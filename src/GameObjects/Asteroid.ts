@@ -1,8 +1,8 @@
 import Phaser from "phaser";
 
 class Asteroid extends Phaser.Physics.Matter.Image {
-  constructor(scene: Phaser.Scene) {
-    super(scene.matter.world, 0, 0, "asteroid");
+  constructor(scene: Phaser.Scene, x: number, y: number) {
+    super(scene.matter.world, x, y, "asteroid");
 
     this.setCircle(this.width / 4, {
       restitution: 0.1,
@@ -17,8 +17,6 @@ class Asteroid extends Phaser.Physics.Matter.Image {
     // Make the asteroid immovable
     this.setMass(1000);
     this.setStatic(true);
-
-    //scene.matter.add.existing(this); Do I need this line???
   }
 
   preUpdate() {

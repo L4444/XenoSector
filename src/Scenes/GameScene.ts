@@ -3,7 +3,6 @@ import GameBackground from "../GameObjects/GameBackground";
 
 class GameScene extends Phaser.Scene {
   p!: Phaser.Physics.Matter.Image;
-  asteroids!: Phaser.Physics.Matter.Image;
 
   constructor() {
     super("game");
@@ -30,15 +29,20 @@ class GameScene extends Phaser.Scene {
       frictionAir: 0.01,
       frictionStatic: 0,
     });
-    this.p.setMass(30);
+    this.p.setMass(100);
 
-    // Create Asteroids
-    let a = new Asteroid(this);
+    // Create asteroids to help player orient themselves
+    for (let i = 0; i < 16; i++) {
+      var x = i % 4;
+      var y = Math.floor(i / 4);
+
+      new Asteroid(this, x * 600, y * 600);
+    }
 
     // Turn off gravity (we are in space)
     this.matter.world.setGravity(0, 0);
 
-    this.matter.world.setBounds(-1000, -1000, 2000, 2000);
+    this.matter.world.setBounds(-100, -100, 2000, 2000);
   }
 
   update() {
