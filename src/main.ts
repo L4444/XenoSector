@@ -49,37 +49,33 @@ class GameScene extends Phaser.Scene {
     let force = 0.05;
 
     if (ko.W.isDown) {
-      this.p.thrustLeft(force);
+      this.p.thrust(force);
     }
     if (ko.S.isDown) {
-      this.p.thrustRight(force);
-    }
-
-    /// Give the illusion of weight by slowing the rotation of the ship
-    /// when it gets close to 0 anglular velocity by using, auxThrusterPower
-    let auxThrusterPower = 0.05;
-    let targetAngularVelocity = 0;
-
-    let rotateSpeed = 0.1;
-
-    if (ko.D.isDown) {
-      targetAngularVelocity = rotateSpeed;
+      this.p.thrustBack(force);
     }
 
     if (ko.A.isDown) {
-      targetAngularVelocity = -rotateSpeed;
+      this.p.thrustLeft(force);
+    }
+    if (ko.D.isDown) {
+      this.p.thrustRight(force);
     }
 
-    // If we haven't been trying to rotate the ship, activate the
-    // "auxThruster" to stabilise the rotation enough to give the ship
-    // some weight behind it without it feeling sluggish
-    if (targetAngularVelocity != 0) {
-      this.p.setAngularVelocity(targetAngularVelocity);
-    } else {
-      this.p.setAngularVelocity(
-        this.p.getAngularVelocity() * (1 - auxThrusterPower),
-      );
-    }
+    let targetRotation = Phaser.Math.Angle.Between(
+      this.p.x,
+      this.p.y,
+      this.input.activePointer.x,
+      this.input.activePointer.y,
+    );
+
+    let rotateSpeed = 0.05;
+
+    this.p.rotation = Phaser.Math.Angle.RotateTo(
+      this.p.rotation,
+      targetRotation,
+      rotateSpeed,
+    );
   }
 }
 
