@@ -1,4 +1,5 @@
 import Asteroid from "../GameObjects/Asteroid";
+import GameBackground from "../GameObjects/GameBackground";
 
 class GameScene extends Phaser.Scene {
   p!: Phaser.Physics.Matter.Image;
@@ -9,18 +10,22 @@ class GameScene extends Phaser.Scene {
   }
 
   preload() {
+    this.load.image(
+      "background",
+      "/assets/backgrounds/Blue Nebula/Blue Nebula 1 - 1024x1024.png",
+    );
     this.load.image("player", "/assets/ships/Human-Fighter.png");
     this.load.image("red", "/assets/border/red.png");
     this.load.image("asteroid", "/assets/asteroids/Asteroid.png");
   }
 
   create() {
-    //this.add.text(100, 100, "Hello Phaser John!");
+    let g = new GameBackground(this);
 
     // Create Player
     this.p = this.matter.add.image(100, 100, "player");
     this.p.setCircle(this.p.width / 2, {
-      restitution: 0.5,
+      restitution: 0.1,
       friction: 0,
       frictionAir: 0.01,
       frictionStatic: 0,
@@ -33,7 +38,7 @@ class GameScene extends Phaser.Scene {
     // Turn off gravity (we are in space)
     this.matter.world.setGravity(0, 0);
 
-    this.matter.world.setBounds(-400, -300, 800, 600);
+    this.matter.world.setBounds(-1000, -1000, 2000, 2000);
   }
 
   update() {
