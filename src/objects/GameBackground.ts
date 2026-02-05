@@ -1,6 +1,4 @@
-import Phaser from "phaser";
-
-class GameBackground extends Phaser.GameObjects.TileSprite {
+export default class GameBackground extends Phaser.GameObjects.TileSprite {
   constructor(scene: Phaser.Scene) {
     super(scene, 0, 0, 1024 * 3, 1024 * 3, "background");
 
@@ -10,5 +8,3 @@ class GameBackground extends Phaser.GameObjects.TileSprite {
     this.setScrollFactor(0.2);
   }
 }
-
-export default GameBackground;

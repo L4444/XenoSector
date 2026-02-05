@@ -1,4 +1,4 @@
-import Wall from "../GameObjects/Wall";
+import Wall from "../objects/Wall";
 /**
  * Creates a rectangular arena bounded by four static wall bodies.
  *
@@ -22,6 +22,8 @@ export default function createArena(
   wallThickness: number,
 ): Array<Phaser.Physics.Matter.Image> {
   const walls: Array<Wall> = [];
+
+  console.log(arenaSize);
 
   // Create the "walls", for out of bounds
   walls.push(new Wall(scene, 0, 0 - arenaSize, arenaSize * 2, wallThickness)); ///Top

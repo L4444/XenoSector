@@ -1,4 +1,4 @@
-import Asteroid from "../GameObjects/Asteroid";
+import Asteroid from "../objects/Asteroid";
 
 export default function createAsteroids(
   scene: Phaser.Scene,
