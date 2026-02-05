@@ -1,7 +1,6 @@
-import Asteroid from "../GameObjects/Asteroid";
 import GameBackground from "../GameObjects/GameBackground";
-import { CreateArena } from "../Helpers/CreateArena";
-import { CreateAstroids } from "../Helpers/CreateAsteroids";
+import createArena from "../Helpers/createArena";
+import createAsteroids from "../Helpers/createAsteroids";
 
 class GameScene extends Phaser.Scene {
   p!: Phaser.Physics.Matter.Image;
@@ -36,10 +35,10 @@ class GameScene extends Phaser.Scene {
 
     this.statics = [];
     // Create asteroids to help player orient themselves
-    this.statics.push(...CreateAstroids(this, 16, 300));
+    this.statics.push(...createAsteroids(this, 16, 4, 300));
 
     // Create the walls around the world
-    this.statics.push(...CreateArena(this, 1000, 50));
+    this.statics.push(...createArena(this, 1000, 50));
 
     // Turn off gravity (we are in space)
     this.matter.world.setGravity(0, 0);

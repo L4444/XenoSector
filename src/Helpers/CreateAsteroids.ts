@@ -1,19 +1,29 @@
 import Asteroid from "../GameObjects/Asteroid";
 
-export function CreateAstroids(
+export default function createAsteroids(
   scene: Phaser.Scene,
   totalAsteroids: number,
+  gridSize: number,
   spacing: number,
 ): Array<Phaser.Physics.Matter.Image> {
-  let asteroids = [];
-
-  let sqrtOfTotal = Math.sqrt(totalAsteroids);
+  const asteroids: Array<Asteroid> = [];
 
   for (let i = 0; i < totalAsteroids; i++) {
-    let x: number = i % sqrtOfTotal;
-    let y: number = Math.floor(i / sqrtOfTotal);
+    const gridX: number = i % gridSize;
+    const gridY: number = Math.floor(i / gridSize);
 
-    asteroids.push(new Asteroid(scene, x * spacing, y * spacing));
+    const tintValue: number = (i / totalAsteroids) * 255;
+
+    const tintColour: number = Phaser.Display.Color.GetColor32(
+      255,
+      tintValue,
+      tintValue,
+      255,
+    );
+
+    asteroids.push(
+      new Asteroid(scene, gridX * spacing, gridY * spacing, tintColour),
+    );
   }
 
   return asteroids;
