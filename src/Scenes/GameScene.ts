@@ -1,10 +1,10 @@
 import Asteroid from "../GameObjects/Asteroid";
 import GameBackground from "../GameObjects/GameBackground";
-import Wall from "../GameObjects/Wall";
+import { CreateArena } from "../Helpers/CreateArena";
 
 class GameScene extends Phaser.Scene {
   p!: Phaser.Physics.Matter.Image;
-  statics!: Array<Wall>;
+  statics!: Array<Phaser.Physics.Matter.Image>;
 
   constructor() {
     super("game");
@@ -42,22 +42,8 @@ class GameScene extends Phaser.Scene {
     }
 
     this.statics = [];
-    // Create Walls
-    let boundSize = 2000;
-    let wallThickness = 100;
-    // Create the "walls", for out of bounds
-    this.statics.push(
-      new Wall(this, 1000, 1000 - boundSize, boundSize * 2, wallThickness),
-    ); ///Top
-    this.statics.push(
-      new Wall(this, 1000 + boundSize, 1000, wallThickness, boundSize * 2),
-    ); // Right
-    this.statics.push(
-      new Wall(this, 1000, 1000 + boundSize, boundSize * 2, wallThickness),
-    ); // Bottom
-    this.statics.push(
-      new Wall(this, 1000 - boundSize, 1000, wallThickness, boundSize * 2),
-    ); // Left
+
+    this.statics.push(...CreateArena(this, 1000, 50));
 
     // Turn off gravity (we are in space)
     this.matter.world.setGravity(0, 0);
