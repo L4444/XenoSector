@@ -24,7 +24,7 @@ export default class GameScene extends Phaser.Scene {
     let g = new GameBackground(this);
 
     // Create Player
-    this.p = this.matter.add.image(100, 100, "player");
+    this.p = this.matter.add.image(0, 400, "player");
     this.p.setCircle(this.p.width / 2, {
       restitution: 0.1,
       friction: 0,
