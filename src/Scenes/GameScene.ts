@@ -1,9 +1,11 @@
 import GameBackground from "../objects/GameBackground";
 import createArena from "../factories/createArena";
 import createAsteroids from "../factories/createAsteroids";
+import rotateTexture from "../helpers/rotateTexture";
 
 export default class GameScene extends Phaser.Scene {
   p!: Phaser.Physics.Matter.Image;
+  e!: Phaser.Physics.Matter.Image;
   statics!: Array<Phaser.Physics.Matter.Image>;
 
   constructor() {
@@ -15,13 +17,20 @@ export default class GameScene extends Phaser.Scene {
       "background",
       "/assets/backgrounds/Blue Nebula/Blue Nebula 1 - 1024x1024.png",
     );
-    this.load.image("player", "/assets/ships/Human-Fighter.png");
+    this.load.image("player_old", "/assets/ships/Human-Fighter.png");
+    this.load.image("enemy_old", "/assets/ships/Alien-Battleship.png");
+
     this.load.image("red", "/assets/border/red.png");
     this.load.image("asteroid", "/assets/asteroids/Asteroid.png");
   }
 
   create() {
     let g = new GameBackground(this);
+
+    rotateTexture(this, "player_old", "player");
+    rotateTexture(this, "enemy_old", "enemy");
+
+    this.e = this.matter.add.image(-300, 1600, "enemy");
 
     // Create Player
     this.p = this.matter.add.image(0, 1800, "player");
@@ -52,7 +61,7 @@ export default class GameScene extends Phaser.Scene {
       return;
     }
 
-    let ko = keyboardInput.addKeys("W,S,A,D") as Keys;
+    let ko = keyboardInput.addKeys("W,S,A,D,F") as Keys;
     let force = 0.05;
 
     if (ko.W.isDown) {
@@ -61,6 +70,8 @@ export default class GameScene extends Phaser.Scene {
     if (ko.S.isDown) {
       this.p.thrustBack(force);
     }
+
+    this.e.thrust(force);
 
     if (ko.A.isDown) {
       this.p.thrustLeft(force);

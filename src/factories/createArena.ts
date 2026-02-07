@@ -10,7 +10,7 @@ import Wall from "../objects/Wall";
  * @param arenaHeight - The width of the arena
  * @param wallThickness - Thickness of each boundary wall.
  *
- * @returns An array of matter images....
+ * @returns An array of staticPhysicsObjects???
  *
  * @remarks
  * - Assumes the physics world origin is at (0, 0).
