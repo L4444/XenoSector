@@ -3,11 +3,11 @@ import Wall from "../objects/Wall";
  * Creates a rectangular arena bounded by four static wall bodies.
  *
  * The arena is centered on the origin (0, 0). Walls are positioned at
- * the edges defined by `arenaSize` and extend inward.
+ * the edges defined by both arenaWidth and arenaHeight
  *
  * @param scene - The Phaser scene the walls will be added to.
- * @param arenaSize - Half the width and height of the arena, measured
- * from the center to each wall.
+ * @param arenaWidth - The width of the arena
+ * @param arenaHeight - The width of the arena
  * @param wallThickness - Thickness of each boundary wall.
  *
  * @returns An array of matter images....
@@ -18,18 +18,25 @@ import Wall from "../objects/Wall";
  */
 export default function createArena(
   scene: Phaser.Scene,
-  arenaSize: number,
+  arenaWidth: number,
+  arenaHeight: number,
   wallThickness: number,
 ): Array<Phaser.Physics.Matter.Image> {
   const walls: Array<Wall> = [];
 
-  console.log(arenaSize);
-
   // Create the "walls", for out of bounds
-  walls.push(new Wall(scene, 0, 0 - arenaSize, arenaSize * 2, wallThickness)); ///Top
-  walls.push(new Wall(scene, 0 + arenaSize, 0, wallThickness, arenaSize * 2)); // Right
-  walls.push(new Wall(scene, 0, 0 + arenaSize, arenaSize * 2, wallThickness)); // Bottom
-  walls.push(new Wall(scene, 0 - arenaSize, 0, wallThickness, arenaSize * 2)); // Left
+  walls.push(
+    new Wall(scene, 0, 0 - arenaHeight, arenaWidth * 2, wallThickness),
+  ); ///Top
+  walls.push(
+    new Wall(scene, 0 + arenaWidth, 0, wallThickness, arenaHeight * 2),
+  ); // Right
+  walls.push(
+    new Wall(scene, 0, 0 + arenaHeight, arenaWidth * 2, wallThickness),
+  ); // Bottom
+  walls.push(
+    new Wall(scene, 0 - arenaWidth, 0, wallThickness, arenaHeight * 2),
+  ); // Left
 
   return walls;
 }

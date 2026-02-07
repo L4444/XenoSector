@@ -24,7 +24,7 @@ export default class GameScene extends Phaser.Scene {
     let g = new GameBackground(this);
 
     // Create Player
-    this.p = this.matter.add.image(0, 400, "player");
+    this.p = this.matter.add.image(0, 1800, "player");
     this.p.setCircle(this.p.width / 2, {
       restitution: 0.1,
       friction: 0,
@@ -38,7 +38,7 @@ export default class GameScene extends Phaser.Scene {
     this.statics.push(...createAsteroids(this, 16, 4, 500));
 
     // Create the walls around the world
-    this.statics.push(...createArena(this, 2000, 50));
+    this.statics.push(...createArena(this, 500, 2000, 50));
 
     // Turn off gravity (we are in space)
     this.matter.world.setGravity(0, 0);
