@@ -1,6 +1,6 @@
 import GameBackground from "../objects/GameBackground";
 import createArena from "../factories/createArena";
-import createAsteroids from "../factories/createAsteroids";
+import createAsteroidGrid from "../factories/createAsteroidGrid";
 import rotateTexture from "../helpers/rotateTexture";
 import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 
@@ -31,10 +31,10 @@ export default class GameScene extends Phaser.Scene {
     rotateTexture(this, "player_old", "player");
     rotateTexture(this, "enemy_old", "enemy");
 
-    this.e = this.matter.add.image(-300, 1600, "enemy");
+    this.e = this.matter.add.image(0, 1800, "enemy");
 
     // Create Player
-    this.p = this.matter.add.image(0, 1800, "player");
+    this.p = this.matter.add.image(-200, 1800, "player");
     this.p.setCircle(this.p.width / 2, {
       restitution: 0.1,
       friction: 0,
@@ -45,7 +45,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.statics = [];
     // Create asteroids to help player orient themselves
-    this.statics.push(...createAsteroids(this, -300, 0, 8, 2, 500));
+    this.statics.push(...createAsteroidGrid(this, -300, 0, 8, 2, 500));
     // Create asteroids to help player orient themselves
     //    this.statics.push(...createAsteroids(this, -500, -1000, 16, 4, 250));
 

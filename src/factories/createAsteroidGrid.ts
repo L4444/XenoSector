@@ -1,6 +1,18 @@
 import Asteroid from "../objects/Asteroid";
 
-export default function createAsteroids(
+/**
+ *
+ * Creates a grid of asteroids, if you want a grid that is not square, simply increate the totalAstroids.
+ *
+ * @param scene The Phaser scene object where the asteroids will be placed
+ * @param x The **Top left** X position of the start of the grid
+ * @param y The **Top left** Y position of the start of the grid
+ * @param totalAsteroids The total number of asteroids in the grid
+ * @param gridWidth The number of asteroids wide the grid will be
+ * @param spacing The distance between each asteroid
+ * @returns The created asteroid array
+ */
+export default function createAsteroidGrid(
   scene: Phaser.Scene,
   x: number,
   y: number,
