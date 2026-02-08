@@ -5,7 +5,7 @@ export default function createAsteroids(
   totalAsteroids: number,
   gridSize: number,
   spacing: number,
-): Array<Phaser.Physics.Matter.Image> {
+): Array<Asteroid> {
   const asteroids: Array<Asteroid> = [];
 
   for (let i = 0; i < totalAsteroids; i++) {

@@ -1,4 +1,5 @@
 import Wall from "../objects/Wall";
+
 /**
  * Creates a rectangular arena bounded by four static wall bodies.
  *
@@ -10,7 +11,7 @@ import Wall from "../objects/Wall";
  * @param arenaHeight - The width of the arena
  * @param wallThickness - Thickness of each boundary wall.
  *
- * @returns An array of staticPhysicsObjects???
+ * @returns An array of the created walls
  *
  * @remarks
  * - Assumes the physics world origin is at (0, 0).
@@ -21,7 +22,7 @@ export default function createArena(
   arenaWidth: number,
   arenaHeight: number,
   wallThickness: number,
-): Array<Phaser.Physics.Matter.Image> {
+): Array<Wall> {
   const walls: Array<Wall> = [];
 
   // Create the "walls", for out of bounds

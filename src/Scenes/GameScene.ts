@@ -2,11 +2,12 @@ import GameBackground from "../objects/GameBackground";
 import createArena from "../factories/createArena";
 import createAsteroids from "../factories/createAsteroids";
 import rotateTexture from "../helpers/rotateTexture";
+import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 
 export default class GameScene extends Phaser.Scene {
   p!: Phaser.Physics.Matter.Image;
   e!: Phaser.Physics.Matter.Image;
-  statics!: Array<Phaser.Physics.Matter.Image>;
+  statics!: Array<StaticPhysicsObject>;
 
   constructor() {
     super("game");
