@@ -45,7 +45,9 @@ export default class GameScene extends Phaser.Scene {
 
     this.statics = [];
     // Create asteroids to help player orient themselves
-    this.statics.push(...createAsteroids(this, 16, 4, 500));
+    this.statics.push(...createAsteroids(this, -300, 0, 8, 2, 500));
+    // Create asteroids to help player orient themselves
+    //    this.statics.push(...createAsteroids(this, -500, -1000, 16, 4, 250));
 
     // Create the walls around the world
     this.statics.push(...createArena(this, 500, 2000, 50));

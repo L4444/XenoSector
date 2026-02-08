@@ -2,15 +2,17 @@ import Asteroid from "../objects/Asteroid";
 
 export default function createAsteroids(
   scene: Phaser.Scene,
+  x: number,
+  y: number,
   totalAsteroids: number,
-  gridSize: number,
+  gridWidth: number,
   spacing: number,
 ): Array<Asteroid> {
   const asteroids: Array<Asteroid> = [];
 
   for (let i = 0; i < totalAsteroids; i++) {
-    const gridX: number = i % gridSize;
-    const gridY: number = Math.floor(i / gridSize);
+    const gridX: number = i % gridWidth;
+    const gridY: number = Math.floor(i / gridWidth);
 
     const tintValue: number = (i / totalAsteroids) * 255;
 
@@ -22,7 +24,7 @@ export default function createAsteroids(
     );
 
     asteroids.push(
-      new Asteroid(scene, gridX * spacing, gridY * spacing, tintColour),
+      new Asteroid(scene, x + gridX * spacing, y + gridY * spacing, tintColour),
     );
   }
 
