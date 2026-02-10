@@ -3,10 +3,11 @@ import createArena from "../factories/createArena";
 import createAsteroidGrid from "../factories/createAsteroidGrid";
 import rotateTexture from "../helpers/rotateTexture";
 import StaticPhysicsObject from "../physics/StaticPhysicsObject";
+import Ship from "../objects/Ship";
 
 export default class GameScene extends Phaser.Scene {
-  p!: Phaser.Physics.Matter.Image;
-  e!: Phaser.Physics.Matter.Image;
+  p!: Ship;
+  e!: Ship;
   c!: Phaser.Math.Vector2;
   statics!: Array<StaticPhysicsObject>;
 
@@ -32,17 +33,10 @@ export default class GameScene extends Phaser.Scene {
     rotateTexture(this, "player_old", "player");
     rotateTexture(this, "enemy_old", "enemy");
 
-    this.e = this.matter.add.image(0, 1800, "enemy");
+    this.e = new Ship(this, 0, 1800, "enemy");
 
     // Create Player
-    this.p = this.matter.add.image(-200, 1800, "player");
-    this.p.setCircle(this.p.width / 2, {
-      restitution: 0.1,
-      friction: 0,
-      frictionAir: 0.01,
-      frictionStatic: 0,
-    });
-    this.p.setMass(100);
+    this.p = new Ship(this, -200, 1800, "player");
 
     this.statics = [];
     // Create asteroids to help player orient themselves

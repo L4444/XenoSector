@@ -7,7 +7,9 @@ export default abstract class DynamicPhysicsObject extends BasePhysicsObject {
     y: number,
     textureName: string,
     isCircle: boolean,
+    mass: number,
   ) {
     super(scene, x, y, textureName, isCircle);
+    this.setMass(mass);
   }
 }

@@ -16,7 +16,7 @@ export default abstract class BasePhysicsObject
     });
 
     if (isCircle) {
-      this.setCircle(this.width / 4);
+      this.setCircle(this.width / 2);
     }
 
     // Have to add this or it doesn't render
