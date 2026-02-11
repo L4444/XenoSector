@@ -4,6 +4,7 @@ import createAsteroidGrid from "../factories/createAsteroidGrid";
 import rotateTexture from "../helpers/rotateTexture";
 import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import Ship from "../objects/Ship";
+import loadImage from "../helpers/loadImage";
 
 export default class GameScene extends Phaser.Scene {
   p!: Ship;
@@ -16,22 +17,20 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image(
+    loadImage(
+      this,
       "background",
       "/assets/backgrounds/Blue Nebula/Blue Nebula 1 - 1024x1024.png",
     );
-    this.load.image("player_old", "/assets/ships/Human-Fighter.png");
-    this.load.image("enemy_old", "/assets/ships/Alien-Battleship.png");
+    loadImage(this, "player", "/assets/ships/Human-Fighter.png");
+    loadImage(this, "enemy", "/assets/ships/Alien-Battleship.png");
 
-    this.load.image("red", "/assets/border/red.png");
-    this.load.image("asteroid", "/assets/asteroids/Asteroid.png");
+    loadImage(this, "red", "/assets/border/red.png");
+    loadImage(this, "asteroid", "/assets/asteroids/Asteroid.png");
   }
 
   create() {
     let g = new GameBackground(this);
-
-    rotateTexture(this, "player_old", "player");
-    rotateTexture(this, "enemy_old", "enemy");
 
     this.e = new Ship(this, 0, 1800, "enemy");
 
