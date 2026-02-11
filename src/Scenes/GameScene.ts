@@ -21,6 +21,7 @@ export default class GameScene extends Phaser.Scene {
       this,
       "background",
       "/assets/backgrounds/Blue Nebula/Blue Nebula 1 - 1024x1024.png",
+      true,
     );
     loadImage(this, "player", "/assets/ships/Human-Fighter.png");
     loadImage(this, "enemy", "/assets/ships/Alien-Battleship.png");
@@ -30,7 +31,8 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    let g = new GameBackground(this);
+    let g = new GameBackground(this, 0.2);
+    //new GameBackground(this, 1);
 
     this.e = new Ship(this, 0, 1800, "enemy");
 

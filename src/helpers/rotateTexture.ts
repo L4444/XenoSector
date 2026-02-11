@@ -18,7 +18,11 @@ export default function rotateTexture(
   // If the texture already exists then we don't need to create it.
   // This prevents vite generating the texture twice on HMR
   // Or human mistakes accidentally calling this function twice.
-  if (scene.textures.exists(targetTextureKey)) return;
+  if (scene.textures.exists(targetTextureKey)) {
+    throw new Error(
+      `rotateTexture: target texture "${sourceTextureKey}" already exists`,
+    );
+  }
 
   // Check if the old texture exists
   if (!scene.textures.exists(sourceTextureKey)) {
