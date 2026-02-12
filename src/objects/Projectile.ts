@@ -45,8 +45,8 @@ export default class Projectile extends DynamicPhysicsObject {
   disable() {
     this.setCollidesWith(0);
     this.setVelocity(0);
+    this.setAngularVelocity(0);
     this.setAngle(0);
-    this.setAngularVelocity(9);
   }
 
   enable() {
