@@ -1,16 +1,18 @@
 import GameBackground from "../objects/GameBackground";
 import createArena from "../factories/createArena";
 import createAsteroidGrid from "../factories/createAsteroidGrid";
-import rotateTexture from "../helpers/rotateTexture";
+
 import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import Ship from "../objects/Ship";
 import loadImage from "../helpers/loadImage";
+import Projectile from "../objects/Projectile";
 
 export default class GameScene extends Phaser.Scene {
-  p!: Ship;
+  player!: Ship;
   e!: Ship;
   c!: Phaser.Math.Vector2;
   statics!: Array<StaticPhysicsObject>;
+  proj!: Projectile;
 
   constructor() {
     super("game");
@@ -44,7 +46,7 @@ export default class GameScene extends Phaser.Scene {
     this.e = new Ship(this, 0, 1800, "enemy");
 
     // Create Player
-    this.p = new Ship(this, -200, 1800, "player");
+    this.player = new Ship(this, -200, 1800, "player");
 
     this.statics = [];
     // Create asteroids to help player orient themselves
@@ -57,6 +59,9 @@ export default class GameScene extends Phaser.Scene {
     this.matter.world.setGravity(0, 0);
 
     this.c = new Phaser.Math.Vector2(0, 0);
+
+    // Test projectile
+    this.proj = new Projectile(this);
   }
 
   update() {
@@ -71,33 +76,37 @@ export default class GameScene extends Phaser.Scene {
     let force = 0.05;
 
     if (ko.W.isDown) {
-      this.p.thrust(force);
+      this.player.thrust(force);
     }
     if (ko.S.isDown) {
-      this.p.thrustBack(force);
+      this.player.thrustBack(force);
+    }
+
+    if (ko.F.isDown) {
+      this.proj.fire(this.player, { range: 500, speed: 10 });
     }
 
     this.e.thrust(force);
 
     if (ko.A.isDown) {
-      this.p.thrustLeft(force);
+      this.player.thrustLeft(force);
     }
     if (ko.D.isDown) {
-      this.p.thrustRight(force);
+      this.player.thrustRight(force);
     }
 
     this.input.activePointer.updateWorldPoint(this.cameras.main);
     let targetRotation = Phaser.Math.Angle.Between(
-      this.p.x,
-      this.p.y,
+      this.player.x,
+      this.player.y,
       this.input.activePointer.worldX,
       this.input.activePointer.worldY,
     );
 
     let rotateSpeed = 0.05;
 
-    this.p.rotation = Phaser.Math.Angle.RotateTo(
-      this.p.rotation,
+    this.player.rotation = Phaser.Math.Angle.RotateTo(
+      this.player.rotation,
       targetRotation,
       rotateSpeed,
     );
@@ -105,9 +114,9 @@ export default class GameScene extends Phaser.Scene {
     // The camera target is where the camera should be, taking into account the cursor
     let cameraTarget: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
     cameraTarget.x =
-      this.p.x - this.scale.width / 2 + this.input.activePointer.x;
+      this.player.x - this.scale.width / 2 + this.input.activePointer.x;
     cameraTarget.y =
-      this.p.y - this.scale.height / 2 + this.input.activePointer.y;
+      this.player.y - this.scale.height / 2 + this.input.activePointer.y;
 
     // move the actual camera focus to the target vector, very smoothly
     this.c.x -= (this.c.x - cameraTarget.x) / 20;
@@ -123,4 +132,5 @@ interface Keys {
   S: Phaser.Input.Keyboard.Key;
   A: Phaser.Input.Keyboard.Key;
   D: Phaser.Input.Keyboard.Key;
+  F: Phaser.Input.Keyboard.Key;
 }
