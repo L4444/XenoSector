@@ -34,7 +34,7 @@ export default class Projectile extends DynamicPhysicsObject {
       const x = t / fadeStart;
 
       // Exponential fade
-      //this.alpha = Math.exp((x - 1) * 2);
+      this.alpha = Math.exp((x - 1) * 2);
     }
 
     if (this.currentLifetime <= 0) {
