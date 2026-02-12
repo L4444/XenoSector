@@ -84,7 +84,7 @@ export default class GameScene extends Phaser.Scene {
       this.player.thrustBack(force);
     }
 
-    if (ko.F.isDown) {
+    if (this.input.mousePointer.leftButtonDown()) {
       this.pm.shoot(this.player, { range: 10, speed: 10 });
     }
 

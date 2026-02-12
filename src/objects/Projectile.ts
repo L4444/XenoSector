@@ -71,8 +71,8 @@ export default class Projectile extends DynamicPhysicsObject {
     v.rotate(parent.rotation);
 
     this.setVelocity(
-      v.x, //+ parent.body.velocity.x,
-      v.y, //+ parent.body.velocity.y,
+      v.x + parent.getVelocity().x,
+      v.y + parent.getVelocity().y,
     );
 
     //this.damage = projectileData.damageValue;
