@@ -8,8 +8,10 @@ export default abstract class DynamicPhysicsObject extends BasePhysicsObject {
     textureName: string,
     isCircle: boolean,
     mass: number,
+    airFriction: number = 0,
   ) {
     super(scene, x, y, textureName, isCircle);
+    this.setFrictionAir(airFriction);
     this.setMass(mass);
   }
 }
