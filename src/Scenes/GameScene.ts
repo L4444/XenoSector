@@ -20,7 +20,13 @@ export default class GameScene extends Phaser.Scene {
     loadImage(
       this,
       "background",
-      "/assets/backgrounds/Blue Nebula/Blue Nebula 1 - 1024x1024.png",
+      "/assets/backgrounds/Blue Nebula/Blue Nebula 4 - 1024x1024.png",
+      true,
+    );
+    loadImage(
+      this,
+      "midground",
+      "/assets/backgrounds/Blue Nebula/Blue Nebula 2 - 1024x1024.png",
       true,
     );
     loadImage(this, "player", "/assets/ships/Human-Fighter.png");
@@ -31,8 +37,9 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    let g = new GameBackground(this, 0.2);
-    //new GameBackground(this, 1);
+    // Create a parallax effect
+    let g = new GameBackground(this, "background", 0.2, 1);
+    new GameBackground(this, "midground", 1, 0.3);
 
     this.e = new Ship(this, 0, 1800, "enemy");
 
