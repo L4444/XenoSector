@@ -6,13 +6,14 @@ import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import Ship from "../objects/Ship";
 import loadImage from "../helpers/loadImage";
 import Projectile from "../objects/Projectile";
+import ProjectileManager from "../managers/ProjectileManager";
 
 export default class GameScene extends Phaser.Scene {
   player!: Ship;
   e!: Ship;
   c!: Phaser.Math.Vector2;
   statics!: Array<StaticPhysicsObject>;
-  proj!: Projectile;
+  pm!: ProjectileManager;
 
   constructor() {
     super("game");
@@ -35,6 +36,8 @@ export default class GameScene extends Phaser.Scene {
     loadImage(this, "enemy", "/assets/ships/Alien-Battleship.png");
 
     loadImage(this, "red", "/assets/border/red.png");
+
+    loadImage(this, "pew", "/assets/projectiles/pew-yellow.png");
     loadImage(this, "asteroid", "/assets/asteroids/Asteroid.png");
   }
 
@@ -58,18 +61,17 @@ export default class GameScene extends Phaser.Scene {
     // Turn off gravity (we are in space)
     this.matter.world.setGravity(0, 0);
 
+    // Create the camera position vector
     this.c = new Phaser.Math.Vector2(0, 0);
 
-    // Test projectile
-    this.proj = new Projectile(this);
+    this.pm = new ProjectileManager(this);
   }
 
   update() {
     let keyboardInput = this.input.keyboard;
 
     if (keyboardInput == null) {
-      console.log("No keyboard detected!");
-      return;
+      throw new Error("No keyboard detected!");
     }
 
     let ko = keyboardInput.addKeys("W,S,A,D,F") as Keys;
@@ -83,7 +85,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (ko.F.isDown) {
-      this.proj.fire(this.player, { range: 500, speed: 10 });
+      this.pm.shoot(this.player, { range: 10, speed: 10 });
     }
 
     this.e.thrust(force);

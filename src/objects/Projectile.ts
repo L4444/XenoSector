@@ -7,13 +7,13 @@ export default class Projectile extends DynamicPhysicsObject {
 
   constructor(scene: Phaser.Scene) {
     // Do not set the mass to 0
-    super(scene, 0, 0, "red", true, 1);
+    super(scene, 0, 0, "pew", true, 1);
 
     // Your mass is 1, but don't knock other ships around (for now)
     this.setSensor(true);
 
     // Start disabled, ready to fire
-    //this.disable();
+    this.disable();
 
     // The projectiles should be under the ship but over the background layer.
     //this.setDepth(SpriteLayer.PROJECTILES);
@@ -34,7 +34,7 @@ export default class Projectile extends DynamicPhysicsObject {
       const x = t / fadeStart;
 
       // Exponential fade
-      this.alpha = Math.exp((x - 1) * 2);
+      //this.alpha = Math.exp((x - 1) * 2);
     }
 
     if (this.currentLifetime <= 0) {
@@ -43,23 +43,23 @@ export default class Projectile extends DynamicPhysicsObject {
   }
 
   disable() {
-    // Move them "way off screen" before you disable them, otherwise when
-    // wireframe physics (debug) is on, it will leave the pink/purple hitbox still on the screen.
-    // it won't do anything it will just look ugly when debugging
-    //this.body?.position.x = -9999;
-    //this.body?.position.y = -9999;
-    //this.disableBody(true, true);
+    this.setCollidesWith(0);
+    this.setVelocity(0);
+    this.setAngle(0);
+    this.setAngularVelocity(9);
+  }
+
+  enable() {
+    this.setCollidesWith(1);
   }
 
   fire(parent: Ship, projectileData: any) {
-    console.log("Fire");
-    //this.enableBody(true, parent.x, parent.y, true, true);
+    this.enable();
 
     this.x = parent.x;
     this.y = parent.y;
 
     //this.setTexture(projectileData.spriteName);
-    //this.setCircle(this.width / 4, this.width / 4, this.width / 4);
 
     // The lifetime should be determined by the "range", faster projectiles have less lifetime
     // Multiply by 50 to get the rough distance
@@ -78,7 +78,7 @@ export default class Projectile extends DynamicPhysicsObject {
     //this.damage = projectileData.damageValue;
     //this.weapon = projectileData.weapon;
 
-    //this.rotation = parent.rotation;
+    this.rotation = parent.rotation;
     // Assign the projectile's "owner" so ships can't damage themselves
     //this.owner = parent;
   }
