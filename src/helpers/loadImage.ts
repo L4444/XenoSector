@@ -17,12 +17,13 @@ export default function loadImage(
   textureUrl: string,
   isTileSprite: boolean = false,
 ) {
+  let tu: string = import.meta.env.BASE_URL + textureUrl;
   // Phaser doesn't like me rotating tileSprites, so skip rotation if it's going to be used for a tilesprite.
   if (!isTileSprite) {
     let tempTextureKey = textureKey + "_old";
 
     // get Phaser to actually load the texture.
-    scene.load.image(tempTextureKey, textureUrl);
+    scene.load.image(tempTextureKey, tu);
 
     // Because phaser loads assets asynchronously you want to rotate the texture after it has been loaded.
     scene.load.once(`filecomplete-image-${tempTextureKey}`, () => {
@@ -30,6 +31,6 @@ export default function loadImage(
     });
   } else {
     // get Phaser to actually load the texture.
-    scene.load.image(textureKey, textureUrl);
+    scene.load.image(textureKey, tu);
   }
 }
