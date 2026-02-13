@@ -7,4 +7,5 @@ export default defineConfig({
       interval: 100,
     },
   },
+  base: "/XenoSector/",
 });
