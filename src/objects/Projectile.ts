@@ -18,7 +18,8 @@ export default class Projectile extends DynamicPhysicsObject {
     // The projectiles should be under the ship but over the background layer.
     //this.setDepth(SpriteLayer.PROJECTILES);
   }
-  preUpdate(time: number, delta: number) {
+  // time: number, delta: number
+  preUpdate() {
     this.currentLifetime--;
 
     // The fading code I pulled out of copilot.

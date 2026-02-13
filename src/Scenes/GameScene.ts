@@ -5,7 +5,7 @@ import createAsteroidGrid from "../factories/createAsteroidGrid";
 import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import Ship from "../objects/Ship";
 import loadImage from "../helpers/loadImage";
-import Projectile from "../objects/Projectile";
+
 import ProjectileManager from "../managers/ProjectileManager";
 
 export default class GameScene extends Phaser.Scene {
@@ -43,7 +43,7 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     // Create a parallax effect
-    let g = new GameBackground(this, "background", 0.2, 1);
+    new GameBackground(this, "background", 0.2, 1);
     new GameBackground(this, "midground", 1, 0.3);
 
     this.e = new Ship(this, 0, 1800, "enemy");
