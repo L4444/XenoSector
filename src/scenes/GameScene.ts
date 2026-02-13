@@ -7,6 +7,7 @@ import Ship from "../objects/Ship";
 import loadImage from "../helpers/loadImage";
 
 import ProjectileManager from "../managers/ProjectileManager";
+import CollisionManager from "../managers/CollisionManager";
 
 export default class GameScene extends Phaser.Scene {
   player!: Ship;
@@ -64,6 +65,7 @@ export default class GameScene extends Phaser.Scene {
     // Create the camera position vector
     this.c = new Phaser.Math.Vector2(0, 0);
 
+    new CollisionManager(this);
     this.pm = new ProjectileManager(this);
   }
 
@@ -85,7 +87,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.input.mousePointer.leftButtonDown()) {
-      this.pm.shoot(this.player, { range: 10, speed: 10 });
+      this.pm.shoot(this.player, { range: 10, speed: 20 });
     }
 
     this.e.thrust(force);

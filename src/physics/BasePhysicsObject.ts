@@ -1,8 +1,11 @@
 export default abstract class BasePhysicsObject
   extends Phaser.Physics.Matter.Image
 {
+  objID!: string;
+
   constructor(
     scene: Phaser.Scene,
+
     x: number,
     y: number,
     textureName: string,
@@ -18,7 +21,13 @@ export default abstract class BasePhysicsObject
       this.setCircle(this.width / 2);
     }
 
+    this.setCollisionCategory(1);
+
+    this.objID = textureName;
+
     // Have to add this or it doesn't render
     scene.add.existing(this);
   }
+
+  onHit(): void {}
 }

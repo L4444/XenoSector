@@ -10,7 +10,12 @@ export default class Projectile extends DynamicPhysicsObject {
     super(scene, 0, 0, "pew", true, 1);
 
     // Your mass is 1, but don't knock other ships around (for now)
-    this.setSensor(true);
+    //this.setSensor(true);
+
+    // Do not collide with other bullets
+    //this.setCollisionGroup(-1);
+    this.setCollisionCategory(2);
+    this.setCollidesWith(1);
 
     // Start disabled, ready to fire
     this.disable();
@@ -54,8 +59,15 @@ export default class Projectile extends DynamicPhysicsObject {
     this.setCollidesWith(1);
   }
 
+  onHit(): void {
+    this.disable();
+  }
+
   fire(parent: Ship, projectileData: any) {
     this.enable();
+
+    // To prevent projectiles from colliding with the ship that is firing them,
+    this.setCollisionGroup(-parent.shipID);
 
     this.x = parent.x;
     this.y = parent.y;
