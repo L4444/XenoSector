@@ -1,9 +1,11 @@
 import DynamicPhysicsObject from "../physics/DynamicPhysicsObject";
+import type ProjectileData from "../types/ProjectileData";
 import type Ship from "./Ship";
 
 export default class Projectile extends DynamicPhysicsObject {
   currentLifetime: number = 0;
   totalLifetime: number = 0;
+  weaponFiredFrom!: any;
 
   constructor(scene: Phaser.Scene, projectileName: string) {
     // Do not set the mass to 0
@@ -65,15 +67,20 @@ export default class Projectile extends DynamicPhysicsObject {
     this.disable();
   }
 
-  fire(parent: Ship, projectileData: any) {
+  fire(parent: Ship, projectileData: ProjectileData) {
     this.x = parent.x;
     this.y = parent.y;
     this.enable();
 
-    // To prevent projectiles from colliding with the ship that is firing them,
+    console.log("\'" + projectileData.textureName + "\' fired");
+    this.setTexture(projectileData.textureName);
+    this.setCircle(this.width / 2);
+
+    // To prevent projectiles from colliding with the ship that is firing them
+    // Set this after adjusting the physics body via setCircle() because that function resets the collision group
     this.setCollisionGroup(-parent.shipID);
 
-    //this.setTexture(projectileData.spriteName);
+    this.weaponFiredFrom = projectileData.weaponFiredFrom;
 
     // The lifetime should be determined by the "range", faster projectiles have less lifetime
     // Multiply by 50 to get the rough distance
@@ -89,11 +96,6 @@ export default class Projectile extends DynamicPhysicsObject {
       v.y + parent.getVelocity().y,
     );
 
-    //this.damage = projectileData.damageValue;
-    //this.weapon = projectileData.weapon;
-
     this.rotation = parent.rotation;
-    // Assign the projectile's "owner" so ships can't damage themselves
-    //this.owner = parent;
   }
 }

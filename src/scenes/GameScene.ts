@@ -8,13 +8,16 @@ import loadImage from "../helpers/loadImage";
 
 import ProjectileManager from "../managers/ProjectileManager";
 import CollisionManager from "../managers/CollisionManager";
+import ProjectileData from "../types/ProjectileData";
 
 export default class GameScene extends Phaser.Scene {
   player!: Ship;
-  e!: Ship;
-  c!: Phaser.Math.Vector2;
+  enemy!: Ship;
+  camera!: Phaser.Math.Vector2;
   statics!: Array<StaticPhysicsObject>;
   pm!: ProjectileManager;
+  pd1!: ProjectileData;
+  pd2!: ProjectileData;
 
   constructor() {
     super("game");
@@ -38,7 +41,8 @@ export default class GameScene extends Phaser.Scene {
 
     loadImage(this, "red", "/assets/border/red.png");
 
-    loadImage(this, "pew", "/assets/projectiles/pew-yellow.png");
+    loadImage(this, "yellow-pew", "/assets/projectiles/pew-yellow.png");
+    loadImage(this, "green-pew", "/assets/projectiles/pew-big-green.png");
     loadImage(this, "asteroid", "/assets/asteroids/Asteroid.png");
   }
 
@@ -47,7 +51,7 @@ export default class GameScene extends Phaser.Scene {
     new GameBackground(this, "background", 0.2, 1);
     new GameBackground(this, "midground", 1, 0.3);
 
-    this.e = new Ship(this, "Enemy Ship", 0, 1800, "enemy");
+    this.enemy = new Ship(this, "Enemy Ship", 0, 1800, "enemy");
 
     // Create Player
     this.player = new Ship(this, "Player Ship", -200, 1800, "player");
@@ -63,10 +67,13 @@ export default class GameScene extends Phaser.Scene {
     this.matter.world.setGravity(0, 0);
 
     // Create the camera position vector
-    this.c = new Phaser.Math.Vector2(0, 0);
+    this.camera = new Phaser.Math.Vector2(0, 0);
 
     new CollisionManager(this);
     this.pm = new ProjectileManager(this);
+
+    this.pd1 = new ProjectileData(15, 10, "yellow-pew", null);
+    this.pd2 = new ProjectileData(15, 2, "green-pew", null);
   }
 
   update() {
@@ -87,10 +94,14 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.input.mousePointer.leftButtonDown()) {
-      this.pm.shoot(this.player, { range: 10, speed: 30 });
+      this.pm.shoot(this.player, this.pd1);
     }
 
-    this.e.thrust(force);
+    if (ko.F.isDown) {
+      this.pm.shoot(this.player, this.pd2);
+    }
+
+    this.enemy.thrust(force);
 
     if (ko.A.isDown) {
       this.player.thrustLeft(force);
@@ -123,11 +134,11 @@ export default class GameScene extends Phaser.Scene {
       this.player.y - this.scale.height / 2 + this.input.activePointer.y;
 
     // move the actual camera focus to the target vector, very smoothly
-    this.c.x -= (this.c.x - cameraTarget.x) / 20;
-    this.c.y -= (this.c.y - cameraTarget.y) / 20;
+    this.camera.x -= (this.camera.x - cameraTarget.x) / 20;
+    this.camera.y -= (this.camera.y - cameraTarget.y) / 20;
 
     // Set the camera on the ship
-    this.cameras.main.centerOn(this.c.x, this.c.y);
+    this.cameras.main.centerOn(this.camera.x, this.camera.y);
   }
 }
 

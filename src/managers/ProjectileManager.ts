@@ -8,14 +8,8 @@ export default class ProjectileManager {
 
   constructor(scene: Phaser.Scene) {
     this.scene = scene;
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < 100; i++) {
       this.projectiles[i] = new Projectile(this.scene, "Projectile" + i);
-      this.projectiles[i].tint = Phaser.Display.Color.GetColor32(
-        255,
-        i * 20,
-        i * 20,
-        255,
-      );
     }
   }
 
