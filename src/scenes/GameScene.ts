@@ -72,8 +72,8 @@ export default class GameScene extends Phaser.Scene {
     new CollisionManager(this);
     this.pm = new ProjectileManager(this);
 
-    this.pd1 = new ProjectileData(15, 10, "yellow-pew", null);
-    this.pd2 = new ProjectileData(15, 2, "green-pew", null);
+    this.pd1 = new ProjectileData(15, 10, "yellow-pew");
+    this.pd2 = new ProjectileData(15, 2, "green-pew");
   }
 
   update() {

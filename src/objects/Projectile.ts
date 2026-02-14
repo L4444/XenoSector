@@ -80,8 +80,6 @@ export default class Projectile extends DynamicPhysicsObject {
     // Set this after adjusting the physics body via setCircle() because that function resets the collision group
     this.setCollisionGroup(-parent.shipID);
 
-    this.weaponFiredFrom = projectileData.weaponFiredFrom;
-
     // The lifetime should be determined by the "range", faster projectiles have less lifetime
     // Multiply by 50 to get the rough distance
     this.totalLifetime = (projectileData.range / projectileData.speed) * 50;
