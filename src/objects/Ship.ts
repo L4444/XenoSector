@@ -9,4 +9,8 @@ export default class Ship extends DynamicPhysicsObject {
     this.shipID = Ship.count;
     this.setCollisionGroup(-this.shipID);
   }
+
+  onHit(): void {
+    console.log("Ship " + this.shipID + " has been hit");
+  }
 }

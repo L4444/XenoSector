@@ -87,7 +87,7 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.input.mousePointer.leftButtonDown()) {
-      this.pm.shoot(this.player, { range: 10, speed: 20 });
+      this.pm.shoot(this.player, { range: 10, speed: 30 });
     }
 
     this.e.thrust(force);
