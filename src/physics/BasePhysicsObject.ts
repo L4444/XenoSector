@@ -5,7 +5,7 @@ export default abstract class BasePhysicsObject
 
   constructor(
     scene: Phaser.Scene,
-
+    physicsObjectID: string,
     x: number,
     y: number,
     textureName: string,
@@ -23,7 +23,7 @@ export default abstract class BasePhysicsObject
 
     this.setCollisionCategory(1);
 
-    this.objID = textureName;
+    this.objID = physicsObjectID;
 
     // Have to add this or it doesn't render
     scene.add.existing(this);

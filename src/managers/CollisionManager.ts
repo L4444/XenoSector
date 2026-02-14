@@ -20,7 +20,7 @@ export default class CollisionManager {
           objA.onHit();
           objB.onHit();
 
-          console.log(objA.objID + " collided2 with " + objB.objID);
+          console.log(objA.objID + " collided with " + objB.objID);
         });
       },
     );

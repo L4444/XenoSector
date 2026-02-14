@@ -27,16 +27,44 @@ export default function createArena(
 
   // Create the "walls", for out of bounds
   walls.push(
-    new Wall(scene, 0, 0 - arenaHeight, arenaWidth * 2, wallThickness),
+    new Wall(
+      scene,
+      "Wall Top",
+      0,
+      0 - arenaHeight,
+      arenaWidth * 2,
+      wallThickness,
+    ),
   ); ///Top
   walls.push(
-    new Wall(scene, 0 + arenaWidth, 0, wallThickness, arenaHeight * 2),
+    new Wall(
+      scene,
+      "Wall Right",
+      0 + arenaWidth,
+      0,
+      wallThickness,
+      arenaHeight * 2,
+    ),
   ); // Right
   walls.push(
-    new Wall(scene, 0, 0 + arenaHeight, arenaWidth * 2, wallThickness),
+    new Wall(
+      scene,
+      "Wall Bottom",
+      0,
+      0 + arenaHeight,
+      arenaWidth * 2,
+      wallThickness,
+    ),
   ); // Bottom
   walls.push(
-    new Wall(scene, 0 - arenaWidth, 0, wallThickness, arenaHeight * 2),
+    new Wall(
+      scene,
+      "Wall Left",
+      0 - arenaWidth,
+      0,
+      wallThickness,
+      arenaHeight * 2,
+    ),
   ); // Left
 
   return walls;

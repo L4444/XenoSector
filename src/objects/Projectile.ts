@@ -5,9 +5,9 @@ export default class Projectile extends DynamicPhysicsObject {
   currentLifetime: number = 0;
   totalLifetime: number = 0;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: Phaser.Scene, projectileName: string) {
     // Do not set the mass to 0
-    super(scene, 0, 0, "pew", true, 1);
+    super(scene, projectileName, 0, 0, "pew", true, 1);
 
     // Your mass is 1, but don't knock other ships around (for now)
     //this.setSensor(true);

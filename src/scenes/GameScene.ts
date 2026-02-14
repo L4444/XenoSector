@@ -47,10 +47,10 @@ export default class GameScene extends Phaser.Scene {
     new GameBackground(this, "background", 0.2, 1);
     new GameBackground(this, "midground", 1, 0.3);
 
-    this.e = new Ship(this, 0, 1800, "enemy");
+    this.e = new Ship(this, "Enemy Ship", 0, 1800, "enemy");
 
     // Create Player
-    this.player = new Ship(this, -200, 1800, "player");
+    this.player = new Ship(this, "Player Ship", -200, 1800, "player");
 
     this.statics = [];
     // Create asteroids to help player orient themselves

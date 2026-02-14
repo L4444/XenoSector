@@ -3,7 +3,7 @@ import BasePhysicsObject from "./BasePhysicsObject";
 export default abstract class DynamicPhysicsObject extends BasePhysicsObject {
   constructor(
     scene: Phaser.Scene,
-
+    physicsObjectID: string,
     x: number,
     y: number,
     textureName: string,
@@ -11,7 +11,7 @@ export default abstract class DynamicPhysicsObject extends BasePhysicsObject {
     mass: number,
     airFriction: number = 0,
   ) {
-    super(scene, x, y, textureName, isCircle);
+    super(scene, physicsObjectID, x, y, textureName, isCircle);
     this.setFrictionAir(airFriction);
     this.setMass(mass);
   }

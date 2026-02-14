@@ -11,11 +11,12 @@ export default class Asteroid extends StaticPhysicsObject {
    */
   constructor(
     scene: Phaser.Scene,
+    asteroidName: string,
     x: number,
     y: number,
     tint: number = 0xffffff,
   ) {
-    super(scene, x, y, "asteroid", true);
+    super(scene, asteroidName, x, y, "asteroid", true);
 
     // Use phasers nice colour function to convert it to hex
     this.tint = tint;

@@ -36,7 +36,13 @@ export default function createAsteroidGrid(
     );
 
     asteroids.push(
-      new Asteroid(scene, x + gridX * spacing, y + gridY * spacing, tintColour),
+      new Asteroid(
+        scene,
+        "Astroid" + i,
+        x + gridX * spacing,
+        y + gridY * spacing,
+        tintColour,
+      ),
     );
   }
 
