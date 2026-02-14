@@ -8,8 +8,8 @@ export default class CollisionManager {
       "collisionstart",
       function (
         event: Phaser.Physics.Matter.Events.CollisionStartEvent,
-        bodyA: MatterJS.BodyType,
-        bodyB: MatterJS.BodyType,
+        _bodyA: MatterJS.BodyType,
+        _bodyB: MatterJS.BodyType,
       ) {
         event.pairs.forEach((pair) => {
           let objA: BasePhysicsObject = pair.bodyA
