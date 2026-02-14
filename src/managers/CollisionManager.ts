@@ -11,10 +11,17 @@ export default class CollisionManager {
         bodyA: MatterJS.BodyType,
         bodyB: MatterJS.BodyType,
       ) {
-        let objA: BasePhysicsObject = bodyA.gameObject as BasePhysicsObject;
-        let objB: BasePhysicsObject = bodyB.gameObject as BasePhysicsObject;
+        event.pairs.forEach((pair) => {
+          let objA: BasePhysicsObject = pair.bodyA
+            .gameObject as BasePhysicsObject;
+          let objB: BasePhysicsObject = pair.bodyB
+            .gameObject as BasePhysicsObject;
 
-        console.log(objA.objID + " collided2 with " + objB.objID);
+          objA.onHit();
+          objB.onHit();
+
+          console.log(objA.objID + " collided2 with " + objB.objID);
+        });
       },
     );
   }

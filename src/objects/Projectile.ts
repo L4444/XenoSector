@@ -49,6 +49,7 @@ export default class Projectile extends DynamicPhysicsObject {
   }
 
   disable() {
+    this.setVisible(false);
     this.setCollidesWith(0);
     this.setVelocity(0);
     this.setAngularVelocity(0);
@@ -56,6 +57,7 @@ export default class Projectile extends DynamicPhysicsObject {
   }
 
   enable() {
+    this.setVisible(true);
     this.setCollidesWith(1);
   }
 
@@ -64,13 +66,12 @@ export default class Projectile extends DynamicPhysicsObject {
   }
 
   fire(parent: Ship, projectileData: any) {
+    this.x = parent.x;
+    this.y = parent.y;
     this.enable();
 
     // To prevent projectiles from colliding with the ship that is firing them,
     this.setCollisionGroup(-parent.shipID);
-
-    this.x = parent.x;
-    this.y = parent.y;
 
     //this.setTexture(projectileData.spriteName);
 
