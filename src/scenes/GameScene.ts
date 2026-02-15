@@ -8,7 +8,10 @@ import loadImage from "../helpers/loadImage";
 
 import ProjectileManager from "../managers/ProjectileManager";
 import CollisionManager from "../managers/CollisionManager";
-import ProjectileData from "../types/ProjectileData";
+
+import BasicWeapon from "../shipsystems/BasicWeapon";
+import RapidFireWeapon from "../shipsystems/RapidFireWeapon";
+import HeavyLongCooldownWeapon from "../shipsystems/HeavyLongCooldownWeapon";
 
 export default class GameScene extends Phaser.Scene {
   player!: Ship;
@@ -16,8 +19,9 @@ export default class GameScene extends Phaser.Scene {
   camera!: Phaser.Math.Vector2;
   statics!: Array<StaticPhysicsObject>;
   pm!: ProjectileManager;
-  pd1!: ProjectileData;
-  pd2!: ProjectileData;
+  weapon1!: BasicWeapon;
+  weapon2!: RapidFireWeapon;
+  weapon3!: HeavyLongCooldownWeapon;
 
   constructor() {
     super("game");
@@ -43,6 +47,8 @@ export default class GameScene extends Phaser.Scene {
 
     loadImage(this, "yellow-pew", "/assets/projectiles/pew-yellow.png");
     loadImage(this, "green-pew", "/assets/projectiles/pew-big-green.png");
+    loadImage(this, "blue-pew", "/assets/projectiles/pew-blue.png");
+
     loadImage(this, "asteroid", "/assets/asteroids/Asteroid.png");
   }
 
@@ -72,8 +78,11 @@ export default class GameScene extends Phaser.Scene {
     new CollisionManager(this);
     this.pm = new ProjectileManager(this);
 
-    this.pd1 = new ProjectileData(15, 10, "yellow-pew");
-    this.pd2 = new ProjectileData(15, 2, "green-pew");
+    //this.pd1 = new ProjectileData(15, 10, "yellow-pew");
+    //this.pd2 = new ProjectileData(15, 2, "green-pew");
+    this.weapon1 = new BasicWeapon(this, this.player);
+    this.weapon2 = new RapidFireWeapon(this, this.player);
+    this.weapon3 = new HeavyLongCooldownWeapon(this, this.player);
   }
 
   update() {
@@ -83,7 +92,7 @@ export default class GameScene extends Phaser.Scene {
       throw new Error("No keyboard detected!");
     }
 
-    let ko = keyboardInput.addKeys("W,S,A,D,F") as Keys;
+    let ko = keyboardInput.addKeys("W,S,A,D,F,G") as Keys;
     let force = 0.05;
 
     if (ko.W.isDown) {
@@ -94,11 +103,15 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.input.mousePointer.leftButtonDown()) {
-      this.pm.shoot(this.player, this.pd1);
+      this.weapon1.use(this.pm);
     }
 
     if (ko.F.isDown) {
-      this.pm.shoot(this.player, this.pd2);
+      this.weapon2.use(this.pm);
+    }
+
+    if (ko.G.isDown) {
+      this.weapon3.use(this.pm);
     }
 
     this.enemy.thrust(force);
@@ -148,4 +161,5 @@ interface Keys {
   A: Phaser.Input.Keyboard.Key;
   D: Phaser.Input.Keyboard.Key;
   F: Phaser.Input.Keyboard.Key;
+  G: Phaser.Input.Keyboard.Key;
 }
