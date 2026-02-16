@@ -31,13 +31,13 @@ export default class GameScene extends Phaser.Scene {
     loadImage(
       this,
       "background",
-      "/assets/backgrounds/Blue Nebula/Blue Nebula 4 - 1024x1024.png",
+      "/assets/backgrounds/Blue Nebula 4 - 1024x1024.png",
       true,
     );
     loadImage(
       this,
       "midground",
-      "/assets/backgrounds/Blue Nebula/Blue Nebula 2 - 1024x1024.png",
+      "/assets/backgrounds/Blue Nebula 2 - 1024x1024.png",
       true,
     );
     loadImage(this, "player", "/assets/ships/Human-Fighter.png");
@@ -78,11 +78,14 @@ export default class GameScene extends Phaser.Scene {
     new CollisionManager(this);
     this.pm = new ProjectileManager(this);
 
-    //this.pd1 = new ProjectileData(15, 10, "yellow-pew");
-    //this.pd2 = new ProjectileData(15, 2, "green-pew");
     this.weapon1 = new BasicWeapon(this, this.player);
     this.weapon2 = new RapidFireWeapon(this, this.player);
     this.weapon3 = new HeavyLongCooldownWeapon(this, this.player);
+
+    // Disable mouse click context menu
+    this.game.canvas.addEventListener("contextmenu", (e) => {
+      e.preventDefault();
+    });
   }
 
   update() {
@@ -106,11 +109,11 @@ export default class GameScene extends Phaser.Scene {
       this.weapon1.use(this.pm);
     }
 
-    if (ko.F.isDown) {
+    if (this.input.mousePointer.rightButtonDown()) {
       this.weapon2.use(this.pm);
     }
 
-    if (ko.G.isDown) {
+    if (ko.F.isDown) {
       this.weapon3.use(this.pm);
     }
 
