@@ -50,6 +50,8 @@ export default class GameScene extends Phaser.Scene {
     loadImage(this, "blue-pew", "/assets/projectiles/pew-blue.png");
 
     loadImage(this, "asteroid", "/assets/asteroids/Asteroid.png");
+
+    loadImage(this, "shield", "/assets/ships/Shield.png", true);
   }
 
   create() {
