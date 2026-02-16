@@ -9,7 +9,7 @@ export default class BasicWeapon extends ShipSystem {
   }
 
   onActivate(pm: ProjectileManager) {
-    let pd: ProjectileData = new ProjectileData(15, 10, "blue-pew");
+    let pd: ProjectileData = new ProjectileData(15, 20, "blue-pew");
 
     pm.shoot(this.parentShip, pd);
   }

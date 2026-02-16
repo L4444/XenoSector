@@ -14,6 +14,9 @@ export default class Projectile extends DynamicPhysicsObject {
     // Your mass is 1, but don't knock other ships around (for now)
     //this.setSensor(true);
 
+    // For clean looking collision detection, projectile hitbox should be very small
+    this.setCircle(1);
+
     // Do not collide with other bullets
     //this.setCollisionGroup(-1);
     this.setCollisionCategory(2);
@@ -74,7 +77,6 @@ export default class Projectile extends DynamicPhysicsObject {
 
     console.log("\'" + projectileData.textureName + "\' fired");
     this.setTexture(projectileData.textureName);
-    this.setCircle(this.width / 2);
 
     // To prevent projectiles from colliding with the ship that is firing them
     // Set this after adjusting the physics body via setCircle() because that function resets the collision group
