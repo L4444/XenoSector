@@ -1,9 +1,12 @@
 import DynamicPhysicsObject from "../physics/DynamicPhysicsObject";
+import ValueBar from "./ValueBar";
 
 export default class Ship extends DynamicPhysicsObject {
   static count: number = 0;
   shipID!: number;
   shield!: Phaser.GameObjects.Image;
+  hp!: ValueBar;
+  energy!: ValueBar;
 
   constructor(
     scene: Phaser.Scene,
@@ -17,10 +20,14 @@ export default class Ship extends DynamicPhysicsObject {
     this.shipID = Ship.count;
     this.setCollisionGroup(-this.shipID);
 
+    /// Put shield in it's own object class
     this.shield = scene.add.image(x, y, "shield");
     this.shield.displayWidth = this.displayWidth;
     this.shield.displayHeight = this.displayHeight;
     this.shield.alpha = 0.3;
+
+    this.hp = new ValueBar(scene, this, 0, 0x993333, 100, 100);
+    this.energy = new ValueBar(scene, this, 15, 0x9999ff, 70, 100);
 
     // Post update, the preUpdate() function calls BEFORE physics update so if I sync
     // the other elements (e.g. shield/thruster) they will lag slightly behind.
@@ -38,8 +45,13 @@ export default class Ship extends DynamicPhysicsObject {
     this.shield.y = this.y;
   }
 
+  dealDamage() {
+    this.hp.reduce(10);
+  }
+
   onHit(): void {
     console.log("Ship " + this.shipID + " has been hit");
     this.shield.alpha = 1;
+    this.hp.reduce(-1);
   }
 }
