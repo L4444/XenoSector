@@ -59,11 +59,6 @@ export default class GameScene extends Phaser.Scene {
     new GameBackground(this, "background", 0.2, 1);
     new GameBackground(this, "midground", 1, 0.3);
 
-    this.enemy = new Ship(this, "Enemy Ship", 0, 1800, "enemy");
-
-    // Create Player
-    this.player = new Ship(this, "Player Ship", -200, 1800, "player");
-
     this.statics = [];
     // Create asteroids to help player orient themselves
     this.statics.push(...createAsteroidGrid(this, -300, -1500, 14, 2, 500));
@@ -71,18 +66,24 @@ export default class GameScene extends Phaser.Scene {
     // Create the walls around the world
     this.statics.push(...createArena(this, 500, 2000, 50));
 
+    this.pm = new ProjectileManager(this);
+
+    this.enemy = new Ship(this, "Enemy Ship", 0, 1800, "enemy");
+
+    // Create Player
+    this.player = new Ship(this, "Player Ship", -200, 1800, "player");
+
     // Turn off gravity (we are in space)
     this.matter.world.setGravity(0, 0);
 
     // Create the camera position vector
     this.camera = new Phaser.Math.Vector2(0, 0);
 
-    new CollisionManager(this);
-    this.pm = new ProjectileManager(this);
-
     this.weapon1 = new BasicWeapon(this, this.player);
     this.weapon2 = new RapidFireWeapon(this, this.player);
     this.weapon3 = new HeavyLongCooldownWeapon(this, this.player);
+
+    new CollisionManager(this);
 
     // Disable mouse click context menu
     this.game.canvas.addEventListener("contextmenu", (e) => {

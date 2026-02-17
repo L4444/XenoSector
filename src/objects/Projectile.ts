@@ -24,9 +24,6 @@ export default class Projectile extends DynamicPhysicsObject {
 
     // Start disabled, ready to fire
     this.disable();
-
-    // The projectiles should be under the ship but over the background layer.
-    //this.setDepth(SpriteLayer.PROJECTILES);
   }
   // time: number, delta: number
   preUpdate() {

@@ -25,7 +25,7 @@ export default class ValueBar {
       0x000000, // rgb colour
       1,
     );
-    //this.hpBarBack.setDepth(SpriteLayer.HP);
+
     this.barFront = scene.add.rectangle(
       0, // x
       0, // y
@@ -34,9 +34,6 @@ export default class ValueBar {
       colour, // rgb colour
       1,
     );
-
-    // TODO
-    //this.hpBarFront.setDepth(SpriteLayer.HP);
 
     this.parentShip = parentShip;
     this.offset = offset;
