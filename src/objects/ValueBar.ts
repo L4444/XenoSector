@@ -1,12 +1,13 @@
 import type Ship from "./Ship";
 
-export default class ValueBar extends Phaser.GameObjects.GameObject {
+export default class ValueBar {
   barBack!: Phaser.GameObjects.Rectangle;
   barFront!: Phaser.GameObjects.Rectangle;
   parentShip!: Ship;
   offset!: number;
   currentValue: number = -99;
   maxValue: number = -99;
+  passiveRegen: number = 0;
   constructor(
     scene: Phaser.Scene,
     parentShip: Ship,
@@ -14,8 +15,8 @@ export default class ValueBar extends Phaser.GameObjects.GameObject {
     colour: number,
     startingValue: number,
     maxValue: number,
+    passiveRegen: number = 0,
   ) {
-    super(scene, "Value Bar");
     this.barBack = scene.add.rectangle(
       0, // x
       0, // y
@@ -42,9 +43,7 @@ export default class ValueBar extends Phaser.GameObjects.GameObject {
 
     this.currentValue = startingValue;
     this.maxValue = maxValue;
-
-    // Have to add this or it doesn't update
-    scene.add.existing(this);
+    this.passiveRegen = passiveRegen;
 
     // Post update, the preUpdate() function calls BEFORE physics update so if I sync
     // the other elements (e.g. shield/thruster) they will lag slightly behind.
@@ -56,6 +55,7 @@ export default class ValueBar extends Phaser.GameObjects.GameObject {
   }
 
   postUpdate() {
+    this.currentValue += this.passiveRegen;
     // Cap currentValue, it should never be negative
     if (this.currentValue < 0) {
       this.currentValue = 0;

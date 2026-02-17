@@ -113,6 +113,7 @@ export default class GameScene extends Phaser.Scene {
 
     if (this.input.mousePointer.rightButtonDown()) {
       this.weapon2.use(this.pm);
+      this.player.useEnergy();
     }
 
     if (ko.F.isDown) {

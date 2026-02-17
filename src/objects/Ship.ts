@@ -26,8 +26,8 @@ export default class Ship extends DynamicPhysicsObject {
     this.shield.displayHeight = this.displayHeight;
     this.shield.alpha = 0.3;
 
-    this.hp = new ValueBar(scene, this, 0, 0x993333, 100, 100);
-    this.energy = new ValueBar(scene, this, 15, 0x9999ff, 70, 100);
+    this.hp = new ValueBar(scene, this, 0, 0x993333, 100, 100, 1);
+    this.energy = new ValueBar(scene, this, 15, 0x9999ff, 70, 100, 0.5);
 
     // Post update, the preUpdate() function calls BEFORE physics update so if I sync
     // the other elements (e.g. shield/thruster) they will lag slightly behind.
@@ -47,6 +47,10 @@ export default class Ship extends DynamicPhysicsObject {
 
   dealDamage() {
     this.hp.reduce(10);
+  }
+
+  useEnergy() {
+    this.energy.reduce(1);
   }
 
   onHit(): void {
