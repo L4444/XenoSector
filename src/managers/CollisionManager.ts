@@ -34,6 +34,7 @@ export default class CollisionManager {
             hitShip.shield.hit();
             hitShip.hp.reduce(10);
 
+            // TODO: Disable if energy weapon against shields?
             //bullet.disable();
           }
 
@@ -42,11 +43,20 @@ export default class CollisionManager {
             objA.entityType == EntityType.STATIC &&
             objB.entityType == EntityType.PROJECTILE
           ) {
-            let bullet: Projectile = objA as Projectile;
+            let bullet: Projectile = objB as Projectile;
             bullet.currentLifetime = bullet.totalLifetime;
           }
 
-          console.log(objA.objID + " collided with " + objB.objID);
+          console.log(
+            "\'" +
+              objA.objID +
+              "\':" +
+              objA.entityType +
+              " collided with \'" +
+              objB.objID +
+              "\':" +
+              objB.entityType,
+          );
         });
       },
     );
