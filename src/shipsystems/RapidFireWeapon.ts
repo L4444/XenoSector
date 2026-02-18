@@ -9,7 +9,7 @@ export default class RapidFireWeapon extends ShipSystem {
   }
 
   onActivate(pm: ProjectileManager) {
-    let pd: ProjectileData = new ProjectileData(15, 20, "yellow-pew");
+    let pd: ProjectileData = new ProjectileData(15, 20, "yellow-pew", 3);
 
     pm.shoot(this.parentShip, pd);
   }

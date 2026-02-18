@@ -1,7 +1,10 @@
+import type { EntityType } from "../types/EntityType";
+
 export default abstract class BasePhysicsObject
   extends Phaser.Physics.Matter.Image
 {
   objID!: string;
+  entityType!: EntityType;
 
   constructor(
     scene: Phaser.Scene,
@@ -10,6 +13,7 @@ export default abstract class BasePhysicsObject
     y: number,
     textureName: string,
     isCircle: boolean,
+    entityType: EntityType,
   ) {
     super(scene.matter.world, x, y, textureName, 0, {
       restitution: 0.1,
@@ -24,10 +28,8 @@ export default abstract class BasePhysicsObject
     this.setCollisionCategory(1);
 
     this.objID = physicsObjectID;
+    this.entityType = entityType;
 
-    // Have to add this or it doesn't render
     scene.add.existing(this);
   }
-
-  onHit(): void {}
 }

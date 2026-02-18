@@ -119,7 +119,6 @@ export default class GameScene extends Phaser.Scene {
 
     if (ko.F.isDown) {
       this.weapon3.use(this.pm);
-      this.player.dealDamage();
     }
 
     this.enemy.thrust(force);

@@ -1,4 +1,7 @@
+import type Projectile from "../objects/Projectile";
+import type Ship from "../objects/Ship";
 import type BasePhysicsObject from "../physics/BasePhysicsObject";
+import { EntityType } from "../types/EntityType";
 
 export default class CollisionManager {
   constructor(scene: Phaser.Scene) {
@@ -17,8 +20,22 @@ export default class CollisionManager {
           let objB: BasePhysicsObject = pair.bodyB
             .gameObject as BasePhysicsObject;
 
-          objA.onHit();
-          objB.onHit();
+          // Projectile handling code, projectile will always be on the "left side" of this check because
+          // Projectiles are created earlier than ships in create()
+          if (
+            objA.entityType == EntityType.PROJECTILE &&
+            objB.entityType == EntityType.SHIP
+          ) {
+            let bullet: Projectile = objA as Projectile;
+            let hitShip: Ship = objB as Ship;
+            console.log("Projectile hit ship " + bullet.damage);
+
+            console.log("Ship " + hitShip.shipID + " has been hit");
+            hitShip.shield.hit();
+            hitShip.hp.reduce(10);
+
+            bullet.disable();
+          }
 
           console.log(objA.objID + " collided with " + objB.objID);
         });

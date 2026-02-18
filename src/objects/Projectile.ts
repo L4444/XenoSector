@@ -1,4 +1,5 @@
 import DynamicPhysicsObject from "../physics/DynamicPhysicsObject";
+import { EntityType } from "../types/EntityType";
 import type ProjectileData from "../types/ProjectileData";
 import type Ship from "./Ship";
 
@@ -6,10 +7,21 @@ export default class Projectile extends DynamicPhysicsObject {
   currentLifetime: number = 0;
   totalLifetime: number = 0;
   weaponFiredFrom!: any;
+  damage!: number;
 
   constructor(scene: Phaser.Scene, projectileName: string) {
     // Do not set the mass to 0
-    super(scene, projectileName, 0, 0, "pew", true, 1);
+    super(
+      scene,
+      projectileName,
+      0,
+      0,
+      "pew",
+      true,
+      1,
+      0,
+      EntityType.PROJECTILE,
+    );
 
     // Your mass is 1, but don't knock other ships around (for now)
     //this.setSensor(true);
@@ -63,10 +75,6 @@ export default class Projectile extends DynamicPhysicsObject {
     this.setCollidesWith(1);
   }
 
-  onHit(): void {
-    this.disable();
-  }
-
   fire(parent: Ship, projectileData: ProjectileData) {
     this.x = parent.x;
     this.y = parent.y;
@@ -83,6 +91,7 @@ export default class Projectile extends DynamicPhysicsObject {
     // Multiply by 50 to get the rough distance
     this.totalLifetime = (projectileData.range / projectileData.speed) * 50;
     this.currentLifetime = this.totalLifetime;
+    this.damage = projectileData.damage;
 
     // Use vectors to set the path of the projectile, use the X axis to align with the player ship.
     let v = new Phaser.Math.Vector2(projectileData.speed, 0);

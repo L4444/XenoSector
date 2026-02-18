@@ -1,3 +1,4 @@
+import { EntityType } from "../types/EntityType";
 import BasePhysicsObject from "./BasePhysicsObject";
 
 export default abstract class StaticPhysicsObject extends BasePhysicsObject {
@@ -9,7 +10,15 @@ export default abstract class StaticPhysicsObject extends BasePhysicsObject {
     textureName: string,
     isCircle: boolean,
   ) {
-    super(scene, physicsObjectID, x, y, textureName, isCircle);
+    super(
+      scene,
+      physicsObjectID,
+      x,
+      y,
+      textureName,
+      isCircle,
+      EntityType.STATIC,
+    );
 
     this.setStatic(true);
   }
