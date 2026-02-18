@@ -92,6 +92,7 @@ export default class Projectile extends DynamicPhysicsObject {
     this.totalLifetime = (projectileData.range / projectileData.speed) * 50;
     this.currentLifetime = this.totalLifetime;
     this.damage = projectileData.damage;
+    this.setMass(projectileData.mass);
 
     // Use vectors to set the path of the projectile, use the X axis to align with the player ship.
     let v = new Phaser.Math.Vector2(projectileData.speed, 0);

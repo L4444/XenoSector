@@ -9,7 +9,7 @@ export default class HeavyLongCooldownWeapon extends ShipSystem {
   }
 
   onActivate(pm: ProjectileManager) {
-    let pd: ProjectileData = new ProjectileData(15, 10, "green-pew", 33);
+    let pd: ProjectileData = new ProjectileData(15, 10, "green-pew", 33, 100);
 
     pm.shoot(this.parentShip, pd);
   }

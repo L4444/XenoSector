@@ -61,10 +61,10 @@ export default class GameScene extends Phaser.Scene {
 
     this.statics = [];
     // Create asteroids to help player orient themselves
-    this.statics.push(...createAsteroidGrid(this, -300, -1500, 14, 2, 500));
+    this.statics.push(...createAsteroidGrid(this, -300, -1500, 14, 2, 800));
 
     // Create the walls around the world
-    this.statics.push(...createArena(this, 500, 2000, 50));
+    this.statics.push(...createArena(this, 1000, 2000, 50));
 
     this.pm = new ProjectileManager(this);
 
@@ -120,8 +120,6 @@ export default class GameScene extends Phaser.Scene {
     if (ko.F.isDown) {
       this.weapon3.use(this.pm);
     }
-
-    this.enemy.thrust(force);
 
     if (ko.A.isDown) {
       this.player.thrustLeft(force);

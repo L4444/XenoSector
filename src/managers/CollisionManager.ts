@@ -34,7 +34,16 @@ export default class CollisionManager {
             hitShip.shield.hit();
             hitShip.hp.reduce(10);
 
-            bullet.disable();
+            //bullet.disable();
+          }
+
+          //
+          if (
+            objA.entityType == EntityType.STATIC &&
+            objB.entityType == EntityType.PROJECTILE
+          ) {
+            let bullet: Projectile = objA as Projectile;
+            bullet.currentLifetime = bullet.totalLifetime;
           }
 
           console.log(objA.objID + " collided with " + objB.objID);

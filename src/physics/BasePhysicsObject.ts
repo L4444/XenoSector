@@ -16,7 +16,7 @@ export default abstract class BasePhysicsObject
     entityType: EntityType,
   ) {
     super(scene.matter.world, x, y, textureName, 0, {
-      restitution: 0.1,
+      restitution: 1,
       friction: 0,
       frictionStatic: 0,
     });

@@ -24,12 +24,15 @@ export default class Ship extends DynamicPhysicsObject {
 
     /// Put shield in it's own object class
     this.shield = new Shield(scene, this);
-    this.hp = new ValueBar(scene, this, 0, 0x993333, 100, 100, 0.1);
+    this.hp = new ValueBar(scene, this, 0, 0x993333, 1000, 1000, 0.1);
     this.energy = new ValueBar(scene, this, 15, 0x9999ff, 70, 100, 0.5);
   }
 
   preUpdate() {
-    // Do nothing for now
+    // Heal if you hit 0 hp to reset.
+    if (this.hp.currentValue <= 0) {
+      this.hp.currentValue = this.hp.maxValue;
+    }
   }
 
   useEnergy() {
