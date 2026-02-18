@@ -5,12 +5,18 @@ import ProjectileData from "../types/ProjectileData";
 
 export default class RapidFireWeapon extends ShipSystem {
   constructor(scene: Phaser.Scene, parentShip: Ship) {
-    super(scene, parentShip, "Machine gun", 0.1, 3);
+    super(scene, parentShip, "Machine gun", 0.1, 3, 15);
   }
 
   onActivate(pm: ProjectileManager) {
-    let pd: ProjectileData = new ProjectileData(15, 20, "yellow-pew", 3, 0.001);
+    let pd: ProjectileData = new ProjectileData(
+      15,
+      20,
+      "yellow-pew",
+      10,
+      0.001,
+    );
 
-    pm.shoot(this.parentShip, pd);
+    pm.shoot(this.getParentShip(), pd);
   }
 }

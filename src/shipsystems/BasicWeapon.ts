@@ -5,12 +5,12 @@ import ProjectileData from "../types/ProjectileData";
 
 export default class BasicWeapon extends ShipSystem {
   constructor(scene: Phaser.Scene, parentShip: Ship) {
-    super(scene, parentShip, "Basic weapon", 0.1, 10);
+    super(scene, parentShip, "Basic weapon", 0.1, 20, 10);
   }
 
   onActivate(pm: ProjectileManager) {
-    let pd: ProjectileData = new ProjectileData(15, 20, "blue-pew", 0.2, 0.1);
+    let pd: ProjectileData = new ProjectileData(15, 20, "blue-pew", 10, 0.1);
 
-    pm.shoot(this.parentShip, pd);
+    pm.shoot(this.getParentShip(), pd);
   }
 }

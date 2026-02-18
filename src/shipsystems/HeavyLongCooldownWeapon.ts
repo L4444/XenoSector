@@ -5,12 +5,12 @@ import ProjectileData from "../types/ProjectileData";
 
 export default class HeavyLongCooldownWeapon extends ShipSystem {
   constructor(scene: Phaser.Scene, parentShip: Ship) {
-    super(scene, parentShip, "Plasma Cannon", 0.1, 20);
+    super(scene, parentShip, "Plasma Cannon", 0.1, 60, 10);
   }
 
   onActivate(pm: ProjectileManager) {
-    let pd: ProjectileData = new ProjectileData(15, 10, "green-pew", 33, 100);
+    let pd: ProjectileData = new ProjectileData(15, 10, "green-pew", 33, 200);
 
-    pm.shoot(this.parentShip, pd);
+    pm.shoot(this.getParentShip(), pd);
   }
 }

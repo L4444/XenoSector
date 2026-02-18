@@ -9,19 +9,12 @@ import loadImage from "../helpers/loadImage";
 import ProjectileManager from "../managers/ProjectileManager";
 import CollisionManager from "../managers/CollisionManager";
 
-import BasicWeapon from "../shipsystems/BasicWeapon";
-import RapidFireWeapon from "../shipsystems/RapidFireWeapon";
-import HeavyLongCooldownWeapon from "../shipsystems/HeavyLongCooldownWeapon";
-
 export default class GameScene extends Phaser.Scene {
   player!: Ship;
   enemy!: Ship;
   camera!: Phaser.Math.Vector2;
   statics!: Array<StaticPhysicsObject>;
   pm!: ProjectileManager;
-  weapon1!: BasicWeapon;
-  weapon2!: RapidFireWeapon;
-  weapon3!: HeavyLongCooldownWeapon;
 
   constructor() {
     super("game");
@@ -68,20 +61,16 @@ export default class GameScene extends Phaser.Scene {
 
     this.pm = new ProjectileManager(this);
 
-    this.enemy = new Ship(this, "Enemy Ship", 0, 1800, "enemy");
+    this.enemy = new Ship(this, "Enemy Ship", 0, 1800, "enemy", this.pm);
 
     // Create Player
-    this.player = new Ship(this, "Player Ship", -200, 1800, "player");
+    this.player = new Ship(this, "Player Ship", -200, 1800, "player", this.pm);
 
     // Turn off gravity (we are in space)
     this.matter.world.setGravity(0, 0);
 
     // Create the camera position vector
     this.camera = new Phaser.Math.Vector2(0, 0);
-
-    this.weapon1 = new BasicWeapon(this, this.player);
-    this.weapon2 = new RapidFireWeapon(this, this.player);
-    this.weapon3 = new HeavyLongCooldownWeapon(this, this.player);
 
     new CollisionManager(this);
 
@@ -109,16 +98,15 @@ export default class GameScene extends Phaser.Scene {
     }
 
     if (this.input.mousePointer.leftButtonDown()) {
-      this.weapon1.use(this.pm);
+      this.player.useSystem(0);
     }
 
     if (this.input.mousePointer.rightButtonDown()) {
-      this.weapon2.use(this.pm);
-      this.player.useEnergy();
+      this.player.useSystem(1);
     }
 
     if (ko.F.isDown) {
-      this.weapon3.use(this.pm);
+      this.player.useSystem(2);
     }
 
     if (ko.A.isDown) {

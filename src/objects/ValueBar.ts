@@ -1,13 +1,13 @@
 import type Ship from "./Ship";
 
 export default class ValueBar {
-  barBack!: Phaser.GameObjects.Rectangle;
-  barFront!: Phaser.GameObjects.Rectangle;
-  parentShip!: Ship;
-  offset!: number;
-  currentValue: number = -99;
-  maxValue: number = -99;
-  passiveRegen: number = 0;
+  private barBack!: Phaser.GameObjects.Rectangle;
+  private barFront!: Phaser.GameObjects.Rectangle;
+  private parentShip!: Ship;
+  private offset!: number;
+  private currentValue: number = -99;
+  private maxValue: number = -99;
+  private passiveRegen: number = 0;
   constructor(
     scene: Phaser.Scene,
     parentShip: Ship,
@@ -47,8 +47,16 @@ export default class ValueBar {
     scene.events.on("postupdate", this.postUpdate, this);
   }
 
-  reduce(value: number) {
+  reduceBy(value: number) {
     this.currentValue -= value;
+  }
+
+  reset() {
+    this.currentValue = this.maxValue;
+  }
+
+  getCurrentValue(): number {
+    return this.currentValue;
   }
 
   postUpdate() {
@@ -60,7 +68,7 @@ export default class ValueBar {
 
     // It should also never be greater than the max value
     if (this.currentValue > this.maxValue) {
-      this.currentValue = this.maxValue;
+      this.reset();
     }
 
     // TODO: Maybe replace this with math.clamp()?

@@ -32,13 +32,13 @@ export default class CollisionManager {
 
             console.log("Ship " + hitShip.shipID + " has been hit");
             hitShip.shield.hit();
-            hitShip.hp.reduce(10);
+            hitShip.hp.reduceBy(bullet.damage);
 
             // TODO: Disable if energy weapon against shields?
-            //bullet.disable();
+            bullet.disable();
           }
 
-          //
+          // Testing richochet
           if (
             objA.entityType == EntityType.STATIC &&
             objB.entityType == EntityType.PROJECTILE

@@ -3,11 +3,12 @@ import type Ship from "../objects/Ship";
 import type BasePhysicsObject from "../physics/BasePhysicsObject";
 
 export default class ShipSystem extends Phaser.GameObjects.GameObject {
-  parentShip!: Ship;
+  private parentShip!: Ship;
   soundName: string = "Sound Name Not Set";
   soundVolume: number = 0;
-  cooldownDuration: number = 0;
-  cooldownRemaining: number = 0;
+  private cooldownDuration: number = 0;
+  private cooldownRemaining: number = 0;
+  private energyCost!: number;
 
   constructor(
     scene: Phaser.Scene,
@@ -15,6 +16,7 @@ export default class ShipSystem extends Phaser.GameObjects.GameObject {
     _soundName: string,
     _soundVolume: number,
     cooldownDuration: number,
+    energyCost: number,
   ) {
     super(scene, "ShipSystem");
 
@@ -23,23 +25,32 @@ export default class ShipSystem extends Phaser.GameObjects.GameObject {
 
     this.cooldownDuration = cooldownDuration;
     this.cooldownRemaining = 0;
+    this.energyCost = energyCost;
 
     this.parentShip = parentShip;
+
     //this.useSound = scene.sound.add(soundName, { loop: false });
     //this.useSound.volume = soundVolume;
   }
 
   // This function will be called outside the class
   use(projectileManager: ProjectileManager) {
-    if (this.cooldownRemaining == 0) {
-      this.cooldownRemaining = this.cooldownDuration;
-      //this.useSound.play();
-      this.onActivate(projectileManager);
-    }
+    this.cooldownRemaining = this.cooldownDuration;
+    //this.useSound.play();
+    this.onActivate(projectileManager);
+    this.parentShip.energy.reduceBy(10);
   }
 
-  getCooldown() {
-    return this.cooldownRemaining;
+  getParentShip(): Ship {
+    return this.parentShip;
+  }
+
+  isReady() {
+    return this.cooldownRemaining == 0;
+  }
+
+  getEnergyCost(): number {
+    return this.energyCost;
   }
 
   // This function should be overrided in the child class
