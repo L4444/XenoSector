@@ -1,38 +1,41 @@
 import type GameScene from "../scenes/GameScene";
 
 export default class LabelManager {
-  private textBoxes!: Array<Phaser.GameObjects.Text>;
-  private nextTextbox: number = 0;
+  private textboxes!: Array<Phaser.GameObjects.Text>;
+  private nextTextboxID: number = 0;
 
   constructor(scene: GameScene) {
-    this.textBoxes = new Array<Phaser.GameObjects.Text>();
+    this.textboxes = new Array<Phaser.GameObjects.Text>();
 
     // Create them and then make the invisible
     for (let i: number = 0; i < 100; i++) {
-      this.textBoxes[i] = scene.add.text(0, 0, "This is text");
-      this.textBoxes[i].alpha = 0;
+      this.textboxes[i] = scene.add.text(0, 0, "This is text");
+      this.textboxes[i].alpha = 0;
     }
 
     scene.events.on("postupdate", this.postUpdate, this);
   }
 
   textPop(x: number, y: number, message: string) {
-    this.textBoxes[this.nextTextbox].text = message;
-    this.textBoxes[this.nextTextbox].x = x;
-    this.textBoxes[this.nextTextbox].y = y;
-    this.textBoxes[this.nextTextbox].alpha = 1;
+    let nextTextbox: Phaser.GameObjects.Text =
+      this.textboxes[this.nextTextboxID];
+    nextTextbox.text = message;
+    nextTextbox.x = x;
+    nextTextbox.y = y;
+    nextTextbox.alpha = 1;
 
-    if (this.nextTextbox < this.textBoxes.length - 1) {
-      this.nextTextbox++;
+    if (this.nextTextboxID < this.textboxes.length - 1) {
+      this.nextTextboxID++;
     } else {
-      this.nextTextbox = 0;
+      this.nextTextboxID = 0;
     }
   }
 
   postUpdate() {
-    for (let i: number = 0; i < this.textBoxes.length; i++) {
-      this.textBoxes[i].y -= 0.5;
-      this.textBoxes[i].alpha -= 0.01;
+    // After the textbox is "popped", fade out and move up.
+    for (let i: number = 0; i < this.textboxes.length; i++) {
+      this.textboxes[i].y -= 0.5;
+      this.textboxes[i].alpha -= 0.01;
     }
   }
 }
