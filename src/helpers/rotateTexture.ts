@@ -1,3 +1,5 @@
+import type GameScene from "../scenes/GameScene";
+
 /**
  *
  * Rotates a texture by 90 degrees, phaser likes objects to "point" right, while I prefer my textures to point up.
@@ -11,7 +13,7 @@
  *
  */
 export default function rotateTexture(
-  scene: Phaser.Scene,
+  scene: GameScene,
   sourceTextureKey: string,
   targetTextureKey: string,
 ) {

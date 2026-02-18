@@ -1,12 +1,13 @@
 import Projectile from "../objects/Projectile";
 import type Ship from "../objects/Ship";
+import type GameScene from "../scenes/GameScene";
 
 export default class ProjectileManager {
   projectiles: Array<Projectile> = new Array<Projectile>();
   nextProjectile: number = 0;
-  scene!: Phaser.Scene;
+  scene!: GameScene;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: GameScene) {
     this.scene = scene;
     for (var i = 0; i < 100; i++) {
       this.projectiles[i] = new Projectile(this.scene, "Projectile" + i);

@@ -8,7 +8,7 @@ import loadImage from "../helpers/loadImage";
 
 import ProjectileManager from "../managers/ProjectileManager";
 import CollisionManager from "../managers/CollisionManager";
-import LabelManager from "../managers/LabelManager";
+import AlertManager from "../managers/AlertManager";
 
 export default class GameScene extends Phaser.Scene {
   player!: Ship;
@@ -17,7 +17,7 @@ export default class GameScene extends Phaser.Scene {
   statics!: Array<StaticPhysicsObject>;
   pm!: ProjectileManager;
   cm!: CollisionManager;
-  lm!: LabelManager;
+  am!: AlertManager;
 
   constructor() {
     super("game");
@@ -77,7 +77,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.cm = new CollisionManager(this);
 
-    this.lm = new LabelManager(this);
+    this.am = new AlertManager(this);
 
     // Disable mouse click context menu
     this.game.canvas.addEventListener("contextmenu", (e) => {
@@ -161,8 +161,8 @@ export default class GameScene extends Phaser.Scene {
     return this.cm;
   }
 
-  getLabelManager(): LabelManager {
-    return this.lm;
+  getAlertManager(): AlertManager {
+    return this.am;
   }
 }
 

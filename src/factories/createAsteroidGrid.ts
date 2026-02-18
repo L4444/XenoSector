@@ -1,4 +1,5 @@
 import Asteroid from "../objects/Asteroid";
+import type GameScene from "../scenes/GameScene";
 
 /**
  *
@@ -13,7 +14,7 @@ import Asteroid from "../objects/Asteroid";
  * @returns The created asteroid array
  */
 export default function createAsteroidGrid(
-  scene: Phaser.Scene,
+  scene: GameScene,
   x: number,
   y: number,
   totalAsteroids: number,

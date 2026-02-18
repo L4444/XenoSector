@@ -1,4 +1,5 @@
 import StaticPhysicsObject from "../physics/StaticPhysicsObject";
+import type GameScene from "../scenes/GameScene";
 
 export default class Asteroid extends StaticPhysicsObject {
   spinSpeed!: number;
@@ -10,7 +11,7 @@ export default class Asteroid extends StaticPhysicsObject {
    *
    */
   constructor(
-    scene: Phaser.Scene,
+    scene: GameScene,
     asteroidName: string,
     x: number,
     y: number,

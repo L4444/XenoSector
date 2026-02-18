@@ -1,10 +1,11 @@
 import type Projectile from "../objects/Projectile";
 import type Ship from "../objects/Ship";
 import type BasePhysicsObject from "../physics/BasePhysicsObject";
+import type GameScene from "../scenes/GameScene";
 import { EntityType } from "../types/EntityType";
 
 export default class CollisionManager {
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: GameScene) {
     console.log("Collision manager Created");
 
     scene.matter.world.on(

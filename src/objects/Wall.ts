@@ -1,8 +1,9 @@
 import StaticPhysicsObject from "../physics/StaticPhysicsObject";
+import type GameScene from "../scenes/GameScene";
 
 export default class Wall extends StaticPhysicsObject {
   constructor(
-    scene: Phaser.Scene,
+    scene: GameScene,
     wallName: string,
     x: number,
     y: number,

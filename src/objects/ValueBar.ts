@@ -1,4 +1,5 @@
 import type Ship from "./Ship";
+import type GameScene from "../scenes/GameScene";
 
 export default class ValueBar {
   private barBack!: Phaser.GameObjects.Rectangle;
@@ -9,7 +10,7 @@ export default class ValueBar {
   private maxValue: number = -99;
   private passiveRegen: number = 0;
   constructor(
-    scene: Phaser.Scene,
+    scene: GameScene,
     parentShip: Ship,
     offset: number,
     colour: number,

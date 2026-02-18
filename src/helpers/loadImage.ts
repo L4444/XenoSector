@@ -1,3 +1,4 @@
+import type GameScene from "../scenes/GameScene";
 import rotateTexture from "./rotateTexture";
 
 /**
@@ -12,7 +13,7 @@ import rotateTexture from "./rotateTexture";
  *
  */
 export default function loadImage(
-  scene: Phaser.Scene,
+  scene: GameScene,
   textureKey: string,
   textureUrl: string,
   isTileSprite: boolean = false,

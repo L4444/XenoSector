@@ -2,6 +2,7 @@ import DynamicPhysicsObject from "../physics/DynamicPhysicsObject";
 import { EntityType } from "../types/EntityType";
 import type ProjectileData from "../types/ProjectileData";
 import type Ship from "./Ship";
+import type GameScene from "../scenes/GameScene";
 
 export default class Projectile extends DynamicPhysicsObject {
   currentLifetime: number = 0;
@@ -9,7 +10,7 @@ export default class Projectile extends DynamicPhysicsObject {
   weaponFiredFrom!: any;
   damage!: number;
 
-  constructor(scene: Phaser.Scene, projectileName: string) {
+  constructor(scene: GameScene, projectileName: string) {
     // Do not set the mass to 0
     super(
       scene,

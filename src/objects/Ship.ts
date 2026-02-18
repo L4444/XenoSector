@@ -74,7 +74,7 @@ export default class Ship extends DynamicPhysicsObject {
         "Not enough energy to use: \'" + sys.getSystemName() + "\'";
       console.log(debugText);
       if (this.ticksSinceEnergyMessage > 50) {
-        this.gameScene.getLabelManager().textPop(this.x, this.y, debugText);
+        this.gameScene.getAlertManager().textPop(this.x, this.y, debugText);
 
         this.ticksSinceEnergyMessage = 0;
       }
@@ -86,7 +86,7 @@ export default class Ship extends DynamicPhysicsObject {
       let debugText: string = "\'" + sys.getSystemName() + "\' isn\'t ready";
       console.log(debugText);
       if (this.ticksSinceCooldownMessage > 50) {
-        this.gameScene.getLabelManager().textPop(this.x, this.y, debugText);
+        this.gameScene.getAlertManager().textPop(this.x, this.y, debugText);
         this.ticksSinceCooldownMessage = 0;
       }
       return;

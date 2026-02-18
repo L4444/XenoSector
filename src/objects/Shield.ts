@@ -1,9 +1,10 @@
 import type Ship from "./Ship";
+import type GameScene from "../scenes/GameScene";
 
 export default class Shield {
   parentShip!: Ship;
   shieldImage!: Phaser.GameObjects.Image;
-  constructor(scene: Phaser.Scene, parentShip: Ship) {
+  constructor(scene: GameScene, parentShip: Ship) {
     this.parentShip = parentShip;
 
     this.shieldImage = scene.add.image(0, 0, "shield");

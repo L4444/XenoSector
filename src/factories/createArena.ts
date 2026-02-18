@@ -1,4 +1,5 @@
 import Wall from "../objects/Wall";
+import type GameScene from "../scenes/GameScene";
 
 /**
  * Creates a rectangular arena bounded by four static wall bodies.
@@ -18,7 +19,7 @@ import Wall from "../objects/Wall";
  * - Walls are static and intended to act as collision boundaries only.
  */
 export default function createArena(
-  scene: Phaser.Scene,
+  scene: GameScene,
   arenaWidth: number,
   arenaHeight: number,
   wallThickness: number,
