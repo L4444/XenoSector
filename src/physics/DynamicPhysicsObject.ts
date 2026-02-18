@@ -1,9 +1,10 @@
+import type GameScene from "../scenes/GameScene";
 import type { EntityType } from "../types/EntityType";
 import BasePhysicsObject from "./BasePhysicsObject";
 
 export default abstract class DynamicPhysicsObject extends BasePhysicsObject {
   constructor(
-    scene: Phaser.Scene,
+    scene: GameScene,
     physicsObjectID: string,
     x: number,
     y: number,

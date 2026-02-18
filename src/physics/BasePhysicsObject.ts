@@ -1,13 +1,15 @@
 import type { EntityType } from "../types/EntityType";
+import type GameScene from "../scenes/GameScene";
 
 export default abstract class BasePhysicsObject
   extends Phaser.Physics.Matter.Image
 {
   objID!: string;
   entityType!: EntityType;
+  gameScene!: GameScene;
 
   constructor(
-    scene: Phaser.Scene,
+    scene: GameScene,
     physicsObjectID: string,
     x: number,
     y: number,
@@ -20,6 +22,8 @@ export default abstract class BasePhysicsObject
       friction: 0,
       frictionStatic: 0,
     });
+
+    this.gameScene = scene;
 
     if (isCircle) {
       this.setCircle(this.width / 2);

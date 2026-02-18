@@ -8,6 +8,7 @@ import loadImage from "../helpers/loadImage";
 
 import ProjectileManager from "../managers/ProjectileManager";
 import CollisionManager from "../managers/CollisionManager";
+import LabelManager from "../managers/LabelManager";
 
 export default class GameScene extends Phaser.Scene {
   player!: Ship;
@@ -15,6 +16,8 @@ export default class GameScene extends Phaser.Scene {
   camera!: Phaser.Math.Vector2;
   statics!: Array<StaticPhysicsObject>;
   pm!: ProjectileManager;
+  cm!: CollisionManager;
+  lm!: LabelManager;
 
   constructor() {
     super("game");
@@ -72,7 +75,9 @@ export default class GameScene extends Phaser.Scene {
     // Create the camera position vector
     this.camera = new Phaser.Math.Vector2(0, 0);
 
-    new CollisionManager(this);
+    this.cm = new CollisionManager(this);
+
+    this.lm = new LabelManager(this);
 
     // Disable mouse click context menu
     this.game.canvas.addEventListener("contextmenu", (e) => {
@@ -149,6 +154,15 @@ export default class GameScene extends Phaser.Scene {
 
   getProjectileManager(): ProjectileManager {
     return this.pm;
+  }
+
+  getCollisionManager(): CollisionManager {
+    throw new Error("Why do you want the collision manager?");
+    return this.cm;
+  }
+
+  getLabelManager(): LabelManager {
+    return this.lm;
   }
 }
 

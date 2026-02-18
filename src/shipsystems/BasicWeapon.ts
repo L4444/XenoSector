@@ -5,7 +5,7 @@ import type GameScene from "../scenes/GameScene";
 
 export default class BasicWeapon extends ShipSystem {
   constructor(scene: GameScene, parentShip: Ship) {
-    super(scene, parentShip, "Basic weapon", 0.1, 20, 10);
+    super(scene, "Basic weapon", parentShip, "sound", 0.1, 20, 20, 10);
   }
 
   onActivate() {

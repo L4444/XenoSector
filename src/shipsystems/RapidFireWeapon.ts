@@ -5,7 +5,7 @@ import type GameScene from "../scenes/GameScene";
 
 export default class RapidFireWeapon extends ShipSystem {
   constructor(scene: GameScene, parentShip: Ship) {
-    super(scene, parentShip, "Machine gun", 0.1, 3, 15);
+    super(scene, "Machine gun", parentShip, "sound", 0.1, 3, 3, 15);
   }
 
   onActivate() {

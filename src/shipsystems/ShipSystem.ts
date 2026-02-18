@@ -3,27 +3,35 @@ import type BasePhysicsObject from "../physics/BasePhysicsObject";
 import type GameScene from "../scenes/GameScene";
 
 export default class ShipSystem {
+  private systemName: string;
   private parentShip!: Ship;
   soundName: string = "Sound Name Not Set"; // Add later
   soundVolume: number = 0; // Add later
   private cooldownDuration: number = 0;
   private cooldownRemaining: number = 0;
   private energyCost!: number;
+  private reuseDuration: number = 0;
+  private reuseRemaining: number = 0;
+
   protected scene!: GameScene;
 
   constructor(
     scene: GameScene,
+    systemName: string,
     parentShip: Ship,
     _soundName: string,
     _soundVolume: number,
     cooldownDuration: number,
+    reuseDuration: number,
     energyCost: number,
   ) {
     // Manually add this to scene and physics (contructor doesn't do this for us)
     scene.events.on("postupdate", this.postUpdate, this);
 
+    this.systemName = systemName;
+
     this.cooldownDuration = cooldownDuration;
-    this.cooldownRemaining = 0;
+    this.reuseDuration = reuseDuration;
     this.energyCost = energyCost;
 
     this.parentShip = parentShip;
@@ -36,8 +44,13 @@ export default class ShipSystem {
   // This function will be called outside the class
   use() {
     this.cooldownRemaining = this.cooldownDuration;
+    this.reuseRemaining = this.reuseDuration;
     //this.useSound.play();
     this.onActivate();
+  }
+
+  getSystemName(): string {
+    return this.systemName;
   }
 
   getParentShip(): Ship {
@@ -48,9 +61,17 @@ export default class ShipSystem {
     if (this.cooldownRemaining > 0) {
       this.cooldownRemaining--;
     }
+
+    if (this.reuseRemaining > 0) {
+      this.reuseRemaining--;
+    }
   }
 
   isReady() {
+    return this.reuseRemaining == 0;
+  }
+
+  isOffCooldown() {
     return this.cooldownRemaining == 0;
   }
 

@@ -18,6 +18,9 @@ export default class Ship extends DynamicPhysicsObject {
   systems!: Array<ShipSystem>;
   projectileManager!: ProjectileManager;
 
+  private ticksSinceEnergyMessage: number = 0;
+  private ticksSinceCooldownMessage: number = 0;
+
   constructor(
     scene: GameScene,
     shipName: string,
@@ -51,21 +54,41 @@ export default class Ship extends DynamicPhysicsObject {
     if (this.hp.getCurrentValue() <= 0) {
       this.hp.reset();
     }
+
+    this.ticksSinceEnergyMessage++;
+    this.ticksSinceCooldownMessage++;
   }
 
   useSystem(num: number) {
     // For easy shorthand
     let sys: ShipSystem = this.systems[num];
 
+    if (!sys.isReady()) {
+      console.log("refire delay");
+      return;
+    }
+
     // If we don't have enough energy to use the system, don't use it.
     if (this.energy.getCurrentValue() < sys.getEnergyCost()) {
-      console.log(" not enough energy ");
+      let debugText: string =
+        "Not enough energy to use: \'" + sys.getSystemName() + "\'";
+      console.log(debugText);
+      if (this.ticksSinceEnergyMessage > 30) {
+        this.gameScene.getLabelManager().textPop(this.x, this.y, debugText);
+
+        this.ticksSinceEnergyMessage = 0;
+      }
       return;
     }
 
     // If the system isn't ready to usem don't use it
-    if (!sys.isReady()) {
-      console.log(" system  isn't ready ");
+    if (!sys.isOffCooldown()) {
+      let debugText: string = "\'" + sys.getSystemName() + "\' isn\'t ready";
+      console.log(debugText);
+      if (this.ticksSinceCooldownMessage > 30) {
+        this.gameScene.getLabelManager().textPop(this.x, this.y, debugText);
+        this.ticksSinceCooldownMessage = 0;
+      }
       return;
     }
 
