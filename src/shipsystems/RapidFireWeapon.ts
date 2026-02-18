@@ -1,14 +1,14 @@
-import type ProjectileManager from "../managers/ProjectileManager";
 import ShipSystem from "./ShipSystem";
 import type Ship from "../objects/Ship";
 import ProjectileData from "../types/ProjectileData";
+import type GameScene from "../scenes/GameScene";
 
 export default class RapidFireWeapon extends ShipSystem {
-  constructor(scene: Phaser.Scene, parentShip: Ship) {
+  constructor(scene: GameScene, parentShip: Ship) {
     super(scene, parentShip, "Machine gun", 0.1, 3, 15);
   }
 
-  onActivate(pm: ProjectileManager) {
+  onActivate() {
     let pd: ProjectileData = new ProjectileData(
       15,
       20,
@@ -17,6 +17,6 @@ export default class RapidFireWeapon extends ShipSystem {
       0.001,
     );
 
-    pm.shoot(this.getParentShip(), pd);
+    this.scene.getProjectileManager().shoot(this.getParentShip(), pd);
   }
 }

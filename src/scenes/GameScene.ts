@@ -146,6 +146,10 @@ export default class GameScene extends Phaser.Scene {
     // Set the camera on the ship
     this.cameras.main.centerOn(this.camera.x, this.camera.y);
   }
+
+  getProjectileManager(): ProjectileManager {
+    return this.pm;
+  }
 }
 
 interface Keys {

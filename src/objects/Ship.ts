@@ -59,16 +59,17 @@ export default class Ship extends DynamicPhysicsObject {
 
     // If we don't have enough energy to use the system, don't use it.
     if (this.energy.getCurrentValue() < sys.getEnergyCost()) {
+      console.log(" not enough energy ");
       return;
     }
 
     // If the system isn't ready to usem don't use it
     if (!sys.isReady()) {
-      console.log(sys.name + " isn't ready ");
+      console.log(" system  isn't ready ");
       return;
     }
 
-    sys.use(this.projectileManager);
+    sys.use();
     this.energy.reduceBy(sys.getEnergyCost());
   }
 }

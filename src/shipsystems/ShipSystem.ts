@@ -1,48 +1,53 @@
-import type ProjectileManager from "../managers/ProjectileManager";
 import type Ship from "../objects/Ship";
 import type BasePhysicsObject from "../physics/BasePhysicsObject";
+import type GameScene from "../scenes/GameScene";
 
-export default class ShipSystem extends Phaser.GameObjects.GameObject {
+export default class ShipSystem {
   private parentShip!: Ship;
-  soundName: string = "Sound Name Not Set";
-  soundVolume: number = 0;
+  soundName: string = "Sound Name Not Set"; // Add later
+  soundVolume: number = 0; // Add later
   private cooldownDuration: number = 0;
   private cooldownRemaining: number = 0;
   private energyCost!: number;
+  protected scene!: GameScene;
 
   constructor(
-    scene: Phaser.Scene,
+    scene: GameScene,
     parentShip: Ship,
     _soundName: string,
     _soundVolume: number,
     cooldownDuration: number,
     energyCost: number,
   ) {
-    super(scene, "ShipSystem");
-
     // Manually add this to scene and physics (contructor doesn't do this for us)
-    scene.add.existing(this);
+    scene.events.on("postupdate", this.postUpdate, this);
 
     this.cooldownDuration = cooldownDuration;
     this.cooldownRemaining = 0;
     this.energyCost = energyCost;
 
     this.parentShip = parentShip;
+    this.scene = scene;
 
     //this.useSound = scene.sound.add(soundName, { loop: false });
     //this.useSound.volume = soundVolume;
   }
 
   // This function will be called outside the class
-  use(projectileManager: ProjectileManager) {
+  use() {
     this.cooldownRemaining = this.cooldownDuration;
     //this.useSound.play();
-    this.onActivate(projectileManager);
-    this.parentShip.energy.reduceBy(10);
+    this.onActivate();
   }
 
   getParentShip(): Ship {
     return this.parentShip;
+  }
+
+  postUpdate() {
+    if (this.cooldownRemaining > 0) {
+      this.cooldownRemaining--;
+    }
   }
 
   isReady() {
@@ -54,7 +59,7 @@ export default class ShipSystem extends Phaser.GameObjects.GameObject {
   }
 
   // This function should be overrided in the child class
-  onActivate(_projectileManager: ProjectileManager) {
+  onActivate() {
     throw new Error(
       "You need to implement your own onActivate() function when you extend this class",
     );
@@ -67,9 +72,5 @@ export default class ShipSystem extends Phaser.GameObjects.GameObject {
     );
   }
 
-  preUpdate() {
-    if (this.cooldownRemaining > 0) {
-      this.cooldownRemaining--;
-    }
-  }
+  preUpdate() {}
 }
