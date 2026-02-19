@@ -1,9 +1,10 @@
-import type Projectile from "../objects/Projectile";
-import type Ship from "../objects/Ship";
+import Projectile from "../objects/Projectile";
+import Ship from "../objects/Ship";
 import type BasePhysicsObject from "../physics/BasePhysicsObject";
-import type StaticPhysicsObject from "../physics/StaticPhysicsObject";
+import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import type GameScene from "../scenes/GameScene";
-import { EntityType } from "../types/EntityType";
+
+type Ctor<T> = new (...args: any[]) => T;
 
 export default class CollisionManager {
   constructor(scene: GameScene) {
@@ -22,51 +23,77 @@ export default class CollisionManager {
           let objB: BasePhysicsObject = pair.bodyB
             .gameObject as BasePhysicsObject;
 
-          // Projectile handling code, projectile will always be on the "left side" of this check because
-          // Projectiles are created earlier than ships in create()
-          if (
-            objA.entityType == EntityType.PROJECTILE &&
-            objB.entityType == EntityType.SHIP
-          ) {
-            let bullet: Projectile = objA as Projectile;
-            let hitShip: Ship = objB as Ship;
-            console.log("Projectile hit ship " + bullet.damage);
-
-            console.log("Ship " + hitShip.shipID + " has been hit");
-            hitShip.shield.hit();
-            hitShip.hp.reduceBy(bullet.damage);
+          const shipProjectileCollision = matchPair(
+            objA,
+            objB,
+            Ship,
+            Projectile,
+          );
+          if (shipProjectileCollision) {
+            const [shipHit, projectileHit] = shipProjectileCollision;
+            console.log(
+              "Ship " +
+                shipHit.physicsObjectName +
+                " is hit by projectile " +
+                projectileHit.physicsObjectName,
+            );
+            shipHit.shield.hit();
+            shipHit.hp.reduceBy(projectileHit.damage);
 
             // TODO: Disable if energy weapon against shields?
-            bullet.disable();
+            projectileHit.disable();
           }
 
           // Handling projectiles hitting walls/asteroids etc. (e.g. statics)
-          if (
-            objA.entityType == EntityType.STATIC &&
-            objB.entityType == EntityType.PROJECTILE
-          ) {
-            let hitStatic: StaticPhysicsObject = objA as StaticPhysicsObject;
-            let bullet: Projectile = objB as Projectile;
 
-            console.log(hitStatic.physicsObjectName + " has been hit");
+          const staticProjectileCollision = matchPair(
+            objA,
+            objB,
+            StaticPhysicsObject,
+            Projectile,
+          );
+          if (staticProjectileCollision) {
+            const [staticHit, projectileHit] = staticProjectileCollision;
+
+            console.log(staticHit.physicsObjectName + " has been hit");
 
             // TODO: Trigger particles or something when hit
 
-            bullet.disable();
+            projectileHit.disable();
           }
 
           console.log(
             "\'" +
               objA.physicsObjectName +
               "\':" +
-              objA.entityType +
+              objA.constructor.name +
               " collided with \'" +
               objB.physicsObjectName +
               "\':" +
-              objB.entityType,
+              objB.constructor.name,
           );
         });
       },
     );
+
+    // Yes, ChatGPT generated 99% of this function
+    // What it does is take two objects and check if they are the two types you are looking for
+    // (Regardless of their order)
+    function matchPair<T1, T2>(
+      a: BasePhysicsObject,
+      b: BasePhysicsObject,
+      Type1: Ctor<T1>,
+      Type2: Ctor<T2>,
+    ): [T1, T2] | null {
+      if (a instanceof Type1 && b instanceof Type2) {
+        return [a, b];
+      }
+
+      if (a instanceof Type2 && b instanceof Type1) {
+        return [b, a];
+      }
+
+      return null;
+    }
   }
 }

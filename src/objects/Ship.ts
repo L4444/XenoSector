@@ -3,7 +3,6 @@ import DynamicPhysicsObject from "../physics/DynamicPhysicsObject";
 import type GameScene from "../scenes/GameScene";
 
 import ShipSystem from "../objects/ShipSystem";
-import { EntityType } from "../types/EntityType";
 import Shield from "./Shield";
 import ValueBar from "./ValueBar";
 
@@ -27,7 +26,7 @@ export default class Ship extends DynamicPhysicsObject {
     textureName: string,
     projectileManager: ProjectileManager,
   ) {
-    super(scene, shipName, x, y, textureName, true, 100, 0.01, EntityType.SHIP);
+    super(scene, shipName, x, y, textureName, true, 100, 0.01);
     Ship.count++;
     this.shipID = Ship.count;
     this.setCollisionGroup(-this.shipID);

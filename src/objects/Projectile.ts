@@ -1,5 +1,4 @@
 import DynamicPhysicsObject from "../physics/DynamicPhysicsObject";
-import { EntityType } from "../types/EntityType";
 import type ProjectileData from "../types/ProjectileData";
 import type Ship from "./Ship";
 import type GameScene from "../scenes/GameScene";
@@ -12,17 +11,7 @@ export default class Projectile extends DynamicPhysicsObject {
 
   constructor(scene: GameScene, projectileName: string) {
     // Do not set the mass to 0
-    super(
-      scene,
-      projectileName,
-      0,
-      0,
-      "pew",
-      true,
-      1,
-      0,
-      EntityType.PROJECTILE,
-    );
+    super(scene, projectileName, 0, 0, "pew", true, 1, 0);
 
     // For clean looking collision detection, projectile hitbox should be very small
     this.setCircle(1);

@@ -1,5 +1,5 @@
 import type GameScene from "../scenes/GameScene";
-import type { EntityType } from "../types/EntityType";
+
 import BasePhysicsObject from "./BasePhysicsObject";
 
 export default abstract class DynamicPhysicsObject extends BasePhysicsObject {
@@ -12,9 +12,8 @@ export default abstract class DynamicPhysicsObject extends BasePhysicsObject {
     isCircle: boolean,
     mass: number,
     airFriction: number,
-    entityType: EntityType,
   ) {
-    super(scene, physicsObjectID, x, y, textureName, isCircle, entityType);
+    super(scene, physicsObjectID, x, y, textureName, isCircle);
     this.setFrictionAir(airFriction);
     this.setMass(mass);
   }
