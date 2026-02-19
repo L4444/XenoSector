@@ -39,15 +39,6 @@ export default class CollisionManager {
             bullet.disable();
           }
 
-          // Testing richochet
-          if (
-            objA.entityType == EntityType.STATIC &&
-            objB.entityType == EntityType.PROJECTILE
-          ) {
-            let bullet: Projectile = objB as Projectile;
-            bullet.currentLifetime = bullet.totalLifetime;
-          }
-
           console.log(
             "\'" +
               objA.objID +

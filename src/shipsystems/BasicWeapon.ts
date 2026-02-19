@@ -1,6 +1,6 @@
 import ShipSystem from "./ShipSystem";
 import type Ship from "../objects/Ship";
-import ProjectileData from "../types/ProjectileData";
+import type ProjectileData from "../types/ProjectileData";
 import type GameScene from "../scenes/GameScene";
 
 export default class BasicWeapon extends ShipSystem {
@@ -9,7 +9,13 @@ export default class BasicWeapon extends ShipSystem {
   }
 
   onActivate() {
-    let pd: ProjectileData = new ProjectileData(15, 20, "blue-pew", 10, 0.1);
+    let pd: ProjectileData = {
+      range: 15,
+      speed: 20,
+      textureName: "blue-pew",
+      damage: 10,
+      mass: 0.01,
+    };
 
     this.scene.getProjectileManager().shoot(this.getParentShip(), pd);
   }

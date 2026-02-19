@@ -1,6 +1,6 @@
 import ShipSystem from "./ShipSystem";
 import type Ship from "../objects/Ship";
-import ProjectileData from "../types/ProjectileData";
+import type ProjectileData from "../types/ProjectileData";
 import type GameScene from "../scenes/GameScene";
 
 export default class RapidFireWeapon extends ShipSystem {
@@ -9,13 +9,13 @@ export default class RapidFireWeapon extends ShipSystem {
   }
 
   onActivate() {
-    let pd: ProjectileData = new ProjectileData(
-      15,
-      20,
-      "yellow-pew",
-      10,
-      0.001,
-    );
+    let pd: ProjectileData = {
+      range: 15,
+      speed: 20,
+      textureName: "yellow-pew",
+      damage: 3,
+      mass: 0,
+    };
 
     this.scene.getProjectileManager().shoot(this.getParentShip(), pd);
   }

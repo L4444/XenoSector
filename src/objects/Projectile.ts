@@ -24,9 +24,6 @@ export default class Projectile extends DynamicPhysicsObject {
       EntityType.PROJECTILE,
     );
 
-    // Your mass is 1, but don't knock other ships around (for now)
-    //this.setSensor(true);
-
     // For clean looking collision detection, projectile hitbox should be very small
     this.setCircle(1);
 
@@ -74,6 +71,8 @@ export default class Projectile extends DynamicPhysicsObject {
   enable() {
     this.setVisible(true);
     this.setCollidesWith(1);
+
+    this.setSensor(true);
   }
 
   fire(parent: Ship, projectileData: ProjectileData) {
@@ -93,7 +92,8 @@ export default class Projectile extends DynamicPhysicsObject {
     this.totalLifetime = (projectileData.range / projectileData.speed) * 50;
     this.currentLifetime = this.totalLifetime;
     this.damage = projectileData.damage;
-    this.setMass(projectileData.mass);
+    console.log("MASS = " + projectileData.mass);
+    //this.setMass(projectileData.mass);
 
     // Use vectors to set the path of the projectile, use the X axis to align with the player ship.
     let v = new Phaser.Math.Vector2(projectileData.speed, 0);

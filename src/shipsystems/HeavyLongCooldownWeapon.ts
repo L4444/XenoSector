@@ -1,6 +1,6 @@
 import ShipSystem from "./ShipSystem";
 import type Ship from "../objects/Ship";
-import ProjectileData from "../types/ProjectileData";
+import type ProjectileData from "../types/ProjectileData";
 import type GameScene from "../scenes/GameScene";
 
 export default class HeavyLongCooldownWeapon extends ShipSystem {
@@ -9,7 +9,13 @@ export default class HeavyLongCooldownWeapon extends ShipSystem {
   }
 
   onActivate() {
-    let pd: ProjectileData = new ProjectileData(15, 10, "green-pew", 33, 200);
+    let pd: ProjectileData = {
+      range: 15,
+      speed: 10,
+      textureName: "green-pew",
+      damage: 33,
+      mass: 6400,
+    };
 
     this.scene.getProjectileManager().shoot(this.getParentShip(), pd);
   }
