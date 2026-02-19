@@ -1,6 +1,7 @@
 import type Projectile from "../objects/Projectile";
 import type Ship from "../objects/Ship";
 import type BasePhysicsObject from "../physics/BasePhysicsObject";
+import type StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import type GameScene from "../scenes/GameScene";
 import { EntityType } from "../types/EntityType";
 
@@ -39,13 +40,28 @@ export default class CollisionManager {
             bullet.disable();
           }
 
+          // Handling projectiles hitting walls/asteroids etc. (e.g. statics)
+          if (
+            objA.entityType == EntityType.STATIC &&
+            objB.entityType == EntityType.PROJECTILE
+          ) {
+            let hitStatic: StaticPhysicsObject = objA as StaticPhysicsObject;
+            let bullet: Projectile = objB as Projectile;
+
+            console.log(hitStatic.physicsObjectName + " has been hit");
+
+            // TODO: Trigger particles or something when hit
+
+            bullet.disable();
+          }
+
           console.log(
             "\'" +
-              objA.objID +
+              objA.physicsObjectName +
               "\':" +
               objA.entityType +
               " collided with \'" +
-              objB.objID +
+              objB.physicsObjectName +
               "\':" +
               objB.entityType,
           );

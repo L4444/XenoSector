@@ -1,10 +1,8 @@
 import type ProjectileManager from "../managers/ProjectileManager";
 import DynamicPhysicsObject from "../physics/DynamicPhysicsObject";
 import type GameScene from "../scenes/GameScene";
-import BasicWeapon from "../shipsystems/BasicWeapon";
-import HeavyLongCooldownWeapon from "../shipsystems/HeavyLongCooldownWeapon";
-import RapidFireWeapon from "../shipsystems/RapidFireWeapon";
-import ShipSystem from "../shipsystems/ShipSystem";
+
+import ShipSystem from "../objects/ShipSystem";
 import { EntityType } from "../types/EntityType";
 import Shield from "./Shield";
 import ValueBar from "./ValueBar";
@@ -43,9 +41,53 @@ export default class Ship extends DynamicPhysicsObject {
 
     this.systems = new Array<ShipSystem>();
 
-    this.systems.push(new BasicWeapon(scene, this));
-    this.systems.push(new RapidFireWeapon(scene, this));
-    this.systems.push(new HeavyLongCooldownWeapon(scene, this));
+    let basicWeapon: ShipSystem = new ShipSystem(scene, this, {
+      systemName: "Basic Weapon",
+      cooldownDuration: 20,
+      reuseDuration: 20,
+      energyCost: 10,
+      projectileData: {
+        range: 15,
+        speed: 20,
+        textureName: "blue-pew",
+        damage: 10,
+        mass: 0.01,
+      },
+    });
+
+    this.systems.push(basicWeapon);
+
+    let rapidFireWeapon: ShipSystem = new ShipSystem(scene, this, {
+      systemName: "Machine Gun",
+      cooldownDuration: 3,
+      reuseDuration: 3,
+      energyCost: 15,
+      projectileData: {
+        range: 15,
+        speed: 20,
+        textureName: "yellow-pew",
+        damage: 3,
+        mass: 0,
+      },
+    });
+
+    this.systems.push(rapidFireWeapon);
+
+    let heavyLongCooldownWeapon: ShipSystem = new ShipSystem(scene, this, {
+      systemName: "Plasma Cannon",
+      cooldownDuration: 60,
+      reuseDuration: 20,
+      energyCost: 10,
+      projectileData: {
+        range: 15,
+        speed: 10,
+        textureName: "green-pew",
+        damage: 33,
+        mass: 6400,
+      },
+    });
+
+    this.systems.push(heavyLongCooldownWeapon);
   }
 
   preUpdate() {

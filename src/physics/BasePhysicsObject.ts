@@ -4,7 +4,7 @@ import type GameScene from "../scenes/GameScene";
 export default abstract class BasePhysicsObject
   extends Phaser.Physics.Matter.Image
 {
-  objID!: string;
+  physicsObjectName!: string;
   entityType!: EntityType;
   gameScene!: GameScene;
 
@@ -31,7 +31,7 @@ export default abstract class BasePhysicsObject
 
     this.setCollisionCategory(1);
 
-    this.objID = physicsObjectID;
+    this.physicsObjectName = physicsObjectID;
     this.entityType = entityType;
 
     scene.add.existing(this);
