@@ -10,6 +10,8 @@ import ProjectileManager from "../managers/ProjectileManager";
 import CollisionManager from "../managers/CollisionManager";
 import AlertManager from "../managers/AlertManager";
 
+import UIElement from "../objects/UIElement";
+
 export default class GameScene extends Phaser.Scene {
   player!: Ship;
   enemy!: Ship;
@@ -18,6 +20,7 @@ export default class GameScene extends Phaser.Scene {
   pm!: ProjectileManager;
   cm!: CollisionManager;
   am!: AlertManager;
+  ui!: UIElement;
 
   constructor() {
     super("game");
@@ -48,6 +51,27 @@ export default class GameScene extends Phaser.Scene {
     loadImage(this, "asteroid", "/assets/asteroids/Asteroid.png");
 
     loadImage(this, "shield", "/assets/ships/Shield.png", true);
+
+    loadImage(
+      this,
+      "MachineGunPlaceholder",
+      "/assets/ui/MachineGunPlaceholder.png",
+      true,
+    );
+
+    loadImage(
+      this,
+      "PlasmaCannonPlaceholder",
+      "/assets/ui/PlasmaCannonPlaceholder.png",
+      true,
+    );
+
+    loadImage(
+      this,
+      "RadBlasterPlaceholder",
+      "/assets/ui/RadBlasterPlaceholder.png",
+      true,
+    );
   }
 
   create() {
@@ -76,6 +100,16 @@ export default class GameScene extends Phaser.Scene {
     this.camera = new Phaser.Math.Vector2(0, 0);
 
     this.cm = new CollisionManager(this);
+
+    // Create the HUD elements, showing cooldowns, energy costs and keybinds
+    for (let i = 0; i < 3; i++) {
+      this.ui = new UIElement(
+        this,
+        400 + i * (64 + 32),
+        750,
+        this.player.getSystem(i),
+      );
+    }
 
     this.am = new AlertManager(this);
 

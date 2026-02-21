@@ -41,6 +41,14 @@ export default class ShipSystem {
     return this.parentShip;
   }
 
+  getUITextureName(): string {
+    return this.data.uiTextureName;
+  }
+
+  getKeybind(): string {
+    return this.data.playerKeyBind;
+  }
+
   postUpdate() {
     if (this.cooldownRemaining > 0) {
       this.cooldownRemaining--;
@@ -61,6 +69,10 @@ export default class ShipSystem {
 
   getEnergyCost(): number {
     return this.data.energyCost;
+  }
+
+  getProgress(): number {
+    return this.cooldownRemaining / this.data.cooldownDuration;
   }
 
   // This function should be overrided in the child class

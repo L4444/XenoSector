@@ -6,4 +6,6 @@ export default interface ShipSystemData {
   reuseDuration: number;
   energyCost: number;
   projectileData: ProjectileData;
+  uiTextureName: string;
+  playerKeyBind: string;
 }

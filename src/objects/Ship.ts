@@ -41,7 +41,7 @@ export default class Ship extends DynamicPhysicsObject {
     this.systems = new Array<ShipSystem>();
 
     let basicWeapon: ShipSystem = new ShipSystem(scene, this, {
-      systemName: "Basic Weapon",
+      systemName: "Plasma Cannon",
       cooldownDuration: 20,
       reuseDuration: 20,
       energyCost: 10,
@@ -52,6 +52,8 @@ export default class Ship extends DynamicPhysicsObject {
         damage: 10,
         mass: 0.01,
       },
+      uiTextureName: "PlasmaCannonPlaceholder",
+      playerKeyBind: "M1",
     });
 
     this.systems.push(basicWeapon);
@@ -68,12 +70,14 @@ export default class Ship extends DynamicPhysicsObject {
         damage: 3,
         mass: 0,
       },
+      uiTextureName: "MachineGunPlaceholder",
+      playerKeyBind: "M2",
     });
 
     this.systems.push(rapidFireWeapon);
 
     let heavyLongCooldownWeapon: ShipSystem = new ShipSystem(scene, this, {
-      systemName: "Plasma Cannon",
+      systemName: "Rad Blaster",
       cooldownDuration: 60,
       reuseDuration: 20,
       energyCost: 10,
@@ -84,6 +88,8 @@ export default class Ship extends DynamicPhysicsObject {
         damage: 33,
         mass: 6400,
       },
+      uiTextureName: "RadBlasterPlaceholder",
+      playerKeyBind: "F",
     });
 
     this.systems.push(heavyLongCooldownWeapon);
@@ -98,6 +104,11 @@ export default class Ship extends DynamicPhysicsObject {
 
     this.ticksSinceEnergyMessage++;
     this.ticksSinceCooldownMessage++;
+  }
+
+  getSystem(num: number): ShipSystem {
+    // Check if
+    return this.systems[num];
   }
 
   useSystem(num: number) {
