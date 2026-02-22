@@ -155,6 +155,12 @@ export default class GameScene extends Phaser.Scene {
       this.player.thrustRight(force);
     }
 
+    if (
+      this.enemy.energy.getCurrentValue() >=
+      this.enemy.getSystem(3).getEnergyCost()
+    )
+      this.enemy.useSystem(3);
+
     this.input.activePointer.updateWorldPoint(this.cameras.main);
     let targetRotation = Phaser.Math.Angle.Between(
       this.player.x,

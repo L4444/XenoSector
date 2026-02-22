@@ -87,13 +87,31 @@ export default class Ship extends DynamicPhysicsObject {
         speed: 10,
         textureName: "green-pew",
         damage: 33,
-        mass: 6400,
+        mass: 99999,
       },
       uiTextureName: "RadBlasterPlaceholder",
       playerKeyBind: "F",
     });
 
     this.systems.push(heavyLongCooldownWeapon);
+
+    let crapBlaster: ShipSystem = new ShipSystem(scene, this, {
+      systemName: "Crap Blaster",
+      cooldownDuration: 60,
+      reuseDuration: 20,
+      energyCost: 100,
+      projectileData: {
+        range: 15,
+        speed: 10,
+        textureName: "green-pew",
+        damage: 33,
+        mass: 6400,
+      },
+      uiTextureName: "RadBlasterPlaceholder",
+      playerKeyBind: "X",
+    });
+
+    this.systems.push(crapBlaster);
   }
 
   preUpdate() {
