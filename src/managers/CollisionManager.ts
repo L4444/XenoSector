@@ -1,14 +1,15 @@
 import Projectile from "../objects/Projectile";
 import Ship from "../objects/Ship";
-import type BasePhysicsObject from "../physics/BasePhysicsObject";
+import BasePhysicsObject from "../physics/BasePhysicsObject";
 import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import type GameScene from "../scenes/GameScene";
+import { cmLogger } from "../helpers/XenoLogger";
 
 type Ctor<T> = new (...args: any[]) => T;
 
 export default class CollisionManager {
   constructor(scene: GameScene) {
-    console.log("Collision manager Created");
+    cmLogger.info("Collision Manager created");
 
     scene.matter.world.on(
       "collisionstart",
@@ -31,17 +32,19 @@ export default class CollisionManager {
           );
           if (shipProjectileCollision) {
             const [shipHit, projectileHit] = shipProjectileCollision;
-            console.log(
-              "Ship " +
+            cmLogger.debug(
+              "Ship-Projectile Collision\tShip: '" +
                 shipHit.physicsObjectName +
-                " is hit by projectile " +
-                projectileHit.physicsObjectName,
+                "'\tProjectile: '" +
+                projectileHit.physicsObjectName +
+                "'",
             );
             shipHit.shield.hit();
             shipHit.hp.reduceBy(projectileHit.damage);
 
             // TODO: Disable if energy weapon against shields?
             projectileHit.disable();
+            return;
           }
 
           // Handling projectiles hitting walls/asteroids etc. (e.g. statics)
@@ -55,22 +58,26 @@ export default class CollisionManager {
           if (staticProjectileCollision) {
             const [staticHit, projectileHit] = staticProjectileCollision;
 
-            console.log(staticHit.physicsObjectName + " has been hit");
+            cmLogger.debug(
+              "Static-Projectile Collision\tShip: '" +
+                staticHit.physicsObjectName +
+                "'\tProjectile: '" +
+                projectileHit.physicsObjectName +
+                "'",
+            );
 
             // TODO: Trigger particles or something when hit
 
             projectileHit.disable();
+            return;
           }
 
-          console.log(
-            "\'" +
+          cmLogger.warn(
+            "Unhandled Collision\tObjA: '" +
               objA.physicsObjectName +
-              "\':" +
-              objA.constructor.name +
-              " collided with \'" +
+              "'\tObjB: '" +
               objB.physicsObjectName +
-              "\':" +
-              objB.constructor.name,
+              "'",
           );
         });
       },

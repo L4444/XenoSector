@@ -2,6 +2,7 @@ import DynamicPhysicsObject from "../physics/DynamicPhysicsObject";
 import type ProjectileData from "../types/ProjectileData";
 import type Ship from "./Ship";
 import type GameScene from "../scenes/GameScene";
+import { pmLogger } from "../helpers/XenoLogger";
 
 export default class Projectile extends DynamicPhysicsObject {
   currentLifetime: number = 0;
@@ -60,8 +61,6 @@ export default class Projectile extends DynamicPhysicsObject {
   enable() {
     this.setVisible(true);
     this.setCollidesWith(1);
-
-    this.setSensor(true);
   }
 
   fire(parent: Ship, projectileData: ProjectileData) {
@@ -69,7 +68,6 @@ export default class Projectile extends DynamicPhysicsObject {
     this.y = parent.y;
     this.enable();
 
-    console.log("\'" + projectileData.textureName + "\' fired");
     this.setTexture(projectileData.textureName);
 
     // To prevent projectiles from colliding with the ship that is firing them
@@ -81,8 +79,15 @@ export default class Projectile extends DynamicPhysicsObject {
     this.totalLifetime = (projectileData.range / projectileData.speed) * 50;
     this.currentLifetime = this.totalLifetime;
     this.damage = projectileData.damage;
-    console.log("MASS = " + projectileData.mass);
-    //this.setMass(projectileData.mass);
+
+    // If a projectile has no mass then use it only for collision detection
+    // and not for "physics" e.g. knocking ships around
+    if (projectileData.mass == 0) {
+      this.setSensor(true);
+    } else {
+      this.setSensor(false);
+      this.setMass(projectileData.mass);
+    }
 
     // Use vectors to set the path of the projectile, use the X axis to align with the player ship.
     let v = new Phaser.Math.Vector2(projectileData.speed, 0);
@@ -94,5 +99,10 @@ export default class Projectile extends DynamicPhysicsObject {
     );
 
     this.rotation = parent.rotation;
+
+    pmLogger.debug(
+      "\'" + projectileData.textureName + "\' fired",
+      projectileData,
+    );
   }
 }

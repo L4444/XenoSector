@@ -5,6 +5,7 @@ import type GameScene from "../scenes/GameScene";
 import ShipSystem from "../objects/ShipSystem";
 import Shield from "./Shield";
 import ValueBar from "./ValueBar";
+import { shipLogger } from "../helpers/XenoLogger";
 
 export default class Ship extends DynamicPhysicsObject {
   static count: number = 0;
@@ -50,7 +51,7 @@ export default class Ship extends DynamicPhysicsObject {
         speed: 20,
         textureName: "blue-pew",
         damage: 10,
-        mass: 0.01,
+        mass: 0,
       },
       uiTextureName: "PlasmaCannonPlaceholder",
       playerKeyBind: "M1",
@@ -107,7 +108,6 @@ export default class Ship extends DynamicPhysicsObject {
   }
 
   getSystem(num: number): ShipSystem {
-    // Check if
     return this.systems[num];
   }
 
@@ -116,7 +116,9 @@ export default class Ship extends DynamicPhysicsObject {
     let sys: ShipSystem = this.systems[num];
 
     if (!sys.isReady()) {
-      console.log("refire delay");
+      shipLogger.trace(
+        "System \'" + sys.getSystemName() + "\' not used due to refire delay",
+      );
       return;
     }
 
@@ -124,7 +126,7 @@ export default class Ship extends DynamicPhysicsObject {
     if (this.energy.getCurrentValue() < sys.getEnergyCost()) {
       let debugText: string =
         "Not enough energy to use: \'" + sys.getSystemName() + "\'";
-      console.log(debugText);
+      shipLogger.debug(debugText);
       if (this.ticksSinceEnergyMessage > 50) {
         this.gameScene.getAlertManager().textPop(this.x, this.y, debugText);
 
@@ -136,7 +138,7 @@ export default class Ship extends DynamicPhysicsObject {
     // If the system isn't ready to usem don't use it
     if (!sys.isOffCooldown()) {
       let debugText: string = "\'" + sys.getSystemName() + "\' isn\'t ready";
-      console.log(debugText);
+      shipLogger.debug(debugText);
       if (this.ticksSinceCooldownMessage > 50) {
         this.gameScene.getAlertManager().textPop(this.x, this.y, debugText);
         this.ticksSinceCooldownMessage = 0;
