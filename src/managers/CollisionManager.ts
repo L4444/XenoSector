@@ -40,10 +40,11 @@ export default class CollisionManager {
                 "'",
             );
             shipHit.shield.hit();
-            shipHit.hp.reduceBy(projectileHit.damage);
+            shipHit.hp.reduceBy(projectileHit.getDamage());
 
             // TODO: Disable if energy weapon against shields?
-            projectileHit.disable();
+            //projectileHit.disable();
+            projectileHit.disableNextTick();
             return;
           }
 

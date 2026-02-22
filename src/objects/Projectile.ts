@@ -5,10 +5,11 @@ import type GameScene from "../scenes/GameScene";
 import { pmLogger } from "../helpers/XenoLogger";
 
 export default class Projectile extends DynamicPhysicsObject {
-  currentLifetime: number = 0;
-  totalLifetime: number = 0;
-  weaponFiredFrom!: any;
-  damage!: number;
+  private currentLifetime: number = 0;
+  private totalLifetime: number = 0;
+  private weaponFiredFrom!: any;
+  private damage!: number;
+  private toRemove: boolean = false;
 
   constructor(scene: GameScene, projectileName: string) {
     // Do not set the mass to 0
@@ -24,6 +25,9 @@ export default class Projectile extends DynamicPhysicsObject {
 
     // Start disabled, ready to fire
     this.disable();
+
+    // Use fo
+    scene.events.on("postupdate", this.postUpdate, this);
   }
   // time: number, delta: number
   preUpdate() {
@@ -48,6 +52,21 @@ export default class Projectile extends DynamicPhysicsObject {
     if (this.currentLifetime <= 0) {
       this.disable();
     }
+  }
+
+  disableNextTick() {
+    this.toRemove = true;
+  }
+
+  postUpdate() {
+    if (this.toRemove) {
+      this.disable();
+      this.toRemove = false;
+    }
+  }
+
+  getDamage(): number {
+    return this.damage;
   }
 
   disable() {
