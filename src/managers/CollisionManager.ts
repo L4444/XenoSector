@@ -43,13 +43,11 @@ export default class CollisionManager {
             shipHit.hp.reduceBy(projectileHit.getDamage());
 
             // TODO: Disable if energy weapon against shields?
-            //projectileHit.disable();
-            projectileHit.disableNextTick();
+            projectileHit.disable();
             return;
           }
 
           // Handling projectiles hitting walls/asteroids etc. (e.g. statics)
-
           const staticProjectileCollision = matchPair(
             objA,
             objB,
@@ -68,7 +66,6 @@ export default class CollisionManager {
             );
 
             // TODO: Trigger particles or something when hit
-
             projectileHit.disable();
             return;
           }

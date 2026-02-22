@@ -7,7 +7,6 @@ import { pmLogger } from "../helpers/XenoLogger";
 export default class Projectile extends DynamicPhysicsObject {
   private currentLifetime: number = 0;
   private totalLifetime: number = 0;
-  private weaponFiredFrom!: any;
   private damage!: number;
   private toRemove: boolean = false;
 
@@ -31,36 +30,40 @@ export default class Projectile extends DynamicPhysicsObject {
   }
   // time: number, delta: number
   preUpdate() {
-    this.currentLifetime--;
+    // Only update "active" (visible) projectiles
+    if (this.visible) {
+      this.currentLifetime--;
 
-    // The fading code I pulled out of copilot.
-    // These values "look the best". Don't touch for now.
-    const fadeStart = 0.3; // fade during last 10% of life
-    const t = this.currentLifetime / this.totalLifetime; // goes 1 → 0
+      // The fading code I pulled out of copilot.
+      // These values "look the best". Don't touch for now.
+      const fadeStart = 0.3; // fade during last 10% of life
+      const t = this.currentLifetime / this.totalLifetime; // goes 1 → 0
 
-    if (t > fadeStart) {
-      // Not in fade window yet → stay fully visible
-      this.alpha = 1;
-    } else {
-      // Normalize t inside the fade window (1 → 0)
-      const x = t / fadeStart;
+      if (t > fadeStart) {
+        // Not in fade window yet → stay fully visible
+        this.alpha = 1;
+      } else {
+        // Normalize t inside the fade window (1 → 0)
+        const x = t / fadeStart;
 
-      // Exponential fade
-      this.alpha = Math.exp((x - 1) * 2);
+        // Exponential fade
+        this.alpha = Math.exp((x - 1) * 2);
+      }
+
+      if (this.currentLifetime <= 0) {
+        this.disable();
+      }
     }
-
-    if (this.currentLifetime <= 0) {
-      this.disable();
-    }
-  }
-
-  disableNextTick() {
-    this.toRemove = true;
   }
 
   postUpdate() {
     if (this.toRemove) {
-      this.disable();
+      pmLogger.debug("Removed");
+      this.setVisible(false);
+      this.setCollidesWith(0);
+      this.setVelocity(0);
+      this.setAngularVelocity(0);
+      this.setAngle(0);
       this.toRemove = false;
     }
   }
@@ -70,11 +73,7 @@ export default class Projectile extends DynamicPhysicsObject {
   }
 
   disable() {
-    this.setVisible(false);
-    this.setCollidesWith(0);
-    this.setVelocity(0);
-    this.setAngularVelocity(0);
-    this.setAngle(0);
+    this.toRemove = true;
   }
 
   enable() {
