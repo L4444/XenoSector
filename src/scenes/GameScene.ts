@@ -11,6 +11,8 @@ import CollisionManager from "../managers/CollisionManager";
 import AlertManager from "../managers/AlertManager";
 
 import UIElement from "../objects/UIElement";
+import AIController from "../controllers/AIController";
+import KeyboardAndMouseController from "../controllers/KeyboardAndMouseController";
 
 export default class GameScene extends Phaser.Scene {
   player!: Ship;
@@ -88,10 +90,26 @@ export default class GameScene extends Phaser.Scene {
 
     this.pm = new ProjectileManager(this);
 
-    this.enemy = new Ship(this, "Enemy Ship", 0, 1800, "enemy", this.pm);
-
     // Create Player
-    this.player = new Ship(this, "Player Ship", -200, 1800, "player", this.pm);
+    this.player = new Ship(
+      this,
+      "Player Ship",
+      -200,
+      1800,
+      "player",
+      this.pm,
+      new KeyboardAndMouseController(this),
+    );
+
+    this.enemy = new Ship(
+      this,
+      "Enemy Ship",
+      0,
+      1800,
+      "enemy",
+      this.pm,
+      new AIController(this, this.player),
+    );
 
     // Turn off gravity (we are in space)
     this.matter.world.setGravity(0, 0);
@@ -120,63 +138,6 @@ export default class GameScene extends Phaser.Scene {
   }
 
   update() {
-    let keyboardInput = this.input.keyboard;
-
-    if (keyboardInput == null) {
-      throw new Error("No keyboard detected!");
-    }
-
-    let ko = keyboardInput.addKeys("W,S,A,D,F,G") as Keys;
-    let force = 0.05;
-
-    if (ko.W.isDown) {
-      this.player.thrust(force);
-    }
-    if (ko.S.isDown) {
-      this.player.thrustBack(force);
-    }
-
-    if (this.input.mousePointer.leftButtonDown()) {
-      this.player.useSystem(0);
-    }
-
-    if (this.input.mousePointer.rightButtonDown()) {
-      this.player.useSystem(1);
-    }
-
-    if (ko.F.isDown) {
-      this.player.useSystem(2);
-    }
-
-    if (ko.A.isDown) {
-      this.player.thrustLeft(force);
-    }
-    if (ko.D.isDown) {
-      this.player.thrustRight(force);
-    }
-
-    if (
-      this.enemy.energy.getCurrentValue() >=
-      this.enemy.getSystem(3).getEnergyCost()
-    )
-      this.enemy.useSystem(3);
-
-    this.input.activePointer.updateWorldPoint(this.cameras.main);
-    let targetRotation = Phaser.Math.Angle.Between(
-      this.player.x,
-      this.player.y,
-      this.input.activePointer.worldX,
-      this.input.activePointer.worldY,
-    );
-
-    let rotateSpeed = 0.05;
-
-    this.player.rotation = Phaser.Math.Angle.RotateTo(
-      this.player.rotation,
-      targetRotation,
-      rotateSpeed,
-    );
-
     // The camera target is where the camera should be, taking into account the cursor
     let cameraTarget: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
     cameraTarget.x =
@@ -204,13 +165,4 @@ export default class GameScene extends Phaser.Scene {
   getAlertManager(): AlertManager {
     return this.am;
   }
-}
-
-interface Keys {
-  W: Phaser.Input.Keyboard.Key;
-  S: Phaser.Input.Keyboard.Key;
-  A: Phaser.Input.Keyboard.Key;
-  D: Phaser.Input.Keyboard.Key;
-  F: Phaser.Input.Keyboard.Key;
-  G: Phaser.Input.Keyboard.Key;
 }

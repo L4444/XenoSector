@@ -6,6 +6,7 @@ import ShipSystem from "../objects/ShipSystem";
 import Shield from "./Shield";
 import ValueBar from "./ValueBar";
 import { shipLogger } from "../helpers/XenoLogger";
+import type BaseController from "../controllers/BaseController";
 
 export default class Ship extends DynamicPhysicsObject {
   static count: number = 0;
@@ -15,9 +16,12 @@ export default class Ship extends DynamicPhysicsObject {
   energy!: ValueBar;
   systems!: Array<ShipSystem>;
   projectileManager!: ProjectileManager;
+  controller!: BaseController;
 
   private ticksSinceEnergyMessage: number = 0;
   private ticksSinceCooldownMessage: number = 0;
+
+  private thrustPower: number = 0.05;
 
   constructor(
     scene: GameScene,
@@ -26,6 +30,7 @@ export default class Ship extends DynamicPhysicsObject {
     y: number,
     textureName: string,
     projectileManager: ProjectileManager,
+    controller: BaseController,
   ) {
     super(scene, shipName, x, y, textureName, true, 100, 0.01);
     Ship.count++;
@@ -102,7 +107,7 @@ export default class Ship extends DynamicPhysicsObject {
       energyCost: 100,
       projectileData: {
         range: 15,
-        speed: 10,
+        speed: 30,
         textureName: "green-pew",
         damage: 33,
         mass: 6400,
@@ -112,6 +117,8 @@ export default class Ship extends DynamicPhysicsObject {
     });
 
     this.systems.push(crapBlaster);
+
+    this.controller = controller;
   }
 
   preUpdate() {
@@ -123,10 +130,36 @@ export default class Ship extends DynamicPhysicsObject {
 
     this.ticksSinceEnergyMessage++;
     this.ticksSinceCooldownMessage++;
+
+    let targetRotation = this.controller.controlShip(this);
+
+    let rotateSpeed = 0.05;
+
+    this.rotation = Phaser.Math.Angle.RotateTo(
+      this.rotation,
+      targetRotation,
+      rotateSpeed,
+    );
   }
 
   getSystem(num: number): ShipSystem {
     return this.systems[num];
+  }
+
+  forward() {
+    this.thrust(this.thrustPower);
+  }
+
+  backward() {
+    this.thrustBack(this.thrustPower);
+  }
+
+  left() {
+    this.thrustLeft(this.thrustPower);
+  }
+
+  right() {
+    this.thrustRight(this.thrustPower);
   }
 
   useSystem(num: number) {
