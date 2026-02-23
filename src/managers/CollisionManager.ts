@@ -39,8 +39,20 @@ export default class CollisionManager {
                 projectileHit.physicsObjectName +
                 "'",
             );
-            shipHit.shield.hit();
-            shipHit.hp.reduceBy(projectileHit.getDamage());
+
+            // Check if friendly fire, it should do no damage but "eat" the projectile, wasting the shot
+            if (projectileHit.getIsPlayerTeam() != shipHit.getIsPlayerTeam()) {
+              shipHit.shield.hit();
+              shipHit.hp.reduceBy(projectileHit.getDamage());
+
+              cmLogger.debug(
+                "Dealing damage to\tShip: '" +
+                  shipHit.physicsObjectName +
+                  "'\tProjectile: '" +
+                  projectileHit.physicsObjectName +
+                  "'",
+              );
+            }
 
             // TODO: Disable if energy weapon against shields?
             projectileHit.disable();

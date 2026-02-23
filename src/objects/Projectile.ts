@@ -82,6 +82,10 @@ export default class Projectile extends DynamicPhysicsObject {
     this.setCollidesWith(1);
   }
 
+  getIsPlayerTeam(): boolean {
+    return this.isPlayerTeam;
+  }
+
   fire(parent: Ship, projectileData: ProjectileData) {
     this.x = parent.x;
     this.y = parent.y;
