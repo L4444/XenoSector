@@ -51,9 +51,9 @@ export default class Ship extends DynamicPhysicsObject {
 
     let basicWeapon: ShipSystem = new ShipSystem(scene, this, {
       systemName: "Plasma Cannon",
-      cooldownDuration: 20,
-      reuseDuration: 20,
-      energyCost: 20,
+      cooldownDuration: 40,
+      reuseDuration: 40,
+      energyCost: 10,
       projectileData: {
         range: 15,
         speed: 20,
@@ -94,7 +94,7 @@ export default class Ship extends DynamicPhysicsObject {
         range: 15,
         speed: 10,
         textureName: "green-pew",
-        damage: 33,
+        damage: 20,
         mass: 6400,
       },
       uiTextureName: "RadBlasterPlaceholder",
