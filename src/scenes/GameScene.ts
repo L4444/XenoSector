@@ -106,12 +106,12 @@ export default class GameScene extends Phaser.Scene {
 
     this.enemies = new Array<Ship>();
 
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 9; i++) {
       this.enemies.push(
         new Ship(
           this,
           "Enemy Ship " + i,
-          i * 200,
+          i * 100,
           1000,
           "enemy",
           this.pm,
