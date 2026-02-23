@@ -21,7 +21,7 @@ export default class Ship extends DynamicPhysicsObject {
   private ticksSinceEnergyMessage: number = 0;
   private ticksSinceCooldownMessage: number = 0;
 
-  private thrustPower: number = 0.05;
+  private thrustPower: number = 0.01;
 
   constructor(
     scene: GameScene,
@@ -110,7 +110,7 @@ export default class Ship extends DynamicPhysicsObject {
         speed: 30,
         textureName: "green-pew",
         damage: 33,
-        mass: 6400,
+        mass: 0.001,
       },
       uiTextureName: "RadBlasterPlaceholder",
       playerKeyBind: "X",
@@ -166,6 +166,8 @@ export default class Ship extends DynamicPhysicsObject {
     // For easy shorthand
     let sys: ShipSystem = this.systems[num];
 
+    shipLogger.trace("Trying to use \'" + sys.getSystemName() + "\'");
+
     if (!sys.isReady()) {
       shipLogger.trace(
         "System \'" + sys.getSystemName() + "\' not used due to refire delay",
@@ -199,5 +201,8 @@ export default class Ship extends DynamicPhysicsObject {
 
     sys.use();
     this.energy.reduceBy(sys.getEnergyCost());
+    shipLogger.debug(
+      "\'" + this.physicsObjectName + "\' Used \'" + sys.getSystemName() + "\'",
+    );
   }
 }

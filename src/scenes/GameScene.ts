@@ -16,7 +16,7 @@ import KeyboardAndMouseController from "../controllers/KeyboardAndMouseControlle
 
 export default class GameScene extends Phaser.Scene {
   player!: Ship;
-  enemy!: Ship;
+  enemies!: Array<Ship>;
   camera!: Phaser.Math.Vector2;
   statics!: Array<StaticPhysicsObject>;
   pm!: ProjectileManager;
@@ -42,7 +42,8 @@ export default class GameScene extends Phaser.Scene {
       true,
     );
     loadImage(this, "player", "/assets/ships/Human-Fighter.png");
-    loadImage(this, "enemy", "/assets/ships/Alien-Battleship.png");
+    loadImage(this, "bigEnemy", "/assets/ships/Alien-Battleship.png");
+    loadImage(this, "enemy", "/assets/ships/Alien-Bomber.png");
 
     loadImage(this, "red", "/assets/border/red.png");
 
@@ -101,15 +102,21 @@ export default class GameScene extends Phaser.Scene {
       new KeyboardAndMouseController(this),
     );
 
-    this.enemy = new Ship(
-      this,
-      "Enemy Ship",
-      0,
-      1800,
-      "enemy",
-      this.pm,
-      new AIController(this, this.player),
-    );
+    this.enemies = new Array<Ship>();
+
+    for (let i = 0; i < 3; i++) {
+      this.enemies.push(
+        new Ship(
+          this,
+          "Enemy Ship " + i,
+          i * 200,
+          1800,
+          "enemy",
+          this.pm,
+          new AIController(this, this.player),
+        ),
+      );
+    }
 
     // Turn off gravity (we are in space)
     this.matter.world.setGravity(0, 0);

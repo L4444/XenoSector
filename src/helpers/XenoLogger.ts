@@ -7,13 +7,15 @@ const baseLogger = new Logger({
 
 export const cmLogger = baseLogger.getSubLogger({
   name: "Collision Manager",
+  minLevel: 3,
 });
 
 export const pmLogger = baseLogger.getSubLogger({
   name: "Projectile Manager",
+  minLevel: 1,
 });
 
 export const shipLogger = baseLogger.getSubLogger({
   name: "Ship",
-  minLevel: 3,
+  minLevel: 2,
 });
