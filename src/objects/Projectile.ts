@@ -9,6 +9,7 @@ export default class Projectile extends DynamicPhysicsObject {
   private totalLifetime: number = 0;
   private damage!: number;
   private toRemove: boolean = false;
+  private isPlayerTeam!: boolean;
 
   constructor(scene: GameScene, projectileName: string) {
     // Do not set the mass to 0
@@ -85,6 +86,7 @@ export default class Projectile extends DynamicPhysicsObject {
     this.x = parent.x;
     this.y = parent.y;
     this.enable();
+    this.isPlayerTeam = parent.getIsPlayerTeam();
 
     this.setTexture(projectileData.textureName);
 

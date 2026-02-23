@@ -12,7 +12,7 @@ export const cmLogger = baseLogger.getSubLogger({
 
 export const pmLogger = baseLogger.getSubLogger({
   name: "Projectile Manager",
-  minLevel: 1,
+  minLevel: 3,
 });
 
 export const shipLogger = baseLogger.getSubLogger({

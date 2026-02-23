@@ -18,6 +18,8 @@ export default class Ship extends DynamicPhysicsObject {
   projectileManager!: ProjectileManager;
   controller!: BaseController;
 
+  private isPlayerTeam!: boolean;
+
   private ticksSinceEnergyMessage: number = 0;
   private ticksSinceCooldownMessage: number = 0;
 
@@ -31,6 +33,7 @@ export default class Ship extends DynamicPhysicsObject {
     textureName: string,
     projectileManager: ProjectileManager,
     controller: BaseController,
+    isPlayerTeam: boolean,
   ) {
     super(scene, shipName, x, y, textureName, true, 100, 0.01);
     Ship.count++;
@@ -41,7 +44,7 @@ export default class Ship extends DynamicPhysicsObject {
 
     /// Put shield in it's own object class
     this.shield = new Shield(scene, this);
-    this.hp = new ValueBar(scene, this, 0, 0x993333, 100, 100, 0.1);
+    this.hp = new ValueBar(scene, this, 0, 0x993333, 100, 100, 0.01);
     this.energy = new ValueBar(scene, this, 15, 0x9999ff, 70, 100, 0.5);
 
     this.systems = new Array<ShipSystem>();
@@ -50,13 +53,13 @@ export default class Ship extends DynamicPhysicsObject {
       systemName: "Plasma Cannon",
       cooldownDuration: 20,
       reuseDuration: 20,
-      energyCost: 10,
+      energyCost: 20,
       projectileData: {
         range: 15,
         speed: 20,
         textureName: "blue-pew",
-        damage: 10,
-        mass: 0,
+        damage: 30,
+        mass: 0.2,
       },
       uiTextureName: "PlasmaCannonPlaceholder",
       playerKeyBind: "M1",
@@ -73,8 +76,8 @@ export default class Ship extends DynamicPhysicsObject {
         range: 15,
         speed: 20,
         textureName: "yellow-pew",
-        damage: 3,
-        mass: 0.01,
+        damage: 15,
+        mass: 0.1,
       },
       uiTextureName: "MachineGunPlaceholder",
       playerKeyBind: "M2",
@@ -102,15 +105,15 @@ export default class Ship extends DynamicPhysicsObject {
 
     let crapBlaster: ShipSystem = new ShipSystem(scene, this, {
       systemName: "Crap Blaster",
-      cooldownDuration: 60,
-      reuseDuration: 20,
-      energyCost: 100,
+      cooldownDuration: 5,
+      reuseDuration: 5,
+      energyCost: 0,
       projectileData: {
-        range: 15,
+        range: 2,
         speed: 30,
-        textureName: "green-pew",
-        damage: 33,
-        mass: 0.001,
+        textureName: "beam",
+        damage: 0.5,
+        mass: 0,
       },
       uiTextureName: "RadBlasterPlaceholder",
       playerKeyBind: "X",
@@ -119,6 +122,11 @@ export default class Ship extends DynamicPhysicsObject {
     this.systems.push(crapBlaster);
 
     this.controller = controller;
+    this.isPlayerTeam = isPlayerTeam;
+  }
+
+  getIsPlayerTeam(): boolean {
+    return this.isPlayerTeam;
   }
 
   preUpdate() {
@@ -126,6 +134,14 @@ export default class Ship extends DynamicPhysicsObject {
     // Heal if you hit 0 hp to reset. This is for "Pseudo death"
     if (this.hp.getCurrentValue() <= 0) {
       this.hp.reset();
+
+      if (this.isPlayerTeam) {
+        this.x = 0;
+        this.y = 1800;
+      } else {
+        this.x = 0;
+        this.y = -1000;
+      }
     }
 
     this.ticksSinceEnergyMessage++;
@@ -201,7 +217,7 @@ export default class Ship extends DynamicPhysicsObject {
 
     sys.use();
     this.energy.reduceBy(sys.getEnergyCost());
-    shipLogger.debug(
+    shipLogger.trace(
       "\'" + this.physicsObjectName + "\' Used \'" + sys.getSystemName() + "\'",
     );
   }

@@ -50,6 +50,7 @@ export default class GameScene extends Phaser.Scene {
     loadImage(this, "yellow-pew", "/assets/projectiles/pew-yellow.png");
     loadImage(this, "green-pew", "/assets/projectiles/pew-big-green.png");
     loadImage(this, "blue-pew", "/assets/projectiles/pew-blue.png");
+    loadImage(this, "beam", "/assets/projectiles/beam.png");
 
     loadImage(this, "asteroid", "/assets/asteroids/Asteroid.png");
 
@@ -95,11 +96,12 @@ export default class GameScene extends Phaser.Scene {
     this.player = new Ship(
       this,
       "Player Ship",
-      -200,
+      0,
       1800,
       "player",
       this.pm,
       new KeyboardAndMouseController(this),
+      true,
     );
 
     this.enemies = new Array<Ship>();
@@ -110,10 +112,11 @@ export default class GameScene extends Phaser.Scene {
           this,
           "Enemy Ship " + i,
           i * 200,
-          1800,
+          1000,
           "enemy",
           this.pm,
           new AIController(this, this.player),
+          false,
         ),
       );
     }
