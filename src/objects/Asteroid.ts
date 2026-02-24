@@ -2,7 +2,7 @@ import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import type GameScene from "../scenes/GameScene";
 
 export default class Asteroid extends StaticPhysicsObject {
-  spinSpeed!: number;
+  private spinSpeed!: number;
 
   /**
    * Makes an asteroid

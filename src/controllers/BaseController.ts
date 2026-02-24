@@ -2,7 +2,7 @@ import type GameScene from "../scenes/GameScene";
 import type Ship from "../objects/Ship";
 
 export default abstract class BaseController {
-  scene!: GameScene;
+  protected scene!: GameScene;
   constructor(scene: GameScene) {
     this.scene = scene;
   }

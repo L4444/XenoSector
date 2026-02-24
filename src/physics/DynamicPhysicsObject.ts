@@ -15,6 +15,7 @@ export default abstract class DynamicPhysicsObject extends BasePhysicsObject {
   ) {
     super(scene, physicsObjectID, x, y, textureName, isCircle);
     this.setFrictionAir(airFriction);
+    this.setBounce(1);
     this.setMass(mass);
   }
 }

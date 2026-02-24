@@ -84,6 +84,4 @@ export default class ShipSystem {
 
   // This function should be overrided in the child class
   onHit(_hitObject: BasePhysicsObject) {}
-
-  preUpdate() {}
 }

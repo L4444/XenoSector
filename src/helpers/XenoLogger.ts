@@ -22,5 +22,5 @@ export const shipLogger = baseLogger.getSubLogger({
 
 export const loadLogger = baseLogger.getSubLogger({
   name: "loadImage",
-  minLevel: 2,
+  minLevel: 4,
 });

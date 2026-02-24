@@ -42,8 +42,7 @@ export default class CollisionManager {
 
             // Check if friendly fire, it should do no damage but "eat" the projectile, wasting the shot
             if (projectileHit.getIsPlayerTeam() != shipHit.getIsPlayerTeam()) {
-              shipHit.shield.hit();
-              shipHit.hp.reduceBy(projectileHit.getDamage());
+              shipHit.hurt(projectileHit.getDamage());
 
               cmLogger.debug(
                 "Dealing damage to\tShip: '" +

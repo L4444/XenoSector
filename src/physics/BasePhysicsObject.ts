@@ -15,11 +15,7 @@ export default abstract class BasePhysicsObject
     textureName: string,
     isCircle: boolean,
   ) {
-    super(scene.matter.world, x, y, textureName, 0, {
-      restitution: 1,
-      friction: 0,
-      frictionStatic: 0,
-    });
+    super(scene.matter.world, x, y, textureName, 0);
 
     this.gameScene = scene;
 

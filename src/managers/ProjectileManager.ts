@@ -3,9 +3,9 @@ import type Ship from "../objects/Ship";
 import type GameScene from "../scenes/GameScene";
 
 export default class ProjectileManager {
-  projectiles: Array<Projectile> = new Array<Projectile>();
-  nextProjectile: number = 0;
-  scene!: GameScene;
+  private projectiles: Array<Projectile> = new Array<Projectile>();
+  private nextProjectile: number = 0;
+  private scene!: GameScene;
 
   constructor(scene: GameScene) {
     this.scene = scene;

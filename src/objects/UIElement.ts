@@ -3,13 +3,13 @@ import type GameScene from "../scenes/GameScene";
 import type ShipSystem from "./ShipSystem";
 
 export default class UIElement extends Phaser.GameObjects.Image {
-  swish!: Phaser.GameObjects.Graphics;
-  swishMask!: Phaser.GameObjects.Graphics;
-  nameText!: Phaser.GameObjects.Text;
-  keybindText!: Phaser.GameObjects.Text;
-  energyCostText!: Phaser.GameObjects.Text;
+  private swish!: Phaser.GameObjects.Graphics;
+  private swishMask!: Phaser.GameObjects.Graphics;
+  private nameText!: Phaser.GameObjects.Text;
+  private keybindText!: Phaser.GameObjects.Text;
+  private energyCostText!: Phaser.GameObjects.Text;
 
-  shipSystem!: ShipSystem;
+  private shipSystem!: ShipSystem;
 
   constructor(scene: GameScene, x: number, y: number, shipSystem: ShipSystem) {
     super(scene, x, y, shipSystem.getUITextureName());

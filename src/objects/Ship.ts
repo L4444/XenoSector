@@ -1,4 +1,3 @@
-import type ProjectileManager from "../managers/ProjectileManager";
 import DynamicPhysicsObject from "../physics/DynamicPhysicsObject";
 import type GameScene from "../scenes/GameScene";
 
@@ -10,14 +9,14 @@ import type BaseController from "../controllers/BaseController";
 import type ShipData from "../types/ShipData";
 
 export default class Ship extends DynamicPhysicsObject {
-  static count: number = 0;
-  shipID!: number;
-  shield!: Shield;
-  hp!: ValueBar;
-  energy!: ValueBar;
-  systems!: Array<ShipSystem>;
-  projectileManager!: ProjectileManager;
-  controller!: BaseController;
+  private static count: number = 0;
+  private shipID!: number;
+  private shield!: Shield;
+  private hp!: ValueBar;
+  private energy!: ValueBar;
+  private systems!: Array<ShipSystem>;
+
+  private controller!: BaseController;
   private explodeParticleEmitter!: Phaser.GameObjects.Particles.ParticleEmitter;
   private isPlayerTeam!: boolean;
 
@@ -32,7 +31,6 @@ export default class Ship extends DynamicPhysicsObject {
     x: number,
     y: number,
     textureName: string,
-    projectileManager: ProjectileManager,
     controller: BaseController,
     isPlayerTeam: boolean,
     shipData: ShipData,
@@ -45,8 +43,6 @@ export default class Ship extends DynamicPhysicsObject {
     Ship.count++;
     this.shipID = Ship.count;
     this.setCollisionGroup(-this.shipID);
-
-    this.projectileManager = projectileManager;
 
     /// Put shield in it's own object class
     this.shield = new Shield(scene, this);
@@ -141,14 +137,21 @@ export default class Ship extends DynamicPhysicsObject {
     this.isPlayerTeam = isPlayerTeam;
   }
 
+  // GETTERS
   getIsPlayerTeam(): boolean {
     return this.isPlayerTeam;
   }
 
-  explode() {
-    this.explodeParticleEmitter.x = this.x;
-    this.explodeParticleEmitter.y = this.y;
-    this.explodeParticleEmitter.explode(32);
+  getCurrentEnergy(): number {
+    return this.energy.getCurrentValue();
+  }
+
+  getShipID(): number {
+    return this.shipID;
+  }
+
+  getSystem(num: number): ShipSystem {
+    return this.systems[num];
   }
 
   preUpdate() {
@@ -182,10 +185,18 @@ export default class Ship extends DynamicPhysicsObject {
     );
   }
 
-  getSystem(num: number): ShipSystem {
-    return this.systems[num];
+  hurt(damageAmount: number) {
+    this.hp.reduceBy(damageAmount);
+    this.shield.hit();
+  }
+  // TESTING Methods
+  explode() {
+    this.explodeParticleEmitter.x = this.x;
+    this.explodeParticleEmitter.y = this.y;
+    this.explodeParticleEmitter.explode(32);
   }
 
+  /// Controls
   forward() {
     this.thrust(this.shipData.thrustPower);
   }

@@ -15,16 +15,16 @@ import AIController from "../controllers/AIController";
 import KeyboardAndMouseController from "../controllers/KeyboardAndMouseController";
 
 export default class GameScene extends Phaser.Scene {
-  player!: Ship;
-  enemies!: Array<Ship>;
-  camera!: Phaser.Math.Vector2;
-  statics!: Array<StaticPhysicsObject>;
-  pm!: ProjectileManager;
-  cm!: CollisionManager;
-  am!: AlertManager;
-  ui!: UIElement;
-  emitter!: Phaser.GameObjects.Particles.ParticleEmitter;
-  versionText!: Phaser.GameObjects.Text;
+  private player!: Ship;
+  private enemies!: Array<Ship>;
+  private camera!: Phaser.Math.Vector2;
+  private statics!: Array<StaticPhysicsObject>;
+  private pm!: ProjectileManager;
+  private cm!: CollisionManager;
+  private am!: AlertManager;
+  private ui!: Array<UIElement>;
+
+  private versionText!: Phaser.GameObjects.Text;
 
   constructor() {
     super("game");
@@ -78,7 +78,6 @@ export default class GameScene extends Phaser.Scene {
       0,
       1800,
       "Human-Fighter",
-      this.pm,
       new KeyboardAndMouseController(this),
       true,
       {
@@ -98,7 +97,7 @@ export default class GameScene extends Phaser.Scene {
           i * 100,
           1000,
           "Alien-Bomber",
-          this.pm,
+
           new AIController(this, this.player),
           false,
           {
@@ -119,12 +118,10 @@ export default class GameScene extends Phaser.Scene {
     this.cm = new CollisionManager(this);
 
     // Create the HUD elements, showing cooldowns, energy costs and keybinds
+    this.ui = new Array<UIElement>();
     for (let i = 0; i < 3; i++) {
-      this.ui = new UIElement(
-        this,
-        400 + i * (64 + 32),
-        750,
-        this.player.getSystem(i),
+      this.ui.push(
+        new UIElement(this, 400 + i * (64 + 32), 750, this.player.getSystem(i)),
       );
     }
 
@@ -169,11 +166,6 @@ export default class GameScene extends Phaser.Scene {
 
   getProjectileManager(): ProjectileManager {
     return this.pm;
-  }
-
-  getCollisionManager(): CollisionManager {
-    throw new Error("Why do you want the collision manager?");
-    return this.cm;
   }
 
   getAlertManager(): AlertManager {
