@@ -7,6 +7,7 @@ import Shield from "./Shield";
 import ValueBar from "./ValueBar";
 import { shipLogger } from "../helpers/XenoLogger";
 import type BaseController from "../controllers/BaseController";
+import type ShipData from "../types/ShipData";
 
 export default class Ship extends DynamicPhysicsObject {
   static count: number = 0;
@@ -23,7 +24,7 @@ export default class Ship extends DynamicPhysicsObject {
   private ticksSinceEnergyMessage: number = 0;
   private ticksSinceCooldownMessage: number = 0;
 
-  private thrustPower: number = 0.01;
+  private shipData: ShipData;
 
   constructor(
     scene: GameScene,
@@ -34,8 +35,13 @@ export default class Ship extends DynamicPhysicsObject {
     projectileManager: ProjectileManager,
     controller: BaseController,
     isPlayerTeam: boolean,
+    shipData: ShipData,
   ) {
-    super(scene, shipName, x, y, textureName, true, 100, 0.01);
+    shipLogger.debug("Ship \'" + shipName + "\' Created", shipData);
+    super(scene, shipName, x, y, textureName, true, shipData.mass, 0.01);
+
+    this.shipData = shipData;
+
     Ship.count++;
     this.shipID = Ship.count;
     this.setCollisionGroup(-this.shipID);
@@ -169,12 +175,10 @@ export default class Ship extends DynamicPhysicsObject {
 
     let targetRotation = this.controller.controlShip(this);
 
-    let rotateSpeed = 0.05;
-
     this.rotation = Phaser.Math.Angle.RotateTo(
       this.rotation,
       targetRotation,
-      rotateSpeed,
+      this.shipData.rotationSpeed,
     );
   }
 
@@ -183,19 +187,19 @@ export default class Ship extends DynamicPhysicsObject {
   }
 
   forward() {
-    this.thrust(this.thrustPower);
+    this.thrust(this.shipData.thrustPower);
   }
 
   backward() {
-    this.thrustBack(this.thrustPower);
+    this.thrustBack(this.shipData.thrustPower);
   }
 
   left() {
-    this.thrustLeft(this.thrustPower);
+    this.thrustLeft(this.shipData.thrustPower);
   }
 
   right() {
-    this.thrustRight(this.thrustPower);
+    this.thrustRight(this.shipData.thrustPower);
   }
 
   useSystem(num: number) {

@@ -24,6 +24,7 @@ export default class GameScene extends Phaser.Scene {
   am!: AlertManager;
   ui!: UIElement;
   emitter!: Phaser.GameObjects.Particles.ParticleEmitter;
+  versionText!: Phaser.GameObjects.Text;
 
   constructor() {
     super("game");
@@ -105,6 +106,11 @@ export default class GameScene extends Phaser.Scene {
       this.pm,
       new KeyboardAndMouseController(this),
       true,
+      {
+        thrustPower: 0.03,
+        mass: 100,
+        rotationSpeed: 0.05,
+      },
     );
 
     this.enemies = new Array<Ship>();
@@ -120,6 +126,11 @@ export default class GameScene extends Phaser.Scene {
           this.pm,
           new AIController(this, this.player),
           false,
+          {
+            thrustPower: 0.01,
+            mass: 100,
+            rotationSpeed: 0.05,
+          },
         ),
       );
     }
@@ -149,6 +160,8 @@ export default class GameScene extends Phaser.Scene {
       e.preventDefault();
     });
 
+    // For testing things out
+    // Note the Arrow Function gets the context from the GameScene as opposed to a function()
     this.input.keyboard?.on("keydown-R", (_event: KeyboardEvent) => {
       console.log(" Pressed R");
 
@@ -156,6 +169,9 @@ export default class GameScene extends Phaser.Scene {
 
       this.player.explode();
     });
+
+    this.versionText = this.add.text(5, 5, "Version 0.1");
+    this.versionText.setScrollFactor(0);
   }
 
   update() {
