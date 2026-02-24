@@ -154,7 +154,7 @@ export default class GameScene extends Phaser.Scene {
 
       console.log(_event);
 
-      this.player.testExplode();
+      this.player.explode();
     });
   }
 

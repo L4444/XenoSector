@@ -139,17 +139,19 @@ export default class Ship extends DynamicPhysicsObject {
     return this.isPlayerTeam;
   }
 
-  testExplode() {
+  explode() {
     this.explodeParticleEmitter.x = this.x;
     this.explodeParticleEmitter.y = this.y;
     this.explodeParticleEmitter.explode(32);
   }
 
   preUpdate() {
-    // TODO: Replace this with code for ship death
-    // Heal if you hit 0 hp to reset. This is for "Pseudo death"
+    // Ship Death code
     if (this.hp.getCurrentValue() <= 0) {
-      this.testExplode();
+      // Play the explosion effect.
+      this.explode();
+
+      // Move their position back to spawn.
       if (this.isPlayerTeam) {
         this.x = 0;
         this.y = 1800;
@@ -158,6 +160,7 @@ export default class Ship extends DynamicPhysicsObject {
         this.y = -1000;
       }
 
+      // Heal back to full
       this.hp.reset();
     }
 
