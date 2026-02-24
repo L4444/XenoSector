@@ -23,6 +23,7 @@ export default class GameScene extends Phaser.Scene {
   cm!: CollisionManager;
   am!: AlertManager;
   ui!: UIElement;
+  emitter!: Phaser.GameObjects.Particles.ParticleEmitter;
 
   constructor() {
     super("game");
@@ -76,6 +77,8 @@ export default class GameScene extends Phaser.Scene {
       "/assets/ui/RadBlasterPlaceholder.png",
       true,
     );
+
+    loadImage(this, "i_0003.png", "/assets/particles/i_0003.png", true);
   }
 
   create() {
@@ -145,6 +148,14 @@ export default class GameScene extends Phaser.Scene {
     this.game.canvas.addEventListener("contextmenu", (e) => {
       e.preventDefault();
     });
+
+    this.input.keyboard?.on("keydown-R", (_event: KeyboardEvent) => {
+      console.log(" Pressed R");
+
+      console.log(_event);
+
+      this.player.testExplode();
+    });
   }
 
   update() {
@@ -161,6 +172,8 @@ export default class GameScene extends Phaser.Scene {
 
     // Set the camera on the ship
     this.cameras.main.centerOn(this.camera.x, this.camera.y);
+
+    //this.cameras.main.centerOn(0, 0);
   }
 
   getProjectileManager(): ProjectileManager {

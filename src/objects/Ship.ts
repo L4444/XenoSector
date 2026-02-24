@@ -17,7 +17,7 @@ export default class Ship extends DynamicPhysicsObject {
   systems!: Array<ShipSystem>;
   projectileManager!: ProjectileManager;
   controller!: BaseController;
-
+  private explodeParticleEmitter!: Phaser.GameObjects.Particles.ParticleEmitter;
   private isPlayerTeam!: boolean;
 
   private ticksSinceEnergyMessage: number = 0;
@@ -46,6 +46,16 @@ export default class Ship extends DynamicPhysicsObject {
     this.shield = new Shield(scene, this);
     this.hp = new ValueBar(scene, this, 0, 0x993333, 100, 100, 0.01);
     this.energy = new ValueBar(scene, this, 15, 0x9999ff, 70, 100, 0.5);
+
+    this.explodeParticleEmitter = scene.add.particles(0, 0, "i_0003.png", {
+      lifespan: 2000,
+      speed: { min: 25, max: 50 },
+      angle: { min: 0, max: 360 },
+      emitting: false,
+      blendMode: "ADD",
+      scale: 0.25,
+      alpha: { start: 0.5, end: 0, ease: "expo.out" },
+    });
 
     this.systems = new Array<ShipSystem>();
 
@@ -129,12 +139,17 @@ export default class Ship extends DynamicPhysicsObject {
     return this.isPlayerTeam;
   }
 
+  testExplode() {
+    this.explodeParticleEmitter.x = this.x;
+    this.explodeParticleEmitter.y = this.y;
+    this.explodeParticleEmitter.explode(32);
+  }
+
   preUpdate() {
     // TODO: Replace this with code for ship death
     // Heal if you hit 0 hp to reset. This is for "Pseudo death"
     if (this.hp.getCurrentValue() <= 0) {
-      this.hp.reset();
-
+      this.testExplode();
       if (this.isPlayerTeam) {
         this.x = 0;
         this.y = 1800;
@@ -142,6 +157,8 @@ export default class Ship extends DynamicPhysicsObject {
         this.x = 0;
         this.y = -1000;
       }
+
+      this.hp.reset();
     }
 
     this.ticksSinceEnergyMessage++;
