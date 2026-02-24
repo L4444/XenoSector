@@ -160,8 +160,12 @@ export default class GameScene extends Phaser.Scene {
 
     // Set the camera on the ship
     this.cameras.main.centerOn(this.camera.x, this.camera.y);
+  }
 
-    //this.cameras.main.centerOn(0, 0);
+  getCollisionManager(): CollisionManager {
+    // Added this so typescript won't complain about this.cm being unused
+    throw new Error("Why are you getting collision manager");
+    return this.cm;
   }
 
   getProjectileManager(): ProjectileManager {
