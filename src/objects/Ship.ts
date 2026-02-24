@@ -53,7 +53,7 @@ export default class Ship extends DynamicPhysicsObject {
     this.hp = new ValueBar(scene, this, 0, 0x993333, 100, 100, 0.01);
     this.energy = new ValueBar(scene, this, 15, 0x9999ff, 70, 100, 0.5);
 
-    this.explodeParticleEmitter = scene.add.particles(0, 0, "i_0003.png", {
+    this.explodeParticleEmitter = scene.add.particles(0, 0, "i_0003", {
       lifespan: 2000,
       speed: { min: 25, max: 50 },
       angle: { min: 0, max: 360 },
@@ -73,7 +73,7 @@ export default class Ship extends DynamicPhysicsObject {
       projectileData: {
         range: 15,
         speed: 20,
-        textureName: "blue-pew",
+        textureName: "pew-blue",
         damage: 30,
         mass: 0.2,
       },
@@ -91,7 +91,7 @@ export default class Ship extends DynamicPhysicsObject {
       projectileData: {
         range: 15,
         speed: 20,
-        textureName: "yellow-pew",
+        textureName: "pew-yellow",
         damage: 15,
         mass: 0.1,
       },
@@ -109,7 +109,7 @@ export default class Ship extends DynamicPhysicsObject {
       projectileData: {
         range: 15,
         speed: 10,
-        textureName: "green-pew",
+        textureName: "pew-big-green",
         damage: 20,
         mass: 6400,
       },

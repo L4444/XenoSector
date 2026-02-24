@@ -1,5 +1,6 @@
 import type GameScene from "../scenes/GameScene";
 import rotateTexture from "./rotateTexture";
+import { loadLogger } from "./XenoLogger";
 
 /**
  * Phaser loads images/sprites assuming they are facing right (when angle = 0), I assume that images/sprites face up (when angle = 0).
@@ -7,20 +8,30 @@ import rotateTexture from "./rotateTexture";
  * @param scene The phaser scene
  * @param textureKey The texture's key (the reference name that phaser uses)
  * @param textureUrl The url/path leading to the texture
- * @param isTileSprite If this going to be used for a tilesprite, don't rotate the texture.
+ * @param rotate90Degrees If this going to be used for a tilesprite, don't rotate the texture.
  *
  * @remarks Don't forget to read about the last parameter
  *
  */
 export default function loadImage(
   scene: GameScene,
-  textureKey: string,
   textureUrl: string,
-  isTileSprite: boolean = false,
+  rotate90Degrees: boolean = false,
 ) {
   let tu: string = import.meta.env.BASE_URL + textureUrl;
-  // Phaser doesn't like me rotating tileSprites, so skip rotation if it's going to be used for a tilesprite.
-  if (!isTileSprite) {
+
+  let matches: RegExpMatchArray | null = textureUrl.match(".+\/(.+)\....$");
+  let textureKey: string = "ERROR";
+  if (matches != null) {
+    textureKey = matches[1];
+  } else {
+    loadLogger.error(" loadImage cannot parse the following url: ", textureUrl);
+  }
+  loadLogger.info(
+    "Loaded image: \t\'" + textureKey + "\'\t from \t\'" + textureUrl + "\'",
+  );
+  // Rotation should be optional
+  if (rotate90Degrees) {
     let tempTextureKey = textureKey + "_old";
 
     // get Phaser to actually load the texture.

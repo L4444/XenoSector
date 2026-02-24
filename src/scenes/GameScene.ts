@@ -31,61 +31,36 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    loadImage(
-      this,
-      "background",
-      "/assets/backgrounds/Blue Nebula 4 - 1024x1024.png",
-      true,
-    );
-    loadImage(
-      this,
-      "midground",
-      "/assets/backgrounds/Blue Nebula 2 - 1024x1024.png",
-      true,
-    );
-    loadImage(this, "player", "/assets/ships/Human-Fighter.png");
-    loadImage(this, "bigEnemy", "/assets/ships/Alien-Battleship.png");
-    loadImage(this, "enemy", "/assets/ships/Alien-Bomber.png");
+    loadImage(this, "/assets/backgrounds/Blue Nebula 4 - 1024x1024.png");
+    loadImage(this, "/assets/backgrounds/Blue Nebula 2 - 1024x1024.png");
+    loadImage(this, "/assets/ships/Human-Fighter.png", true);
+    loadImage(this, "/assets/ships/Alien-Battleship.png", true);
+    loadImage(this, "/assets/ships/Alien-Bomber.png", true);
 
-    loadImage(this, "red", "/assets/border/red.png");
+    loadImage(this, "/assets/border/red.png");
 
-    loadImage(this, "yellow-pew", "/assets/projectiles/pew-yellow.png");
-    loadImage(this, "green-pew", "/assets/projectiles/pew-big-green.png");
-    loadImage(this, "blue-pew", "/assets/projectiles/pew-blue.png");
-    loadImage(this, "beam", "/assets/projectiles/beam.png");
+    loadImage(this, "/assets/projectiles/pew-yellow.png", true);
+    loadImage(this, "/assets/projectiles/pew-big-green.png", true);
+    loadImage(this, "/assets/projectiles/pew-blue.png", true);
+    loadImage(this, "/assets/projectiles/beam.png", true);
 
-    loadImage(this, "asteroid", "/assets/asteroids/Asteroid.png");
+    loadImage(this, "/assets/asteroids/Asteroid.png");
 
-    loadImage(this, "shield", "/assets/ships/Shield.png", true);
+    loadImage(this, "/assets/ships/Shield.png");
 
-    loadImage(
-      this,
-      "MachineGunPlaceholder",
-      "/assets/ui/MachineGunPlaceholder.png",
-      true,
-    );
+    loadImage(this, "/assets/ui/MachineGunPlaceholder.png");
 
-    loadImage(
-      this,
-      "PlasmaCannonPlaceholder",
-      "/assets/ui/PlasmaCannonPlaceholder.png",
-      true,
-    );
+    loadImage(this, "/assets/ui/PlasmaCannonPlaceholder.png");
 
-    loadImage(
-      this,
-      "RadBlasterPlaceholder",
-      "/assets/ui/RadBlasterPlaceholder.png",
-      true,
-    );
+    loadImage(this, "/assets/ui/RadBlasterPlaceholder.png");
 
-    loadImage(this, "i_0003.png", "/assets/particles/i_0003.png", true);
+    loadImage(this, "/assets/particles/i_0003.png");
   }
 
   create() {
     // Create a parallax effect
-    new GameBackground(this, "background", 0.2, 1);
-    new GameBackground(this, "midground", 1, 0.3);
+    new GameBackground(this, "Blue Nebula 4 - 1024x1024", 0.2, 1);
+    new GameBackground(this, "Blue Nebula 2 - 1024x1024", 1, 0.3);
 
     this.statics = [];
     // Create asteroids to help player orient themselves
@@ -102,7 +77,7 @@ export default class GameScene extends Phaser.Scene {
       "Player Ship",
       0,
       1800,
-      "player",
+      "Human-Fighter",
       this.pm,
       new KeyboardAndMouseController(this),
       true,
@@ -122,7 +97,7 @@ export default class GameScene extends Phaser.Scene {
           "Enemy Ship " + i,
           i * 100,
           1000,
-          "enemy",
+          "Alien-Bomber",
           this.pm,
           new AIController(this, this.player),
           false,

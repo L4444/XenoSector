@@ -17,7 +17,7 @@ export default class Asteroid extends StaticPhysicsObject {
     y: number,
     tint: number = 0xffffff,
   ) {
-    super(scene, asteroidName, x, y, "asteroid", true);
+    super(scene, asteroidName, x, y, "Asteroid", true);
 
     // Use phasers nice colour function to convert it to hex
     this.tint = tint;

@@ -7,7 +7,7 @@ export default class Shield {
   constructor(scene: GameScene, parentShip: Ship) {
     this.parentShip = parentShip;
 
-    this.shieldImage = scene.add.image(0, 0, "shield");
+    this.shieldImage = scene.add.image(0, 0, "Shield");
     this.shieldImage.displayWidth = parentShip.displayWidth;
     this.shieldImage.displayHeight = parentShip.displayHeight;
     this.shieldImage.alpha = 0.3;
