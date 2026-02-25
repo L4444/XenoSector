@@ -1,4 +1,3 @@
-import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import type GameScene from "../scenes/GameScene";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 import PhysicsEntity from "./PhysicsEntity";
@@ -19,7 +18,15 @@ export default class Asteroid extends PhysicsEntity {
     y: number,
     tint: number = 0xffffff,
   ) {
-    super(scene, x, y, "Asteroid", PhysicsEntityType.STATIC, "Asteroid", true);
+    super(
+      scene,
+      x,
+      y,
+      asteroidName,
+      PhysicsEntityType.STATIC,
+      "Asteroid",
+      true,
+    );
 
     // Use phasers nice colour function to convert it to hex
     this.image.tint = tint;

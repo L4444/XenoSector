@@ -21,12 +21,14 @@ export default abstract class PhysicsEntity extends PositionalEntity {
     this.image = scene.matter.add.image(x, y, texture);
     this.image.setData("entity", this);
 
-    if (physicsEntityType == PhysicsEntityType.STATIC) {
-      this.image.setStatic(true);
-    }
-
+    // Set circle first because setCircle() resets the setStatic() flag
     if (isCircle) {
       this.image.setCircle(this.image.width / 2);
+    }
+
+    // For static objects, we need to be static.
+    if (physicsEntityType == PhysicsEntityType.STATIC) {
+      this.image.setStatic(true);
     }
 
     //this.setCollisionCategory(1);
