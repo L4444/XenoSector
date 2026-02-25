@@ -67,7 +67,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.statics = [];
     // Create asteroids to help player orient themselves
-    //this.statics.push(...createAsteroidGrid(this, -300, -1500, 14, 2, 800));
+    createAsteroidGrid(this, -300, -1500, 14, 2, 800);
 
     this.pm = new ProjectileManager(this);
 
@@ -94,7 +94,7 @@ export default class GameScene extends Phaser.Scene {
         new Ship(
           this,
           "Enemy Ship " + i,
-          i * 100,
+          -500 + i * 150,
           1000,
           "Alien-Bomber",
 

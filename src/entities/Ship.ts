@@ -119,8 +119,8 @@ export default class Ship extends PhysicsEntity {
 
     let crapBlaster: ShipSystem = new ShipSystem(scene, this, {
       systemName: "Crap Blaster",
-      cooldownDuration: 5,
-      reuseDuration: 5,
+      cooldownDuration: 40,
+      reuseDuration: 40,
       energyCost: 0,
       projectileData: {
         range: 2,
@@ -174,6 +174,10 @@ export default class Ship extends PhysicsEntity {
 
   get displayHeight(): number {
     return this.image.displayHeight;
+  }
+
+  get rotation(): number {
+    return this.image.rotation;
   }
 
   preUpdate() {

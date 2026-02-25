@@ -1,7 +1,9 @@
 import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import type GameScene from "../scenes/GameScene";
+import { PhysicsEntityType } from "../types/PhysicsEntityType";
+import PhysicsEntity from "./PhysicsEntity";
 
-export default class Asteroid extends StaticPhysicsObject {
+export default class Asteroid extends PhysicsEntity {
   private spinSpeed!: number;
 
   /**
@@ -17,15 +19,15 @@ export default class Asteroid extends StaticPhysicsObject {
     y: number,
     tint: number = 0xffffff,
   ) {
-    super(scene, asteroidName, x, y, "Asteroid", true);
+    super(scene, x, y, "Asteroid", PhysicsEntityType.STATIC, "Asteroid", true);
 
     // Use phasers nice colour function to convert it to hex
-    this.tint = tint;
+    this.image.tint = tint;
 
     this.spinSpeed = (Math.random() - 0.5) * 3;
   }
 
   preUpdate() {
-    this.angle += this.spinSpeed;
+    this.image.angle += this.spinSpeed;
   }
 }

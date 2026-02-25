@@ -8,7 +8,7 @@ const baseLogger = new Logger({
 export const XenoLog = {
   coll: baseLogger.getSubLogger({
     name: "Collision Manager",
-    minLevel: 5,
+    minLevel: 3,
   }),
   proj: baseLogger.getSubLogger({
     name: "Projectile Manager",
