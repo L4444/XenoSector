@@ -198,19 +198,24 @@ export default class Ship extends DynamicPhysicsObject {
 
   /// Controls
   forward() {
-    this.thrust(this.shipData.thrustPower);
+    //this.thrust(this.shipData.thrustPower);
+
+    this.applyForce(new Phaser.Math.Vector2(0, -this.shipData.thrustPower));
   }
 
   backward() {
-    this.thrustBack(this.shipData.thrustPower);
+    //this.thrustBack(this.shipData.thrustPower);
+    this.applyForce(new Phaser.Math.Vector2(0, this.shipData.thrustPower));
   }
 
   left() {
-    this.thrustLeft(this.shipData.thrustPower);
+    //this.thrustLeft(this.shipData.thrustPower);
+    this.applyForce(new Phaser.Math.Vector2(-this.shipData.thrustPower, 0));
   }
 
   right() {
-    this.thrustRight(this.shipData.thrustPower);
+    //this.thrustRight(this.shipData.thrustPower);
+    this.applyForce(new Phaser.Math.Vector2(this.shipData.thrustPower, 0));
   }
 
   useSystem(num: number) {

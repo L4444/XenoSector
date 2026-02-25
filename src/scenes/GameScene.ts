@@ -83,7 +83,7 @@ export default class GameScene extends Phaser.Scene {
       {
         thrustPower: 0.03,
         mass: 100,
-        rotationSpeed: 0.05,
+        rotationSpeed: 0.2,
       },
     );
 

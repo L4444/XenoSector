@@ -13,7 +13,21 @@ export default class AIController extends BaseController {
       ship.useSystem(3);
     }
 
-    ship.forward();
+    if (this.targetShip.x < ship.x) {
+      ship.forward();
+    }
+
+    if (this.targetShip.y > ship.y) {
+      ship.backward();
+    }
+
+    if (this.targetShip.x < ship.x) {
+      ship.left();
+    }
+
+    if (this.targetShip.x > ship.x) {
+      ship.right();
+    }
 
     let targetRotation = Phaser.Math.Angle.Between(
       ship.x,
