@@ -23,7 +23,8 @@ export default class KeyboardAndMouseController extends BaseController {
     }
 
     if (this.scene.input.mousePointer.leftButtonDown()) {
-      ship.useSystem(0);
+      // FIX: enable
+      //ship.useSystem(0);
     }
 
     if (this.scene.input.mousePointer.rightButtonDown()) {

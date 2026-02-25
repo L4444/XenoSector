@@ -1,7 +1,8 @@
-import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import type GameScene from "../scenes/GameScene";
+import { PhysicsEntityType } from "../types/PhysicsEntityType";
+import PhysicsEntity from "./PhysicsEntity";
 
-export default class Wall extends StaticPhysicsObject {
+export default class Wall extends PhysicsEntity {
   constructor(
     scene: GameScene,
     wallName: string,
@@ -10,10 +11,12 @@ export default class Wall extends StaticPhysicsObject {
     width: number,
     height: number,
   ) {
-    super(scene, wallName, x, y, "red", false);
+    super(scene, x, y, wallName, PhysicsEntityType.STATIC, "red", false);
 
-    this.displayWidth = width;
-    this.displayHeight = height;
+    this.image.width = width;
+    this.image.height = height;
+    this.image.displayWidth = width;
+    this.image.displayHeight = height;
   }
 
   preUpdate() {}

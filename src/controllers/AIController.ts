@@ -10,23 +10,23 @@ export default class AIController extends BaseController {
   }
   controlShip(ship: Ship): number {
     if (ship.getCurrentEnergy() >= ship.getSystem(3).getEnergyCost()) {
-      ship.useSystem(3);
+      //ship.useSystem(3);
     }
 
     if (this.targetShip.x < ship.x) {
-      ship.forward();
+      //ship.forward();
     }
 
     if (this.targetShip.y > ship.y) {
-      ship.backward();
+      //ship.backward();
     }
 
     if (this.targetShip.x < ship.x) {
-      ship.left();
+      //ship.left();
     }
 
     if (this.targetShip.x > ship.x) {
-      ship.right();
+      //ship.right();
     }
 
     let targetRotation = Phaser.Math.Angle.Between(

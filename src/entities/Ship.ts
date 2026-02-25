@@ -1,4 +1,3 @@
-import DynamicPhysicsObject from "../physics/DynamicPhysicsObject";
 import type GameScene from "../scenes/GameScene";
 
 import ShipSystem from "../entities/ShipSystem";
@@ -7,8 +6,10 @@ import ValueBar from "./ValueBar";
 import { XenoLog } from "../helpers/XenoLogger";
 import type BaseController from "../controllers/BaseController";
 import type ShipData from "../types/ShipData";
+import PhysicsEntity from "./PhysicsEntity";
+import { PhysicsEntityType } from "../types/PhysicsEntityType";
 
-export default class Ship extends DynamicPhysicsObject {
+export default class Ship extends PhysicsEntity {
   private static count: number = 0;
   private shipID!: number;
   private shield!: Shield;
@@ -35,14 +36,15 @@ export default class Ship extends DynamicPhysicsObject {
     isPlayerTeam: boolean,
     shipData: ShipData,
   ) {
-    XenoLog.ship.debug("Ship \'" + shipName + "\' Created", shipData);
-    super(scene, shipName, x, y, textureName, true, shipData.mass, 0.01);
+    super(scene, x, y, shipName, PhysicsEntityType.SHIP, textureName, true);
+    XenoLog.ship.info("Ship \'" + shipName + "\' Created", shipData);
 
     this.shipData = shipData;
 
     Ship.count++;
     this.shipID = Ship.count;
-    this.setCollisionGroup(-this.shipID);
+    this.image.setCollisionGroup(-this.shipID);
+    this.image.setMass(100);
 
     /// Put shield in it's own object class
     this.shield = new Shield(scene, this);
@@ -154,6 +156,26 @@ export default class Ship extends DynamicPhysicsObject {
     return this.systems[num];
   }
 
+  getVelocity(): Phaser.Types.Math.Vector2Like {
+    return this.image.getVelocity();
+  }
+
+  get x(): number {
+    return this.image.x;
+  }
+
+  get y(): number {
+    return this.image.y;
+  }
+
+  get displayWidth(): number {
+    return this.image.displayWidth;
+  }
+
+  get displayHeight(): number {
+    return this.image.displayHeight;
+  }
+
   preUpdate() {
     // Ship Death code
     if (this.hp.getCurrentValue() <= 0) {
@@ -162,11 +184,11 @@ export default class Ship extends DynamicPhysicsObject {
 
       // Move their position back to spawn.
       if (this.isPlayerTeam) {
-        this.x = 0;
-        this.y = 1800;
+        this.image.x = 0;
+        this.image.y = 1800;
       } else {
-        this.x = 0;
-        this.y = -1000;
+        this.image.x = 0;
+        this.image.y = -1000;
       }
 
       // Heal back to full
@@ -178,8 +200,8 @@ export default class Ship extends DynamicPhysicsObject {
 
     let targetRotation = this.controller.controlShip(this);
 
-    this.rotation = Phaser.Math.Angle.RotateTo(
-      this.rotation,
+    this.image.rotation = Phaser.Math.Angle.RotateTo(
+      this.image.rotation,
       targetRotation,
       this.shipData.rotationSpeed,
     );
@@ -200,22 +222,30 @@ export default class Ship extends DynamicPhysicsObject {
   forward() {
     //this.thrust(this.shipData.thrustPower);
 
-    this.applyForce(new Phaser.Math.Vector2(0, -this.shipData.thrustPower));
+    this.image.applyForce(
+      new Phaser.Math.Vector2(0, -this.shipData.thrustPower),
+    );
   }
 
   backward() {
     //this.thrustBack(this.shipData.thrustPower);
-    this.applyForce(new Phaser.Math.Vector2(0, this.shipData.thrustPower));
+    this.image.applyForce(
+      new Phaser.Math.Vector2(0, this.shipData.thrustPower),
+    );
   }
 
   left() {
     //this.thrustLeft(this.shipData.thrustPower);
-    this.applyForce(new Phaser.Math.Vector2(-this.shipData.thrustPower, 0));
+    this.image.applyForce(
+      new Phaser.Math.Vector2(-this.shipData.thrustPower, 0),
+    );
   }
 
   right() {
     //this.thrustRight(this.shipData.thrustPower);
-    this.applyForce(new Phaser.Math.Vector2(this.shipData.thrustPower, 0));
+    this.image.applyForce(
+      new Phaser.Math.Vector2(this.shipData.thrustPower, 0),
+    );
   }
 
   useSystem(num: number) {
@@ -237,7 +267,7 @@ export default class Ship extends DynamicPhysicsObject {
         "Not enough energy to use: \'" + sys.getSystemName() + "\'";
       XenoLog.ship.debug(debugText);
       if (this.ticksSinceEnergyMessage > 50) {
-        this.gameScene.getAlertManager().textPop(this.x, this.y, debugText);
+        this.scene.getAlertManager().textPop(this.x, this.y, debugText);
 
         this.ticksSinceEnergyMessage = 0;
       }
@@ -249,7 +279,7 @@ export default class Ship extends DynamicPhysicsObject {
       let debugText: string = "\'" + sys.getSystemName() + "\' isn\'t ready";
       XenoLog.ship.debug(debugText);
       if (this.ticksSinceCooldownMessage > 50) {
-        this.gameScene.getAlertManager().textPop(this.x, this.y, debugText);
+        this.scene.getAlertManager().textPop(this.x, this.y, debugText);
         this.ticksSinceCooldownMessage = 0;
       }
       return;
@@ -258,7 +288,7 @@ export default class Ship extends DynamicPhysicsObject {
     sys.use();
     this.energy.reduceBy(sys.getEnergyCost());
     XenoLog.ship.trace(
-      "\'" + this.physicsObjectName + "\' Used \'" + sys.getSystemName() + "\'",
+      "\'" + " boop " + "\' Used \'" + sys.getSystemName() + "\'",
     );
   }
 }

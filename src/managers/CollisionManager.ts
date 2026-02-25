@@ -1,9 +1,11 @@
-import Projectile from "../entities/Projectile";
-import Ship from "../entities/Ship";
 import BasePhysicsObject from "../physics/BasePhysicsObject";
-import StaticPhysicsObject from "../physics/StaticPhysicsObject";
+
 import type GameScene from "../scenes/GameScene";
 import { XenoLog } from "../helpers/XenoLogger";
+import type PhysicsEntity from "../entities/PhysicsEntity";
+import Ship from "../entities/Ship";
+import Wall from "../entities/Wall";
+import { PhysicsEntityType } from "../types/PhysicsEntityType";
 
 type Ctor<T> = new (...args: any[]) => T;
 
@@ -19,11 +21,29 @@ export default class CollisionManager {
         _bodyB: MatterJS.BodyType,
       ) {
         event.pairs.forEach((pair) => {
-          let objA: BasePhysicsObject = pair.bodyA
-            .gameObject as BasePhysicsObject;
-          let objB: BasePhysicsObject = pair.bodyB
-            .gameObject as BasePhysicsObject;
+          let objA: PhysicsEntity = pair.bodyA.gameObject?.getData(
+            "entity",
+          ) as PhysicsEntity;
 
+          let objB: PhysicsEntity = pair.bodyB.gameObject?.getData(
+            "entity",
+          ) as PhysicsEntity;
+
+          //XenoLog.coll.error(objA.physicsEntityType);
+          console.log(objA, objB);
+
+          if (
+            checkTypes(
+              objA,
+              objB,
+              PhysicsEntityType.SHIP,
+              PhysicsEntityType.STATIC,
+            )
+          ) {
+            console.log("Ship-Wall collision detected - John");
+          }
+
+          /*
           const shipProjectileCollision = matchPair(
             objA,
             objB,
@@ -88,6 +108,7 @@ export default class CollisionManager {
               objB.physicsObjectName +
               "'",
           );
+          */
         });
       },
     );
@@ -96,8 +117,8 @@ export default class CollisionManager {
     // What it does is take two objects and check if they are the two types you are looking for
     // (Regardless of their order)
     function matchPair<T1, T2>(
-      a: BasePhysicsObject,
-      b: BasePhysicsObject,
+      a: PhysicsEntity,
+      b: PhysicsEntity,
       Type1: Ctor<T1>,
       Type2: Ctor<T2>,
     ): [T1, T2] | null {
@@ -109,6 +130,28 @@ export default class CollisionManager {
         return [b, a];
       }
 
+      return null;
+    }
+
+    function checkTypes(
+      a: PhysicsEntity,
+      b: PhysicsEntity,
+      leftCheck: PhysicsEntityType,
+      rightCheck: PhysicsEntityType,
+    ): [PhysicsEntity, PhysicsEntity] | null {
+      if (
+        a.physicsEntityType == leftCheck &&
+        b.physicsEntityType == rightCheck
+      ) {
+        return [a, b];
+      }
+
+      if (
+        b.physicsEntityType == leftCheck &&
+        a.physicsEntityType == rightCheck
+      ) {
+        return [b, a];
+      }
       return null;
     }
   }

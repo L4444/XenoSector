@@ -3,8 +3,6 @@ import type GameScene from "../scenes/GameScene";
 export default abstract class BasePhysicsObject
   extends Phaser.Physics.Matter.Image
 {
-  physicsObjectName!: string;
-
   gameScene!: GameScene;
 
   constructor(
@@ -24,8 +22,6 @@ export default abstract class BasePhysicsObject
     }
 
     this.setCollisionCategory(1);
-
-    this.physicsObjectName = physicsObjectID;
 
     scene.add.existing(this);
   }

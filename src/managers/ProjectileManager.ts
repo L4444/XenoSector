@@ -10,7 +10,7 @@ export default class ProjectileManager {
   constructor(scene: GameScene) {
     this.scene = scene;
     for (var i = 0; i < 100; i++) {
-      this.projectiles[i] = new Projectile(this.scene, "Projectile" + i);
+      //this.projectiles[i] = new Projectile(this.scene, "Projectile" + i);
     }
   }
 

@@ -115,14 +115,16 @@ export default class Projectile extends DynamicPhysicsObject {
 
     // Use vectors to set the path of the projectile, use the X axis to align with the player ship.
     let v = new Phaser.Math.Vector2(projectileData.speed, 0);
-    v.rotate(parent.rotation);
+    // FIX: Parent.rotation
+    v.rotate(0);
 
     this.setVelocity(
       v.x + parent.getVelocity().x,
       v.y + parent.getVelocity().y,
     );
 
-    this.rotation = parent.rotation;
+    // FIX: Parent.rotation
+    this.rotation = 0;
 
     XenoLog.proj.debug(
       "\'" + projectileData.textureName + "\' fired",

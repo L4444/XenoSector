@@ -62,12 +62,12 @@ export default class GameScene extends Phaser.Scene {
     new GameBackground(this, "Blue Nebula 4 - 1024x1024", 0.2, 1);
     new GameBackground(this, "Blue Nebula 2 - 1024x1024", 1, 0.3);
 
+    // Create the walls around the world
+    createArena(this, 1000, 2000, 50);
+
     this.statics = [];
     // Create asteroids to help player orient themselves
-    this.statics.push(...createAsteroidGrid(this, -300, -1500, 14, 2, 800));
-
-    // Create the walls around the world
-    this.statics.push(...createArena(this, 1000, 2000, 50));
+    //this.statics.push(...createAsteroidGrid(this, -300, -1500, 14, 2, 800));
 
     this.pm = new ProjectileManager(this);
 
