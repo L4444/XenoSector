@@ -1,7 +1,7 @@
 import DynamicPhysicsObject from "../physics/DynamicPhysicsObject";
 import type GameScene from "../scenes/GameScene";
 
-import ShipSystem from "../objects/ShipSystem";
+import ShipSystem from "../entities/ShipSystem";
 import Shield from "./Shield";
 import ValueBar from "./ValueBar";
 import { XenoLog } from "../helpers/XenoLogger";

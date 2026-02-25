@@ -1,7 +1,8 @@
 import type Ship from "./Ship";
 import type GameScene from "../scenes/GameScene";
+import BaseEntity from "./BaseEntity";
 
-export default class ValueBar {
+export default class ValueBar extends BaseEntity {
   private barBack!: Phaser.GameObjects.Rectangle;
   private barFront!: Phaser.GameObjects.Rectangle;
   private parentShip!: Ship;
@@ -18,6 +19,7 @@ export default class ValueBar {
     maxValue: number,
     passiveRegen: number = 0,
   ) {
+    super(scene);
     this.barBack = scene.add.rectangle(
       0, // x
       0, // y
@@ -42,10 +44,6 @@ export default class ValueBar {
     this.currentValue = startingValue;
     this.maxValue = maxValue;
     this.passiveRegen = passiveRegen;
-
-    // Post update, the preUpdate() function calls BEFORE physics update so if I sync
-    // the other elements (e.g. shield/thruster) they will lag slightly behind.
-    scene.events.on("postupdate", this.postUpdate, this);
   }
 
   reduceBy(value: number) {

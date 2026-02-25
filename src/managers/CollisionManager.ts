@@ -1,5 +1,5 @@
-import Projectile from "../objects/Projectile";
-import Ship from "../objects/Ship";
+import Projectile from "../entities/Projectile";
+import Ship from "../entities/Ship";
 import BasePhysicsObject from "../physics/BasePhysicsObject";
 import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import type GameScene from "../scenes/GameScene";

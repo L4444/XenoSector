@@ -1,6 +1,6 @@
 import BaseController from "./BaseController";
 import type GameScene from "../scenes/GameScene";
-import type Ship from "../objects/Ship";
+import type Ship from "../entities/Ship";
 
 export default class AIController extends BaseController {
   private targetShip!: Ship;

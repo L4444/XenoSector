@@ -1,8 +1,10 @@
 import type GameScene from "../scenes/GameScene";
+import PositionalEntity from "./PositionalEntity";
 
 import type ShipSystem from "./ShipSystem";
 
-export default class UIElement extends Phaser.GameObjects.Image {
+export default class UIElement extends PositionalEntity {
+  private icon!: Phaser.GameObjects.Image;
   private swish!: Phaser.GameObjects.Graphics;
   private swishMask!: Phaser.GameObjects.Graphics;
   private nameText!: Phaser.GameObjects.Text;
@@ -12,12 +14,11 @@ export default class UIElement extends Phaser.GameObjects.Image {
   private shipSystem!: ShipSystem;
 
   constructor(scene: GameScene, x: number, y: number, shipSystem: ShipSystem) {
-    super(scene, x, y, shipSystem.getUITextureName());
-    // Add to scene or it doesn't render/update
-    scene.add.existing(this);
+    super(scene);
 
-    this.setScrollFactor(0);
-    this.setScale(2);
+    this.icon = scene.add.image(x, y, shipSystem.getUITextureName());
+    this.icon.setScrollFactor(0);
+    this.icon.setScale(2);
 
     this.shipSystem = shipSystem;
 
@@ -83,5 +84,13 @@ export default class UIElement extends Phaser.GameObjects.Image {
     );
     this.swish.closePath();
     this.swish.fillPath();
+  }
+
+  get x(): number {
+    return this.icon.x;
+  }
+
+  get y(): number {
+    return this.icon.y;
   }
 }

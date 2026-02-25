@@ -1,14 +1,14 @@
-import type Ship from "../objects/Ship";
+import type Ship from "../entities/Ship";
 import type BasePhysicsObject from "../physics/BasePhysicsObject";
 import type GameScene from "../scenes/GameScene";
 import type ShipSystemData from "../types/ShipSystemData";
+import BaseEntity from "./BaseEntity";
 
-export default class ShipSystem {
+export default class ShipSystem extends BaseEntity {
   private data: ShipSystemData;
   private parentShip!: Ship;
   private cooldownRemaining: number = 0;
   private reuseRemaining: number = 0;
-  protected scene!: GameScene;
 
   constructor(
     scene: GameScene,
@@ -16,8 +16,7 @@ export default class ShipSystem {
 
     shipSystemData: ShipSystemData,
   ) {
-    // Manually add this to scene and physics (contructor doesn't do this for us)
-    scene.events.on("postupdate", this.postUpdate, this);
+    super(scene);
 
     this.data = shipSystemData;
 

@@ -1,6 +1,6 @@
 import type GameScene from "../scenes/GameScene";
 import BaseController from "./BaseController";
-import type Ship from "../objects/Ship";
+import type Ship from "../entities/Ship";
 
 export default class KeyboardAndMouseController extends BaseController {
   constructor(scene: GameScene) {

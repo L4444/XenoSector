@@ -1,20 +1,20 @@
 import type Ship from "./Ship";
 import type GameScene from "../scenes/GameScene";
 
-export default class Shield {
-  parentShip!: Ship;
-  shieldImage!: Phaser.GameObjects.Image;
+import BaseEntity from "./BaseEntity";
+
+export default class Shield extends BaseEntity {
+  private shieldImage!: Phaser.GameObjects.Image;
+  private parentShip!: Ship;
+
   constructor(scene: GameScene, parentShip: Ship) {
+    super(scene);
     this.parentShip = parentShip;
 
     this.shieldImage = scene.add.image(0, 0, "Shield");
     this.shieldImage.displayWidth = parentShip.displayWidth;
     this.shieldImage.displayHeight = parentShip.displayHeight;
     this.shieldImage.alpha = 0.3;
-
-    // Post update, the preUpdate() function calls BEFORE physics update so if I sync
-    // the other elements (e.g. shield/thruster) they will lag slightly behind.
-    scene.events.on("postupdate", this.postUpdate, this);
   }
 
   postUpdate() {

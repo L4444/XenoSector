@@ -1,4 +1,4 @@
-import Wall from "../objects/Wall";
+import Wall from "../entities/Wall";
 import type GameScene from "../scenes/GameScene";
 
 /**

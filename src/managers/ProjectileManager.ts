@@ -1,5 +1,5 @@
-import Projectile from "../objects/Projectile";
-import type Ship from "../objects/Ship";
+import Projectile from "../entities/Projectile";
+import type Ship from "../entities/Ship";
 import type GameScene from "../scenes/GameScene";
 
 export default class ProjectileManager {

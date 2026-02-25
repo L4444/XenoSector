@@ -1,16 +1,16 @@
-import GameBackground from "../objects/GameBackground";
+import GameBackground from "../entities/GameBackground";
 import createArena from "../factories/createArena";
 import createAsteroidGrid from "../factories/createAsteroidGrid";
 
 import StaticPhysicsObject from "../physics/StaticPhysicsObject";
-import Ship from "../objects/Ship";
+import Ship from "../entities/Ship";
 import loadImage from "../helpers/loadImage";
 
 import ProjectileManager from "../managers/ProjectileManager";
 import CollisionManager from "../managers/CollisionManager";
 import AlertManager from "../managers/AlertManager";
 
-import UIElement from "../objects/UIElement";
+import UIElement from "../entities/UIElement";
 import AIController from "../controllers/AIController";
 import KeyboardAndMouseController from "../controllers/KeyboardAndMouseController";
 

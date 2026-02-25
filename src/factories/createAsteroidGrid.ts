@@ -1,4 +1,4 @@
-import Asteroid from "../objects/Asteroid";
+import Asteroid from "../entities/Asteroid";
 import type GameScene from "../scenes/GameScene";
 
 /**

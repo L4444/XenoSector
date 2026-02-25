@@ -1,5 +1,5 @@
 import type GameScene from "../scenes/GameScene";
-import type Ship from "../objects/Ship";
+import type Ship from "../entities/Ship";
 
 export default abstract class BaseController {
   protected scene!: GameScene;
