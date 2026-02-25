@@ -1,6 +1,6 @@
 import type GameScene from "../scenes/GameScene";
 import rotateTexture from "./rotateTexture";
-import { loadLogger } from "./XenoLogger";
+import { XenoLog } from "./XenoLogger";
 
 /**
  * Phaser loads images/sprites assuming they are facing right (when angle = 0), I assume that images/sprites face up (when angle = 0).
@@ -25,9 +25,12 @@ export default function loadImage(
   if (matches != null) {
     textureKey = matches[1];
   } else {
-    loadLogger.error(" loadImage cannot parse the following url: ", textureUrl);
+    XenoLog.load.error(
+      " loadImage cannot parse the following url: ",
+      textureUrl,
+    );
   }
-  loadLogger.info(
+  XenoLog.load.info(
     "Loaded image: \t\'" + textureKey + "\'\t from \t\'" + textureUrl + "\'",
   );
   // Rotation should be optional

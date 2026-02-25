@@ -4,7 +4,7 @@ import type GameScene from "../scenes/GameScene";
 import ShipSystem from "../objects/ShipSystem";
 import Shield from "./Shield";
 import ValueBar from "./ValueBar";
-import { shipLogger } from "../helpers/XenoLogger";
+import { XenoLog } from "../helpers/XenoLogger";
 import type BaseController from "../controllers/BaseController";
 import type ShipData from "../types/ShipData";
 
@@ -35,7 +35,7 @@ export default class Ship extends DynamicPhysicsObject {
     isPlayerTeam: boolean,
     shipData: ShipData,
   ) {
-    shipLogger.debug("Ship \'" + shipName + "\' Created", shipData);
+    XenoLog.ship.debug("Ship \'" + shipName + "\' Created", shipData);
     super(scene, shipName, x, y, textureName, true, shipData.mass, 0.01);
 
     this.shipData = shipData;
@@ -222,10 +222,10 @@ export default class Ship extends DynamicPhysicsObject {
     // For easy shorthand
     let sys: ShipSystem = this.systems[num];
 
-    shipLogger.trace("Trying to use \'" + sys.getSystemName() + "\'");
+    XenoLog.ship.trace("Trying to use \'" + sys.getSystemName() + "\'");
 
     if (!sys.isReady()) {
-      shipLogger.trace(
+      XenoLog.ship.trace(
         "System \'" + sys.getSystemName() + "\' not used due to refire delay",
       );
       return;
@@ -235,7 +235,7 @@ export default class Ship extends DynamicPhysicsObject {
     if (this.energy.getCurrentValue() < sys.getEnergyCost()) {
       let debugText: string =
         "Not enough energy to use: \'" + sys.getSystemName() + "\'";
-      shipLogger.debug(debugText);
+      XenoLog.ship.debug(debugText);
       if (this.ticksSinceEnergyMessage > 50) {
         this.gameScene.getAlertManager().textPop(this.x, this.y, debugText);
 
@@ -247,7 +247,7 @@ export default class Ship extends DynamicPhysicsObject {
     // If the system isn't ready to usem don't use it
     if (!sys.isOffCooldown()) {
       let debugText: string = "\'" + sys.getSystemName() + "\' isn\'t ready";
-      shipLogger.debug(debugText);
+      XenoLog.ship.debug(debugText);
       if (this.ticksSinceCooldownMessage > 50) {
         this.gameScene.getAlertManager().textPop(this.x, this.y, debugText);
         this.ticksSinceCooldownMessage = 0;
@@ -257,7 +257,7 @@ export default class Ship extends DynamicPhysicsObject {
 
     sys.use();
     this.energy.reduceBy(sys.getEnergyCost());
-    shipLogger.trace(
+    XenoLog.ship.trace(
       "\'" + this.physicsObjectName + "\' Used \'" + sys.getSystemName() + "\'",
     );
   }

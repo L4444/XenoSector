@@ -3,13 +3,13 @@ import Ship from "../objects/Ship";
 import BasePhysicsObject from "../physics/BasePhysicsObject";
 import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import type GameScene from "../scenes/GameScene";
-import { cmLogger } from "../helpers/XenoLogger";
+import { XenoLog } from "../helpers/XenoLogger";
 
 type Ctor<T> = new (...args: any[]) => T;
 
 export default class CollisionManager {
   constructor(scene: GameScene) {
-    cmLogger.info("Collision Manager created");
+    XenoLog.coll.info("Collision Manager created");
 
     scene.matter.world.on(
       "collisionstart",
@@ -32,7 +32,7 @@ export default class CollisionManager {
           );
           if (shipProjectileCollision) {
             const [shipHit, projectileHit] = shipProjectileCollision;
-            cmLogger.debug(
+            XenoLog.coll.debug(
               "Ship-Projectile Collision\tShip: '" +
                 shipHit.physicsObjectName +
                 "'\tProjectile: '" +
@@ -44,7 +44,7 @@ export default class CollisionManager {
             if (projectileHit.getIsPlayerTeam() != shipHit.getIsPlayerTeam()) {
               shipHit.hurt(projectileHit.getDamage());
 
-              cmLogger.debug(
+              XenoLog.coll.debug(
                 "Dealing damage to\tShip: '" +
                   shipHit.physicsObjectName +
                   "'\tProjectile: '" +
@@ -68,7 +68,7 @@ export default class CollisionManager {
           if (staticProjectileCollision) {
             const [staticHit, projectileHit] = staticProjectileCollision;
 
-            cmLogger.debug(
+            XenoLog.coll.debug(
               "Static-Projectile Collision\tShip: '" +
                 staticHit.physicsObjectName +
                 "'\tProjectile: '" +
@@ -81,7 +81,7 @@ export default class CollisionManager {
             return;
           }
 
-          cmLogger.warn(
+          XenoLog.coll.warn(
             "Unhandled Collision\tObjA: '" +
               objA.physicsObjectName +
               "'\tObjB: '" +

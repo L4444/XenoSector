@@ -2,7 +2,7 @@ import DynamicPhysicsObject from "../physics/DynamicPhysicsObject";
 import type ProjectileData from "../types/ProjectileData";
 import type Ship from "./Ship";
 import type GameScene from "../scenes/GameScene";
-import { pmLogger } from "../helpers/XenoLogger";
+import { XenoLog } from "../helpers/XenoLogger";
 
 export default class Projectile extends DynamicPhysicsObject {
   private currentLifetime: number = 0;
@@ -59,7 +59,7 @@ export default class Projectile extends DynamicPhysicsObject {
 
   postUpdate() {
     if (this.toRemove) {
-      pmLogger.debug("Removed");
+      XenoLog.proj.debug("Removed");
       this.setVisible(false);
       this.setCollidesWith(0);
       this.setVelocity(0);
@@ -124,7 +124,7 @@ export default class Projectile extends DynamicPhysicsObject {
 
     this.rotation = parent.rotation;
 
-    pmLogger.debug(
+    XenoLog.proj.debug(
       "\'" + projectileData.textureName + "\' fired",
       projectileData,
     );
