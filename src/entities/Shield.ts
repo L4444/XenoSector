@@ -11,11 +11,7 @@ export default class Shield extends BaseEntity {
     super(xenoGame);
     this.parentShip = parentShip;
 
-    this.shieldImage = xenoGame.createBasicImage({
-      x: 0,
-      y: 0,
-      textureKey: "Shield",
-    });
+    this.shieldImage = xenoGame.createBasicImage(0, 0, "Shield");
     this.shieldImage.displayWidth = parentShip.displayWidth;
     this.shieldImage.displayHeight = parentShip.displayHeight;
     this.shieldImage.alpha = 0.3;

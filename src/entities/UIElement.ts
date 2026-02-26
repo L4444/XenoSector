@@ -21,11 +21,7 @@ export default class UIElement extends PositionalEntity {
   ) {
     super(xenoGame);
 
-    this.icon = xenoGame.createBasicImage({
-      x: x,
-      y: y,
-      textureKey: shipSystem.getUITextureName(),
-    });
+    this.icon = xenoGame.createBasicImage(x, y, shipSystem.getUITextureName());
     this.icon.setScrollFactor(0);
     this.icon.setScale(2);
 

@@ -20,7 +20,9 @@ export default class Asteroid extends PhysicsEntity {
   ) {
     super(
       xenoGame,
-      { x: x, y: y, textureKey: "Asteroid" },
+      x,
+      y,
+      "Asteroid",
       asteroidName,
       PhysicsEntityType.STATIC,
       true,

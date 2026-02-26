@@ -11,13 +11,7 @@ export default class Wall extends PhysicsEntity {
     width: number,
     height: number,
   ) {
-    super(
-      xenoGame,
-      { x: x, y: y, textureKey: "red" },
-      wallName,
-      PhysicsEntityType.STATIC,
-      false,
-    );
+    super(xenoGame, x, y, "red", wallName, PhysicsEntityType.STATIC, false);
 
     this.image.width = width;
     this.image.height = height;

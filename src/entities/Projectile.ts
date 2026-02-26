@@ -17,7 +17,9 @@ export default class Projectile extends PhysicsEntity {
     // Do not set the mass to 0
     super(
       xenoGame,
-      { x: 0, y: 0, textureKey: "red" },
+      0,
+      0,
+      "red",
       projectileName,
       PhysicsEntityType.PROJECTILE,
       true,

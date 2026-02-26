@@ -30,18 +30,12 @@ export default class Ship extends PhysicsEntity {
     shipName: string,
     x: number,
     y: number,
-    textureName: string,
+    textureKey: string,
     controller: BaseController,
     isPlayerTeam: boolean,
     shipData: ShipData,
   ) {
-    super(
-      xenoGame,
-      { x: x, y: y, textureKey: textureName },
-      shipName,
-      PhysicsEntityType.SHIP,
-      true,
-    );
+    super(xenoGame, x, y, textureKey, shipName, PhysicsEntityType.SHIP, true);
     XenoLog.ship.debug("Ship \'" + shipName + "\' Created", shipData);
 
     this.shipData = shipData;

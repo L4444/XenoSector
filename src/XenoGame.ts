@@ -1,5 +1,5 @@
 import type GameScene from "./scenes/GameScene";
-import type EntityCreationOptions from "./types/EntityCreationOptions";
+
 import GameBackground from "./entities/GameBackground";
 import createArena from "./factories/createArena";
 import createAsteroidGrid from "./factories/createAsteroidGrid";
@@ -36,18 +36,20 @@ export default class XenoGame implements IEntityCreator {
     this.scene = scene;
   }
 
-  createBasicImage(options: EntityCreationOptions): Phaser.GameObjects.Image {
-    return this.scene.add.image(options.x, options.y, options.textureKey);
+  createBasicImage(
+    x: number,
+    y: number,
+    textureKey: string,
+  ): Phaser.GameObjects.Image {
+    return this.scene.add.image(x, y, textureKey);
   }
 
   createMatterImage(
-    options: EntityCreationOptions,
+    x: number,
+    y: number,
+    textureKey: string,
   ): Phaser.Physics.Matter.Image {
-    return this.scene.matter.add.image(
-      options.x,
-      options.y,
-      options.textureKey,
-    );
+    return this.scene.matter.add.image(x, y, textureKey);
   }
 
   createRectangle(
