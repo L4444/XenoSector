@@ -12,6 +12,7 @@ import AlertManager from "../managers/AlertManager";
 import UIElement from "../entities/UIElement";
 import AIController from "../controllers/AIController";
 import KeyboardAndMouseController from "../controllers/KeyboardAndMouseController";
+import { XenoLog } from "../helpers/XenoLogger";
 
 export default class GameScene extends Phaser.Scene {
   private player!: Ship;
@@ -22,6 +23,7 @@ export default class GameScene extends Phaser.Scene {
   private cm!: CollisionManager;
   private am!: AlertManager;
   private ui!: Array<UIElement>;
+  private enemyAutoFire: boolean = true;
 
   private versionText!: Phaser.GameObjects.Text;
 
@@ -135,9 +137,14 @@ export default class GameScene extends Phaser.Scene {
     this.input.keyboard?.on("keydown-R", (_event: KeyboardEvent) => {
       console.log(" Pressed R");
 
-      console.log(_event);
-
       this.player.explode();
+    });
+
+    this.input.keyboard?.on("keydown-Q", (_event: KeyboardEvent) => {
+      console.log(" Pressed Q");
+
+      this.enemyAutoFire = !this.enemyAutoFire;
+      XenoLog.ship.info("Enemy autofire set to " + this.enemyAutoFire);
     });
 
     this.versionText = this.add.text(5, 5, "Version 0.1");
@@ -172,5 +179,9 @@ export default class GameScene extends Phaser.Scene {
 
   getAlertManager(): AlertManager {
     return this.am;
+  }
+
+  getEnemyAutoFire(): boolean {
+    return this.enemyAutoFire;
   }
 }

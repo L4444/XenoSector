@@ -9,8 +9,10 @@ export default class AIController extends BaseController {
     this.targetShip = targetShip;
   }
   controlShip(ship: Ship): number {
-    if (ship.getCurrentEnergy() >= ship.getSystem(3).getEnergyCost()) {
-      //ship.useSystem(3);
+    if (this.scene.getEnemyAutoFire()) {
+      if (ship.getCurrentEnergy() >= ship.getSystem(3).getEnergyCost()) {
+        ship.useSystem(3);
+      }
     }
 
     if (this.targetShip.x < ship.x) {
