@@ -13,8 +13,9 @@ import UIElement from "../entities/UIElement";
 import AIController from "../controllers/AIController";
 import KeyboardAndMouseController from "../controllers/KeyboardAndMouseController";
 import { XenoLog } from "../helpers/XenoLogger";
+import type IGameScene from "./IGameScene";
 
-export default class GameScene extends Phaser.Scene {
+export default class GameScene extends Phaser.Scene implements IGameScene {
   private player!: Ship;
   private enemies!: Array<Ship>;
   private camera!: Phaser.Math.Vector2;
@@ -183,5 +184,15 @@ export default class GameScene extends Phaser.Scene {
 
   getEnemyAutoFire(): boolean {
     return this.enemyAutoFire;
+  }
+
+  onCollisionStart(
+    colStart: (
+      event: Phaser.Physics.Matter.Events.CollisionStartEvent,
+      _bodyA: MatterJS.BodyType,
+      _bodyB: MatterJS.BodyType,
+    ) => void,
+  ) {
+    this.matter.world.on("collisionstart", colStart);
   }
 }

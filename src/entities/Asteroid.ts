@@ -1,4 +1,5 @@
 import type GameScene from "../scenes/GameScene";
+import type IGameScene from "../scenes/IGameScene";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 import PhysicsEntity from "./PhysicsEntity";
 

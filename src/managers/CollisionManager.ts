@@ -5,69 +5,65 @@ import Ship from "../entities/Ship";
 
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 import type Projectile from "../entities/Projectile";
+import type IGameScene from "../scenes/IGameScene";
 
 export default class CollisionManager {
-  constructor(scene: GameScene) {
+  constructor(scene: IGameScene) {
     XenoLog.coll.debug("Collision Manager created");
 
-    scene.matter.world.on(
-      "collisionstart",
-      function (
-        event: Phaser.Physics.Matter.Events.CollisionStartEvent,
-        _bodyA: MatterJS.BodyType,
-        _bodyB: MatterJS.BodyType,
-      ) {
-        event.pairs.forEach((pair) => {
-          let objA: PhysicsEntity = pair.bodyA.gameObject?.getData(
-            "entity",
-          ) as PhysicsEntity;
+    scene.onCollisionStart(function (
+      event: Phaser.Physics.Matter.Events.CollisionStartEvent,
+    ) {
+      event.pairs.forEach((pair) => {
+        let objA: PhysicsEntity = pair.bodyA.gameObject?.getData(
+          "entity",
+        ) as PhysicsEntity;
 
-          let objB: PhysicsEntity = pair.bodyB.gameObject?.getData(
-            "entity",
-          ) as PhysicsEntity;
+        let objB: PhysicsEntity = pair.bodyB.gameObject?.getData(
+          "entity",
+        ) as PhysicsEntity;
 
-          XenoLog.coll.debug(
-            "Collision Detected\tObjA: '" +
-              objA.physicsEntityName +
-              "'\tObjB: '" +
-              objB.physicsEntityName +
-              "'",
-          );
+        XenoLog.coll.info(
+          "Collision Detected\tObjA: '" +
+            objA.physicsEntityName +
+            "'\tObjB: '" +
+            objB.physicsEntityName +
+            "'",
+        );
 
-          checkCollision(
-            objA,
-            objB,
-            PhysicsEntityType.SHIP,
-            PhysicsEntityType.STATIC,
-            handleShipStatic,
-          );
+        checkCollision(
+          objA,
+          objB,
+          PhysicsEntityType.SHIP,
+          PhysicsEntityType.STATIC,
+          handleShipStatic,
+        );
 
-          checkCollision(
-            objA,
-            objB,
-            PhysicsEntityType.SHIP,
-            PhysicsEntityType.SHIP,
-            handleShipShip,
-          );
+        checkCollision(
+          objA,
+          objB,
+          PhysicsEntityType.SHIP,
+          PhysicsEntityType.SHIP,
+          handleShipShip,
+        );
 
-          checkCollision(
-            objA,
-            objB,
-            PhysicsEntityType.SHIP,
-            PhysicsEntityType.PROJECTILE,
-            handleShipProjectile,
-          );
+        checkCollision(
+          objA,
+          objB,
+          PhysicsEntityType.SHIP,
+          PhysicsEntityType.PROJECTILE,
+          handleShipProjectile,
+        );
 
-          checkCollision(
-            objA,
-            objB,
-            PhysicsEntityType.PROJECTILE,
-            PhysicsEntityType.STATIC,
-            handleProjectileStatic,
-          );
-        });
-      },
-    );
+        checkCollision(
+          objA,
+          objB,
+          PhysicsEntityType.PROJECTILE,
+          PhysicsEntityType.STATIC,
+          handleProjectileStatic,
+        );
+      });
+    });
 
     function checkCollision(
       a: PhysicsEntity,
