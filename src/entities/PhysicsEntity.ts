@@ -23,7 +23,11 @@ export default abstract class PhysicsEntity extends PositionalEntity {
 
     // Set circle first because setCircle() resets the setStatic() flag
     if (isCircle) {
-      this.image.setCircle(this.image.width / 2);
+      this.image.setCircle(this.image.width / 2, {
+        friction: 0,
+        frictionAir: 0,
+        frictionStatic: 0,
+      });
     }
 
     // For static objects, we need to be static.
@@ -31,7 +35,7 @@ export default abstract class PhysicsEntity extends PositionalEntity {
       this.image.setStatic(true);
     }
 
-    //this.setCollisionCategory(1);
+    this.image.setCollisionCategory(1);
   }
 
   get x(): number {

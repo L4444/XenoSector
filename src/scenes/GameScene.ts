@@ -2,7 +2,6 @@ import GameBackground from "../entities/GameBackground";
 import createArena from "../factories/createArena";
 import createAsteroidGrid from "../factories/createAsteroidGrid";
 
-import StaticPhysicsObject from "../physics/StaticPhysicsObject";
 import Ship from "../entities/Ship";
 import loadImage from "../helpers/loadImage";
 
@@ -18,7 +17,7 @@ export default class GameScene extends Phaser.Scene {
   private player!: Ship;
   private enemies!: Array<Ship>;
   private camera!: Phaser.Math.Vector2;
-  private statics!: Array<StaticPhysicsObject>;
+
   private pm!: ProjectileManager;
   private cm!: CollisionManager;
   private am!: AlertManager;
@@ -65,7 +64,6 @@ export default class GameScene extends Phaser.Scene {
     // Create the walls around the world
     createArena(this, 1000, 2000, 50);
 
-    this.statics = [];
     // Create asteroids to help player orient themselves
     createAsteroidGrid(this, -300, -1500, 14, 2, 800);
 
@@ -89,12 +87,12 @@ export default class GameScene extends Phaser.Scene {
 
     this.enemies = new Array<Ship>();
 
-    for (let i = 0; i < 9; i++) {
+    for (let i = 0; i < 1; i++) {
       this.enemies.push(
         new Ship(
           this,
           "Enemy Ship " + i,
-          -500 + i * 150,
+          i * 300,
           1000,
           "Alien-Bomber",
 

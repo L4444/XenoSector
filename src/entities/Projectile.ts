@@ -25,10 +25,10 @@ export default class Projectile extends PhysicsEntity {
     );
 
     // For clean looking collision detection, projectile hitbox should be very small
-    this.image.setCircle(1);
+    // FIX
+    //this.image.setCircle(30);
 
-    // Do not collide with other bullets
-    //this.setCollisionGroup(-1);
+    // Only collide with non-projectiles
     this.image.setCollisionCategory(2);
     this.image.setCollidesWith(1);
 
