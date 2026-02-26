@@ -1,9 +1,9 @@
-import type GameScene from "../scenes/GameScene";
+import type XenoGame from "../XenoGame";
 import BaseEntity from "./BaseEntity";
 
 export default abstract class PositionalEntity extends BaseEntity {
-  constructor(scene: GameScene) {
-    super(scene);
+  constructor(xenoGame: XenoGame) {
+    super(xenoGame);
   }
 
   abstract get x(): number;

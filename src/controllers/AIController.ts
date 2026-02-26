@@ -1,15 +1,15 @@
 import BaseController from "./BaseController";
-import type GameScene from "../scenes/GameScene";
 import type Ship from "../entities/Ship";
+import type XenoGame from "../XenoGame";
 
 export default class AIController extends BaseController {
   private targetShip!: Ship;
-  constructor(scene: GameScene, targetShip: Ship) {
-    super(scene);
+  constructor(xenoGame: XenoGame, targetShip: Ship) {
+    super(xenoGame);
     this.targetShip = targetShip;
   }
   controlShip(ship: Ship): number {
-    if (this.scene.getEnemyAutoFire()) {
+    if (this.xenoGame.getEnemyAutoFire()) {
       if (ship.getCurrentEnergy() >= ship.getSystem(3).getEnergyCost()) {
         ship.useSystem(3);
       }

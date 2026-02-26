@@ -1,18 +1,18 @@
 import BaseEntity from "../entities/BaseEntity";
-
-import type GameScene from "../scenes/GameScene";
+import type XenoGame from "../XenoGame";
 
 export default class AlertManager extends BaseEntity {
   private textboxes!: Array<Phaser.GameObjects.Text>;
   private nextTextboxID: number = 0;
 
-  constructor(scene: GameScene) {
-    super(scene);
+  constructor(xenoGame: XenoGame) {
+    super(xenoGame);
     this.textboxes = new Array<Phaser.GameObjects.Text>();
 
     // Create them and then make the invisible
     for (let i: number = 0; i < 100; i++) {
-      this.textboxes[i] = scene.add.text(0, 0, "This is text");
+      this.textboxes[i] = xenoGame.createText(0, 0, "This is a test");
+      // scene.add.text(0, 0, "This is text");
       this.textboxes[i].alpha = 0;
     }
   }

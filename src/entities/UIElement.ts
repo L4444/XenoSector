@@ -1,4 +1,4 @@
-import type GameScene from "../scenes/GameScene";
+import type XenoGame from "../XenoGame";
 import PositionalEntity from "./PositionalEntity";
 
 import type ShipSystem from "./ShipSystem";
@@ -13,10 +13,19 @@ export default class UIElement extends PositionalEntity {
 
   private shipSystem!: ShipSystem;
 
-  constructor(scene: GameScene, x: number, y: number, shipSystem: ShipSystem) {
-    super(scene);
+  constructor(
+    xenoGame: XenoGame,
+    x: number,
+    y: number,
+    shipSystem: ShipSystem,
+  ) {
+    super(xenoGame);
 
-    this.icon = scene.add.image(x, y, shipSystem.getUITextureName());
+    this.icon = xenoGame.createBasicImage({
+      x: x,
+      y: y,
+      textureKey: shipSystem.getUITextureName(),
+    });
     this.icon.setScrollFactor(0);
     this.icon.setScale(2);
 
@@ -24,12 +33,12 @@ export default class UIElement extends PositionalEntity {
 
     // The way this works is the "swish" covers the icon with a greyish filter
     // All it is a circular graphic "cut" into a square with the "swishMask"
-    this.swish = scene.add.graphics();
+    this.swish = xenoGame.createGraphic();
     this.swish.setScrollFactor(0);
     this.swish.x = this.x;
     this.swish.y = this.y;
 
-    this.swishMask = scene.add.graphics();
+    this.swishMask = xenoGame.createGraphic();
     this.swishMask.setScrollFactor(0);
     this.swishMask.x = this.x;
     this.swishMask.y = this.y;
@@ -40,27 +49,24 @@ export default class UIElement extends PositionalEntity {
     this.swish.setMask(this.swishMask.createGeometryMask());
 
     // Now add the text to the element
-    this.nameText = scene.add.text(
+    this.nameText = xenoGame.createText(
       this.x - 32,
       this.y + 32,
       shipSystem.getSystemName(),
-      { fontSize: 10 },
     );
     this.nameText.setScrollFactor(0);
 
-    this.keybindText = scene.add.text(
+    this.keybindText = xenoGame.createText(
       this.x - 32,
       this.y - 32,
       shipSystem.getKeybind(),
-      { fontSize: 15 },
     );
     this.keybindText.setScrollFactor(0);
 
-    this.energyCostText = scene.add.text(
+    this.energyCostText = xenoGame.createText(
       this.x + 16,
       this.y - 32,
       shipSystem.getEnergyCost().toString(),
-      { fontSize: 15 },
     );
     this.energyCostText.setColor("#00ffaa");
     this.energyCostText.setScrollFactor(0);

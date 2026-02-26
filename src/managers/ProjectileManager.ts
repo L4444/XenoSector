@@ -1,16 +1,15 @@
 import Projectile from "../entities/Projectile";
 import type Ship from "../entities/Ship";
-import type GameScene from "../scenes/GameScene";
+
+import type XenoGame from "../XenoGame";
 
 export default class ProjectileManager {
   private projectiles: Array<Projectile> = new Array<Projectile>();
   private nextProjectile: number = 0;
-  private scene!: GameScene;
 
-  constructor(scene: GameScene) {
-    this.scene = scene;
+  constructor(xenoGame: XenoGame) {
     for (var i = 0; i < 100; i++) {
-      this.projectiles[i] = new Projectile(this.scene, "Projectile" + i);
+      this.projectiles[i] = new Projectile(xenoGame, "Projectile" + i);
     }
   }
 

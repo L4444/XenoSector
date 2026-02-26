@@ -1,5 +1,6 @@
 import Wall from "../entities/Wall";
-import type GameScene from "../scenes/GameScene";
+
+import type XenoGame from "../XenoGame";
 
 /**
  * Creates a rectangular arena bounded by four static wall bodies.
@@ -7,7 +8,7 @@ import type GameScene from "../scenes/GameScene";
  * The arena is centered on the origin (0, 0). Walls are positioned at
  * the edges defined by both arenaWidth and arenaHeight
  *
- * @param scene - The Phaser scene the walls will be added to.
+ * @param xenoGame - XenoGAME
  * @param arenaWidth - The width of the arena
  * @param arenaHeight - The width of the arena
  * @param wallThickness - Thickness of each boundary wall.
@@ -19,7 +20,7 @@ import type GameScene from "../scenes/GameScene";
  * - Walls are static and intended to act as collision boundaries only.
  */
 export default function createArena(
-  scene: GameScene,
+  xenoGame: XenoGame,
   arenaWidth: number,
   arenaHeight: number,
   wallThickness: number,
@@ -29,7 +30,7 @@ export default function createArena(
   // Create the "walls", for out of bounds
   walls.push(
     new Wall(
-      scene,
+      xenoGame,
       "Wall Top",
       0,
       0 - arenaHeight,
@@ -39,7 +40,7 @@ export default function createArena(
   ); ///Top
   walls.push(
     new Wall(
-      scene,
+      xenoGame,
       "Wall Right",
       0 + arenaWidth,
       0,
@@ -49,7 +50,7 @@ export default function createArena(
   ); // Right
   walls.push(
     new Wall(
-      scene,
+      xenoGame,
       "Wall Bottom",
       0,
       0 + arenaHeight,
@@ -59,7 +60,7 @@ export default function createArena(
   ); // Bottom
   walls.push(
     new Wall(
-      scene,
+      xenoGame,
       "Wall Left",
       0 - arenaWidth,
       0,

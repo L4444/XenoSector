@@ -1,5 +1,6 @@
 import Asteroid from "../entities/Asteroid";
-import type GameScene from "../scenes/GameScene";
+
+import type XenoGame from "../XenoGame";
 
 /**
  *
@@ -14,7 +15,7 @@ import type GameScene from "../scenes/GameScene";
  * @returns The created asteroid array
  */
 export default function createAsteroidGrid(
-  scene: GameScene,
+  xenoGame: XenoGame,
   x: number,
   y: number,
   totalAsteroids: number,
@@ -38,7 +39,7 @@ export default function createAsteroidGrid(
 
     asteroids.push(
       new Asteroid(
-        scene,
+        xenoGame,
         "Astroid" + i,
         x + gridX * spacing,
         y + gridY * spacing,

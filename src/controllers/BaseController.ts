@@ -1,10 +1,10 @@
-import type GameScene from "../scenes/GameScene";
 import type Ship from "../entities/Ship";
+import type XenoGame from "../XenoGame";
 
 export default abstract class BaseController {
-  protected scene!: GameScene;
-  constructor(scene: GameScene) {
-    this.scene = scene;
+  protected xenoGame!: XenoGame;
+  constructor(xenoGame: XenoGame) {
+    this.xenoGame = xenoGame;
   }
 
   controlShip(_ship: Ship): number {

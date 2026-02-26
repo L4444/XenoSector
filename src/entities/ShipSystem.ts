@@ -1,7 +1,7 @@
 import type Ship from "../entities/Ship";
 
-import type GameScene from "../scenes/GameScene";
 import type ShipSystemData from "../types/ShipSystemData";
+import type XenoGame from "../XenoGame";
 import BaseEntity from "./BaseEntity";
 
 export default class ShipSystem extends BaseEntity {
@@ -11,7 +11,7 @@ export default class ShipSystem extends BaseEntity {
   private reuseRemaining: number = 0;
 
   constructor(
-    scene: GameScene,
+    scene: XenoGame,
     parentShip: Ship,
 
     shipSystemData: ShipSystemData,
@@ -80,7 +80,4 @@ export default class ShipSystem extends BaseEntity {
       .getProjectileManager()
       .shoot(this.getParentShip(), this.data.projectileData);
   }
-
-  // This function should be overrided in the child class
-  //onHit(_hitObject: BasePhysicsObject) {}
 }

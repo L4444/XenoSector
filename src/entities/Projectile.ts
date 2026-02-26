@@ -1,9 +1,10 @@
 import type ProjectileData from "../types/ProjectileData";
 import type Ship from "./Ship";
-import type GameScene from "../scenes/GameScene";
+
 import { XenoLog } from "../helpers/XenoLogger";
 import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
+import type XenoGame from "../XenoGame";
 
 export default class Projectile extends PhysicsEntity {
   private currentLifetime: number = 0;
@@ -12,15 +13,13 @@ export default class Projectile extends PhysicsEntity {
   private toRemove: boolean = false;
   private isPlayerTeam!: boolean;
 
-  constructor(scene: GameScene, projectileName: string) {
+  constructor(xenoGame: XenoGame, projectileName: string) {
     // Do not set the mass to 0
     super(
-      scene,
-      0,
-      0,
+      xenoGame,
+      { x: 0, y: 0, textureKey: "red" },
       projectileName,
       PhysicsEntityType.PROJECTILE,
-      "red",
       true,
     );
 
@@ -34,9 +33,6 @@ export default class Projectile extends PhysicsEntity {
 
     // Start disabled, ready to fire
     this.disable();
-
-    // Use fo
-    scene.events.on("postupdate", this.postUpdate, this);
   }
   // time: number, delta: number
   preUpdate() {

@@ -1,17 +1,23 @@
-import type GameScene from "../scenes/GameScene";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
+import type XenoGame from "../XenoGame";
 import PhysicsEntity from "./PhysicsEntity";
 
 export default class Wall extends PhysicsEntity {
   constructor(
-    scene: GameScene,
+    xenoGame: XenoGame,
     wallName: string,
     x: number,
     y: number,
     width: number,
     height: number,
   ) {
-    super(scene, x, y, wallName, PhysicsEntityType.STATIC, "red", false);
+    super(
+      xenoGame,
+      { x: x, y: y, textureKey: "red" },
+      wallName,
+      PhysicsEntityType.STATIC,
+      false,
+    );
 
     this.image.width = width;
     this.image.height = height;

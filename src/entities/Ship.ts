@@ -1,5 +1,3 @@
-import type GameScene from "../scenes/GameScene";
-
 import ShipSystem from "../entities/ShipSystem";
 import Shield from "./Shield";
 import ValueBar from "./ValueBar";
@@ -8,6 +6,7 @@ import type BaseController from "../controllers/BaseController";
 import type ShipData from "../types/ShipData";
 import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
+import type XenoGame from "../XenoGame";
 
 export default class Ship extends PhysicsEntity {
   private static count: number = 0;
@@ -27,7 +26,7 @@ export default class Ship extends PhysicsEntity {
   private shipData: ShipData;
 
   constructor(
-    scene: GameScene,
+    xenoGame: XenoGame,
     shipName: string,
     x: number,
     y: number,
@@ -36,7 +35,13 @@ export default class Ship extends PhysicsEntity {
     isPlayerTeam: boolean,
     shipData: ShipData,
   ) {
-    super(scene, x, y, shipName, PhysicsEntityType.SHIP, textureName, true);
+    super(
+      xenoGame,
+      { x: x, y: y, textureKey: textureName },
+      shipName,
+      PhysicsEntityType.SHIP,
+      true,
+    );
     XenoLog.ship.debug("Ship \'" + shipName + "\' Created", shipData);
 
     this.shipData = shipData;
@@ -47,10 +52,11 @@ export default class Ship extends PhysicsEntity {
     this.image.setMass(100);
 
     /// Put shield in it's own object class
-    this.shield = new Shield(scene, this);
-    this.hp = new ValueBar(scene, this, 0, 0x993333, 100, 100, 0.01);
-    this.energy = new ValueBar(scene, this, 15, 0x9999ff, 70, 100, 0.5);
+    this.shield = new Shield(xenoGame, this);
+    //this.hp = new ValueBar(xenoGame, this, 0, 0x993333, 100, 100, 0.01);
+    //this.energy = new ValueBar(xenoGame, this, 15, 0x9999ff, 70, 100, 0.5);
 
+    /* Todo: Fix: 
     this.explodeParticleEmitter = scene.add.particles(0, 0, "i_0003", {
       lifespan: 2000,
       speed: { min: 25, max: 50 },
@@ -60,10 +66,11 @@ export default class Ship extends PhysicsEntity {
       scale: 0.25,
       alpha: { start: 0.5, end: 0, ease: "expo.out" },
     });
+    */
 
     this.systems = new Array<ShipSystem>();
 
-    let basicWeapon: ShipSystem = new ShipSystem(scene, this, {
+    let basicWeapon: ShipSystem = new ShipSystem(xenoGame, this, {
       systemName: "Plasma Cannon",
       cooldownDuration: 40,
       reuseDuration: 40,
@@ -81,7 +88,7 @@ export default class Ship extends PhysicsEntity {
 
     this.systems.push(basicWeapon);
 
-    let rapidFireWeapon: ShipSystem = new ShipSystem(scene, this, {
+    let rapidFireWeapon: ShipSystem = new ShipSystem(xenoGame, this, {
       systemName: "Machine Gun",
       cooldownDuration: 3,
       reuseDuration: 3,
@@ -99,7 +106,7 @@ export default class Ship extends PhysicsEntity {
 
     this.systems.push(rapidFireWeapon);
 
-    let heavyLongCooldownWeapon: ShipSystem = new ShipSystem(scene, this, {
+    let heavyLongCooldownWeapon: ShipSystem = new ShipSystem(xenoGame, this, {
       systemName: "Rad Blaster",
       cooldownDuration: 60,
       reuseDuration: 20,
@@ -117,7 +124,7 @@ export default class Ship extends PhysicsEntity {
 
     this.systems.push(heavyLongCooldownWeapon);
 
-    let crapBlaster: ShipSystem = new ShipSystem(scene, this, {
+    let crapBlaster: ShipSystem = new ShipSystem(xenoGame, this, {
       systemName: "Crap Blaster",
       cooldownDuration: 40,
       reuseDuration: 40,

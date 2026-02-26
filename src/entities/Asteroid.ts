@@ -1,6 +1,5 @@
-import type GameScene from "../scenes/GameScene";
-
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
+import type XenoGame from "../XenoGame";
 import PhysicsEntity from "./PhysicsEntity";
 
 export default class Asteroid extends PhysicsEntity {
@@ -13,19 +12,17 @@ export default class Asteroid extends PhysicsEntity {
    *
    */
   constructor(
-    scene: GameScene,
+    xenoGame: XenoGame,
     asteroidName: string,
     x: number,
     y: number,
     tint: number = 0xffffff,
   ) {
     super(
-      scene,
-      x,
-      y,
+      xenoGame,
+      { x: x, y: y, textureKey: "Asteroid" },
       asteroidName,
       PhysicsEntityType.STATIC,
-      "Asteroid",
       true,
     );
 

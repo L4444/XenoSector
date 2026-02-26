@@ -1,17 +1,21 @@
 import type Ship from "./Ship";
-import type GameScene from "../scenes/GameScene";
 
 import BaseEntity from "./BaseEntity";
+import XenoGame from "../XenoGame";
 
 export default class Shield extends BaseEntity {
   private shieldImage!: Phaser.GameObjects.Image;
   private parentShip!: Ship;
 
-  constructor(scene: GameScene, parentShip: Ship) {
-    super(scene);
+  constructor(xenoGame: XenoGame, parentShip: Ship) {
+    super(xenoGame);
     this.parentShip = parentShip;
 
-    this.shieldImage = scene.add.image(0, 0, "Shield");
+    this.shieldImage = xenoGame.createBasicImage({
+      x: 0,
+      y: 0,
+      textureKey: "Shield",
+    });
     this.shieldImage.displayWidth = parentShip.displayWidth;
     this.shieldImage.displayHeight = parentShip.displayHeight;
     this.shieldImage.alpha = 0.3;
