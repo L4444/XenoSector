@@ -8,7 +8,7 @@ import type Projectile from "../entities/Projectile";
 
 export default class CollisionManager {
   constructor(scene: GameScene) {
-    XenoLog.coll.info("Collision Manager created");
+    XenoLog.coll.debug("Collision Manager created");
 
     scene.matter.world.on(
       "collisionstart",
@@ -118,9 +118,9 @@ export default class CollisionManager {
 
       // Check if friendly fire, it should do no damage but "eat" the projectile, wasting the shot
       if (projectileHit.getIsPlayerTeam() != shipHit.getIsPlayerTeam()) {
-        shipHit.hurt(projectileHit.getDamage());
+        shipHit.takeDamage(projectileHit.getDamage());
 
-        XenoLog.coll.info(
+        XenoLog.coll.debug(
           "Dealing damage to\tShip: '" +
             shipHit.physicsEntityName +
             "'\tProjectile: '" +

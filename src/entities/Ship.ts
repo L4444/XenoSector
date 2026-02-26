@@ -37,7 +37,7 @@ export default class Ship extends PhysicsEntity {
     shipData: ShipData,
   ) {
     super(scene, x, y, shipName, PhysicsEntityType.SHIP, textureName, true);
-    XenoLog.ship.info("Ship \'" + shipName + "\' Created", shipData);
+    XenoLog.ship.debug("Ship \'" + shipName + "\' Created", shipData);
 
     this.shipData = shipData;
 
@@ -211,9 +211,17 @@ export default class Ship extends PhysicsEntity {
     );
   }
 
-  hurt(damageAmount: number) {
+  takeDamage(damageAmount: number) {
     this.hp.reduceBy(damageAmount);
     this.shield.hit();
+
+    XenoLog.ship.debug(
+      "\'" +
+        this.physicsEntityName +
+        "\' has taken " +
+        damageAmount +
+        " damage",
+    );
   }
   // TESTING Methods
   explode() {

@@ -30,7 +30,7 @@ export default function loadImage(
       textureUrl,
     );
   }
-  XenoLog.load.info(
+  XenoLog.load.debug(
     "Loaded image: \t\'" + textureKey + "\'\t from \t\'" + textureUrl + "\'",
   );
   // Rotation should be optional
