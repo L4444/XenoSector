@@ -76,6 +76,15 @@ export default class XenoGame implements IEntityCreator {
     return this.scene.add.graphics();
   }
 
+  createParticleEmitter(
+    x: number,
+    y: number,
+    textureKey: string,
+    config: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig,
+  ): Phaser.GameObjects.Particles.ParticleEmitter {
+    return this.scene.add.particles(x, y, textureKey, config);
+  }
+
   getKeyboard(): Phaser.Input.Keyboard.KeyboardPlugin | null {
     return this.scene.input.keyboard;
   }

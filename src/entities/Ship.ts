@@ -6,7 +6,7 @@ import type BaseController from "../controllers/BaseController";
 import type ShipData from "../types/ShipData";
 import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
-import type XenoGame from "../XenoGame";
+import XenoGame from "../XenoGame";
 
 export default class Ship extends PhysicsEntity {
   private static count: number = 0;
@@ -53,20 +53,23 @@ export default class Ship extends PhysicsEntity {
 
     /// Put shield in it's own object class
     this.shield = new Shield(xenoGame, this);
-    //this.hp = new ValueBar(xenoGame, this, 0, 0x993333, 100, 100, 0.01);
-    //this.energy = new ValueBar(xenoGame, this, 15, 0x9999ff, 70, 100, 0.5);
+    this.hp = new ValueBar(xenoGame, this, 0, 0x993333, 100, 100, 0.01);
+    this.energy = new ValueBar(xenoGame, this, 15, 0x9999ff, 70, 100, 0.5);
 
-    /* Todo: Fix: 
-    this.explodeParticleEmitter = scene.add.particles(0, 0, "i_0003", {
-      lifespan: 2000,
-      speed: { min: 25, max: 50 },
-      angle: { min: 0, max: 360 },
-      emitting: false,
-      blendMode: "ADD",
-      scale: 0.25,
-      alpha: { start: 0.5, end: 0, ease: "expo.out" },
-    });
-    */
+    this.explodeParticleEmitter = xenoGame.createParticleEmitter(
+      0,
+      0,
+      "i_0003",
+      {
+        lifespan: 2000,
+        speed: { min: 25, max: 50 },
+        angle: { min: 0, max: 360 },
+        emitting: false,
+        blendMode: "ADD",
+        scale: 0.25,
+        alpha: { start: 0.5, end: 0, ease: "expo.out" },
+      },
+    );
 
     this.systems = new Array<ShipSystem>();
 
