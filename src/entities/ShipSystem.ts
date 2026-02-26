@@ -1,5 +1,5 @@
 import type Ship from "../entities/Ship";
-import type BasePhysicsObject from "../physics/BasePhysicsObject";
+
 import type GameScene from "../scenes/GameScene";
 import type ShipSystemData from "../types/ShipSystemData";
 import BaseEntity from "./BaseEntity";
@@ -82,5 +82,5 @@ export default class ShipSystem extends BaseEntity {
   }
 
   // This function should be overrided in the child class
-  onHit(_hitObject: BasePhysicsObject) {}
+  //onHit(_hitObject: BasePhysicsObject) {}
 }
