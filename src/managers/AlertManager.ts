@@ -1,10 +1,13 @@
+import BaseEntity from "../entities/BaseEntity";
+
 import type GameScene from "../scenes/GameScene";
 
-export default class LabelManager {
+export default class AlertManager extends BaseEntity {
   private textboxes!: Array<Phaser.GameObjects.Text>;
   private nextTextboxID: number = 0;
 
   constructor(scene: GameScene) {
+    super(scene);
     this.textboxes = new Array<Phaser.GameObjects.Text>();
 
     // Create them and then make the invisible
@@ -12,8 +15,6 @@ export default class LabelManager {
       this.textboxes[i] = scene.add.text(0, 0, "This is text");
       this.textboxes[i].alpha = 0;
     }
-
-    scene.events.on("postupdate", this.postUpdate, this);
   }
 
   textPop(x: number, y: number, message: string) {

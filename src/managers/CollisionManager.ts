@@ -88,11 +88,11 @@ export default class CollisionManager {
       }
     }
 
-    function handleShipStatic(ship: PhysicsEntity, staticObj: PhysicsEntity) {
+    function handleShipStatic(_ship: PhysicsEntity, _staticObj: PhysicsEntity) {
       console.log("Ship - Static");
     }
 
-    function handleShipShip(ship1: PhysicsEntity, ship2: PhysicsEntity) {
+    function handleShipShip(_ship1: PhysicsEntity, _ship2: PhysicsEntity) {
       console.log("Ship - Ship");
     }
 

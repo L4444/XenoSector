@@ -153,7 +153,7 @@ export default class GameScene
       XenoLog.ship.info("Enemy autofire set to " + this.enemyAutoFire);
     });
 
-    this.versionText = this.add.text(5, 5, "Version 0.1");
+    this.versionText = this.add.text(5, 5, "Version 0.1.1");
     this.versionText.setScrollFactor(0);
   }
 

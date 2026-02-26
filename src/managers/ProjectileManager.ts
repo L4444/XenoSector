@@ -14,10 +14,6 @@ export default class ProjectileManager {
     }
   }
 
-  getProjectiles() {
-    return this.projectiles;
-  }
-
   shoot(parent: Ship, projectileData: any) {
     this.projectiles[this.nextProjectile].fire(parent, projectileData);
 
