@@ -35,7 +35,6 @@ export default class Asteroid extends PhysicsEntity {
   }
 
   preUpdate() {
-    console.log(this);
     this.image.angle += this.spinSpeed;
   }
 }

@@ -15,10 +15,9 @@ import UIElement from "./entities/UIElement";
 import AIController from "./controllers/AIController";
 import KeyboardAndMouseController from "./controllers/KeyboardAndMouseController";
 import { XenoLog } from "./helpers/XenoLogger";
-import type IEntityCreator from "./interfaces/IEntityCreator";
 import type BaseEntity from "./entities/BaseEntity";
 
-export default class XenoGame implements IEntityCreator {
+export default class XenoGame {
   private scene!: GameScene;
   private player!: Ship;
   private enemies!: Array<Ship>;

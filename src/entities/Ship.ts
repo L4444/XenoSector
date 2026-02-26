@@ -283,7 +283,7 @@ export default class Ship extends PhysicsEntity {
         "Not enough energy to use: \'" + sys.getSystemName() + "\'";
       XenoLog.ship.debug(debugText);
       if (this.ticksSinceEnergyMessage > 50) {
-        this.scene.getAlertManager().textPop(this.x, this.y, debugText);
+        this.xenoGame.getAlertManager().textPop(this.x, this.y, debugText);
 
         this.ticksSinceEnergyMessage = 0;
       }
@@ -295,7 +295,7 @@ export default class Ship extends PhysicsEntity {
       let debugText: string = "\'" + sys.getSystemName() + "\' isn\'t ready";
       XenoLog.ship.debug(debugText);
       if (this.ticksSinceCooldownMessage > 50) {
-        this.scene.getAlertManager().textPop(this.x, this.y, debugText);
+        this.xenoGame.getAlertManager().textPop(this.x, this.y, debugText);
         this.ticksSinceCooldownMessage = 0;
       }
       return;

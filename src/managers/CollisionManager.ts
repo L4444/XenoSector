@@ -90,11 +90,11 @@ export default class CollisionManager {
     }
 
     function handleShipStatic(_ship: PhysicsEntity, _staticObj: PhysicsEntity) {
-      console.log("Ship - Static");
+      XenoLog.coll.debug("Ship - Static");
     }
 
     function handleShipShip(_ship1: PhysicsEntity, _ship2: PhysicsEntity) {
-      console.log("Ship - Ship");
+      XenoLog.coll.debug("Ship - Ship");
     }
 
     function handleShipProjectile(

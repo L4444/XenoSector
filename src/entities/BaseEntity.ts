@@ -1,12 +1,12 @@
-import type IEntityCreator from "../interfaces/IEntityCreator";
+import type XenoGame from "../XenoGame";
 
 export default abstract class BaseEntity {
-  protected scene!: IEntityCreator;
-  constructor(scene: IEntityCreator) {
-    this.scene = scene;
+  protected xenoGame!: XenoGame;
+  constructor(xenoGame: XenoGame) {
+    this.xenoGame = xenoGame;
 
-    scene.setupPostUpdate(this.postUpdate, this);
-    scene.setupPreUpdate(this.preUpdate, this);
+    xenoGame.setupPostUpdate(this.postUpdate, this);
+    xenoGame.setupPreUpdate(this.preUpdate, this);
 
     //scene.events.on("preupdate", this.preUpdate, this);
   }

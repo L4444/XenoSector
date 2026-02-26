@@ -11,17 +11,16 @@ export default class ShipSystem extends BaseEntity {
   private reuseRemaining: number = 0;
 
   constructor(
-    scene: XenoGame,
+    xenoGame: XenoGame,
     parentShip: Ship,
 
     shipSystemData: ShipSystemData,
   ) {
-    super(scene);
+    super(xenoGame);
 
     this.data = shipSystemData;
 
     this.parentShip = parentShip;
-    this.scene = scene;
   }
 
   // This function will be called outside the class
@@ -76,7 +75,7 @@ export default class ShipSystem extends BaseEntity {
 
   // This function should be overrided in the child class
   onActivate() {
-    this.scene
+    this.xenoGame
       .getProjectileManager()
       .shoot(this.getParentShip(), this.data.projectileData);
   }
