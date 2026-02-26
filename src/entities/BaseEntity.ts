@@ -1,13 +1,14 @@
-import type GameScene from "../scenes/GameScene";
+import type IEntityCreator from "../interfaces/IEntityCreator";
 
 export default abstract class BaseEntity {
-  protected scene!: GameScene;
-  constructor(scene: GameScene) {
+  protected scene!: IEntityCreator;
+  constructor(scene: IEntityCreator) {
     this.scene = scene;
 
-    scene.events.on("postupdate", this.postUpdate, this);
+    scene.setupPostUpdate(this.postUpdate, this);
+    scene.setupPreUpdate(this.preUpdate, this);
 
-    scene.events.on("preupdate", this.preUpdate, this);
+    //scene.events.on("preupdate", this.preUpdate, this);
   }
 
   postUpdate() {}

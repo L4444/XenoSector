@@ -13,9 +13,14 @@ import UIElement from "../entities/UIElement";
 import AIController from "../controllers/AIController";
 import KeyboardAndMouseController from "../controllers/KeyboardAndMouseController";
 import { XenoLog } from "../helpers/XenoLogger";
-import type IGameScene from "./IGameScene";
+import type ICollisionSetup from "../interfaces/ICollisionSetup";
+import type IEntityCreator from "../interfaces/IEntityCreator";
+import type BaseEntity from "../entities/BaseEntity";
 
-export default class GameScene extends Phaser.Scene implements IGameScene {
+export default class GameScene
+  extends Phaser.Scene
+  implements ICollisionSetup, IEntityCreator
+{
   private player!: Ship;
   private enemies!: Array<Ship>;
   private camera!: Phaser.Math.Vector2;
@@ -178,10 +183,6 @@ export default class GameScene extends Phaser.Scene implements IGameScene {
     return this.pm;
   }
 
-  getAlertManager(): AlertManager {
-    return this.am;
-  }
-
   getEnemyAutoFire(): boolean {
     return this.enemyAutoFire;
   }
@@ -194,5 +195,17 @@ export default class GameScene extends Phaser.Scene implements IGameScene {
     ) => void,
   ) {
     this.matter.world.on("collisionstart", colStart);
+  }
+
+  setupPostUpdate(postUpdate: () => void, baseEntity: BaseEntity): void {
+    this.events.on("postupdate", postUpdate, baseEntity);
+  }
+
+  setupPreUpdate(preUpdate: () => void, baseEntity: BaseEntity): void {
+    this.events.on("preupdate", preUpdate, baseEntity);
+  }
+
+  getAlertManager(): AlertManager {
+    return this.am;
   }
 }

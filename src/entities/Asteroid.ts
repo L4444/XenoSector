@@ -1,5 +1,5 @@
 import type GameScene from "../scenes/GameScene";
-import type IGameScene from "../scenes/IGameScene";
+
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 import PhysicsEntity from "./PhysicsEntity";
 
@@ -36,6 +36,7 @@ export default class Asteroid extends PhysicsEntity {
   }
 
   preUpdate() {
+    console.log(this);
     this.image.angle += this.spinSpeed;
   }
 }

@@ -1,14 +1,13 @@
-import type GameScene from "../scenes/GameScene";
 import { XenoLog } from "../helpers/XenoLogger";
 import type PhysicsEntity from "../entities/PhysicsEntity";
 import Ship from "../entities/Ship";
 
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 import type Projectile from "../entities/Projectile";
-import type IGameScene from "../scenes/IGameScene";
+import type ICollisionSetup from "../interfaces/ICollisionSetup";
 
 export default class CollisionManager {
-  constructor(scene: IGameScene) {
+  constructor(scene: ICollisionSetup) {
     XenoLog.coll.debug("Collision Manager created");
 
     scene.onCollisionStart(function (

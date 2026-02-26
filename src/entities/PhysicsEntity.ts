@@ -18,6 +18,7 @@ export default abstract class PhysicsEntity extends PositionalEntity {
     super(scene);
     this.physicsEntityType = physicsEntityType;
     this.physicsEntityName = physicsEntityName;
+
     this.image = scene.matter.add.image(x, y, texture);
     this.image.setData("entity", this);
 
