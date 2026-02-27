@@ -93,17 +93,17 @@ export default class Projectile extends PhysicsEntity {
     return this.isPlayerTeam;
   }
 
-  fire(shipSystemUseData: UseShipSystemData, projectileData: ProjectileData) {
-    this.image.x = shipSystemUseData.x;
-    this.image.y = shipSystemUseData.y;
+  fire(useShipSystemData: UseShipSystemData, projectileData: ProjectileData) {
+    this.image.x = useShipSystemData.x;
+    this.image.y = useShipSystemData.y;
     this.enable();
-    this.isPlayerTeam = shipSystemUseData.isPlayerTeam;
+    this.isPlayerTeam = useShipSystemData.isPlayerTeam;
 
     this.image.setTexture(projectileData.textureName);
 
     // To prevent projectiles from colliding with the ship that is firing them
     // Set this after adjusting the physics body via setCircle() because that function resets the collision group
-    this.image.setCollisionGroup(-shipSystemUseData.shipID);
+    this.image.setCollisionGroup(-useShipSystemData.shipID);
 
     // The lifetime should be determined by the "range", faster projectiles have less lifetime
     // Multiply by 50 to get the rough distance
@@ -123,14 +123,14 @@ export default class Projectile extends PhysicsEntity {
     // Use vectors to set the path of the projectile, use the X axis to align with the player ship.
     let v = new Phaser.Math.Vector2(projectileData.speed, 0);
 
-    v.rotate(shipSystemUseData.rotation);
+    v.rotate(useShipSystemData.rotation);
 
     this.image.setVelocity(
-      v.x + shipSystemUseData.velocityX,
-      v.y + shipSystemUseData.velocityY,
+      v.x + useShipSystemData.velocityX,
+      v.y + useShipSystemData.velocityY,
     );
 
-    this.image.rotation = shipSystemUseData.rotation;
+    this.image.rotation = useShipSystemData.rotation;
 
     XenoLog.proj.debug(
       "\'" + projectileData.textureName + "\' fired",

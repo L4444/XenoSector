@@ -13,9 +13,9 @@ export default class ProjectileManager {
     }
   }
 
-  shoot(shipSystemUseData: UseShipSystemData, projectileData: any) {
+  shoot(useShipSystemData: UseShipSystemData, projectileData: any) {
     this.projectiles[this.nextProjectile].fire(
-      shipSystemUseData,
+      useShipSystemData,
       projectileData,
     );
 

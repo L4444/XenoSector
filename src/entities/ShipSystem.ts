@@ -25,13 +25,13 @@ export default class ShipSystem extends BaseEntity {
   }
 
   // This function will be called outside the class
-  use(shipSystemUseData: UseShipSystemData) {
+  use(useShipSystemData: UseShipSystemData) {
     this.cooldownRemaining = this.data.cooldownDuration;
     this.reuseRemaining = this.data.reuseDuration;
 
     this.xenoGame
       .getProjectileManager()
-      .shoot(shipSystemUseData, this.data.projectileData);
+      .shoot(useShipSystemData, this.data.projectileData);
   }
 
   getSystemName(): string {
