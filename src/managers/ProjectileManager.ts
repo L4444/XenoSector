@@ -1,5 +1,5 @@
 import Projectile from "../entities/Projectile";
-import type ShipSystemUseData from "../types/ShipSystemUseData";
+import type UseShipSystemData from "../types/UseShipSystemData";
 
 import type XenoGame from "../XenoGame";
 
@@ -13,7 +13,7 @@ export default class ProjectileManager {
     }
   }
 
-  shoot(shipSystemUseData: ShipSystemUseData, projectileData: any) {
+  shoot(shipSystemUseData: UseShipSystemData, projectileData: any) {
     this.projectiles[this.nextProjectile].fire(
       shipSystemUseData,
       projectileData,

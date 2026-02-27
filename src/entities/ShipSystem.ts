@@ -1,7 +1,7 @@
 import type Ship from "../entities/Ship";
 
 import type ShipSystemData from "../types/ShipSystemData";
-import type ShipSystemUseData from "../types/ShipSystemUseData";
+import type UseShipSystemData from "../types/UseShipSystemData";
 import type XenoGame from "../XenoGame";
 import BaseEntity from "./BaseEntity";
 
@@ -25,7 +25,7 @@ export default class ShipSystem extends BaseEntity {
   }
 
   // This function will be called outside the class
-  use(shipSystemUseData: ShipSystemUseData) {
+  use(shipSystemUseData: UseShipSystemData) {
     this.cooldownRemaining = this.data.cooldownDuration;
     this.reuseRemaining = this.data.reuseDuration;
 

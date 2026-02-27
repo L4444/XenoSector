@@ -4,7 +4,7 @@ import { XenoLog } from "../helpers/XenoLogger";
 import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 import type XenoGame from "../XenoGame";
-import type ShipSystemUseData from "../types/ShipSystemUseData";
+import type UseShipSystemData from "../types/UseShipSystemData";
 
 export default class Projectile extends PhysicsEntity {
   private currentLifetime: number = 0;
@@ -93,7 +93,7 @@ export default class Projectile extends PhysicsEntity {
     return this.isPlayerTeam;
   }
 
-  fire(shipSystemUseData: ShipSystemUseData, projectileData: ProjectileData) {
+  fire(shipSystemUseData: UseShipSystemData, projectileData: ProjectileData) {
     this.image.x = shipSystemUseData.x;
     this.image.y = shipSystemUseData.y;
     this.enable();

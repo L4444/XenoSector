@@ -7,8 +7,6 @@ export default abstract class BaseEntity {
 
     xenoGame.setupPostUpdate(this.postUpdate, this);
     xenoGame.setupPreUpdate(this.preUpdate, this);
-
-    //scene.events.on("preupdate", this.preUpdate, this);
   }
 
   postUpdate() {}
