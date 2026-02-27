@@ -3,7 +3,7 @@ import BaseController from "./BaseController";
 import XenoGame from "../XenoGame";
 import { KeyboardControlStyle } from "../types/GameSettings";
 import type ShipControlInput from "../types/ShipControlInput";
-import { XenoLog } from "../helpers/XenoLogger";
+
 import type Ship from "../entities/Ship";
 
 export default class KeyboardAndMouseController extends BaseController {
