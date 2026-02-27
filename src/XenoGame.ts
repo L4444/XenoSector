@@ -163,9 +163,10 @@ export default class XenoGame {
       new KeyboardAndMouseController(this),
       true,
       {
-        thrustPower: 0.03,
+        thrustPower: 0.02,
         mass: 100,
         rotationSpeed: 0.05,
+        maxSpeed: 6,
       },
     );
 
@@ -183,9 +184,10 @@ export default class XenoGame {
           new AIController(this, this.player),
           false,
           {
-            thrustPower: 0.01,
+            thrustPower: 0.02,
             mass: 100,
             rotationSpeed: 0.05,
+            maxSpeed: 3,
           },
         ),
       );
@@ -254,7 +256,7 @@ export default class XenoGame {
       }
     });
 
-    this.versionText = this.scene.add.text(5, 5, "Version 0.2");
+    this.versionText = this.scene.add.text(5, 5, "Version 0.2.1");
     this.versionText.setScrollFactor(0);
   }
 

@@ -281,6 +281,16 @@ export default class Ship extends PhysicsEntity {
     if (sci.systems[3]) {
       this.useSystem(3);
     }
+
+    // Clamp Speed
+    let velocity = this.image.getVelocity();
+
+    const speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+
+    if (speed > this.shipData.maxSpeed) {
+      const scale = this.shipData.maxSpeed / speed;
+      this.image.setVelocity(velocity.x * scale, velocity.y * scale);
+    }
   }
 
   postUpdate(): void {
