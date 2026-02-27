@@ -24,6 +24,7 @@ export default abstract class BaseController {
         right: false,
       },
       systems: [false, false, false, false],
+      brake: false,
     };
     return this.onControl(sci, ship);
   }

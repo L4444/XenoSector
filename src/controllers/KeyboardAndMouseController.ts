@@ -17,7 +17,7 @@ export default class KeyboardAndMouseController extends BaseController {
   onControl(sci: ShipControlInput, ship: Ship): ShipControlInput {
     let keyboardInput = this.xenoGame.getKeyboard();
 
-    let ko = keyboardInput?.addKeys("W,S,A,D,F,G") as Keys;
+    let ko = keyboardInput?.addKeys("W,S,A,D,F,G,SPACE") as Keys;
 
     let controlStyle: KeyboardControlStyle =
       this.xenoGame.getKeyboardControlStyle();
@@ -70,19 +70,23 @@ export default class KeyboardAndMouseController extends BaseController {
       }
     }
 
-    if (this.xenoGame.getMouse().leftButtonDown()) {
+    if (ko.SPACE.isDown) {
+      sci.brake = true;
+    }
+
+    let activePointer = this.xenoGame.getMouse();
+
+    if (activePointer.leftButtonDown()) {
       sci.systems[0] = true;
     }
 
-    if (this.xenoGame.getMouse().rightButtonDown()) {
+    if (activePointer.rightButtonDown()) {
       sci.systems[1] = true;
     }
 
     if (ko.F.isDown) {
       sci.systems[2] = true;
     }
-
-    let activePointer = this.xenoGame.getMouse();
 
     activePointer.updateWorldPoint(this.xenoGame.getMainCamera());
 
@@ -112,4 +116,5 @@ interface Keys {
   D: Phaser.Input.Keyboard.Key;
   F: Phaser.Input.Keyboard.Key;
   G: Phaser.Input.Keyboard.Key;
+  SPACE: Phaser.Input.Keyboard.Key;
 }

@@ -172,7 +172,7 @@ export default class XenoGame {
 
     this.enemies = new Array<Ship>();
 
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 0; i++) {
       this.enemies.push(
         new Ship(
           this,

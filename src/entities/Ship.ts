@@ -282,13 +282,26 @@ export default class Ship extends PhysicsEntity {
       this.useSystem(3);
     }
 
-    // Clamp Speed
     let velocity = this.image.getVelocity();
+    let maxSpeed = this.shipData.maxSpeed;
 
-    const speed = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y);
+    const currentSpeed = Math.sqrt(
+      velocity.x * velocity.x + velocity.y * velocity.y,
+    );
 
-    if (speed > this.shipData.maxSpeed) {
-      const scale = this.shipData.maxSpeed / speed;
+    const drag: number = 0.95;
+
+    // Activate the brake to slow down
+    if (sci.brake) {
+      this.image.setVelocity(velocity.x * drag, velocity.y * drag);
+      if (currentSpeed < 1) {
+        this.image.setVelocity(0, 0);
+      }
+    }
+
+    // Limit according to max speed
+    if (currentSpeed > maxSpeed) {
+      const scale = maxSpeed / currentSpeed;
       this.image.setVelocity(velocity.x * scale, velocity.y * scale);
     }
   }
