@@ -4,6 +4,7 @@ import XenoGame from "../XenoGame";
 import { KeyboardControlStyle } from "../types/GameSettings";
 import type ShipControlInput from "../types/ShipControlInput";
 import { XenoLog } from "../helpers/XenoLogger";
+import type Ship from "../entities/Ship";
 
 export default class KeyboardAndMouseController extends BaseController {
   constructor(xenoGame: XenoGame) {
@@ -13,12 +14,7 @@ export default class KeyboardAndMouseController extends BaseController {
       throw new Error("No keyboard detected!");
     }
   }
-  onControl(
-    sci: ShipControlInput,
-    shipX: number,
-    shipY: number,
-    shipRotation: number,
-  ): ShipControlInput {
+  onControl(sci: ShipControlInput, ship: Ship): ShipControlInput {
     let keyboardInput = this.xenoGame.getKeyboard();
 
     let ko = keyboardInput?.addKeys("W,S,A,D,F,G") as Keys;
@@ -67,10 +63,10 @@ export default class KeyboardAndMouseController extends BaseController {
       }
 
       if (ko.A.isDown) {
-        sci.shipTargetRotation = shipRotation - 0.1;
+        sci.shipTargetRotation = ship.rotation - 0.1;
       }
       if (ko.D.isDown) {
-        sci.shipTargetRotation = shipRotation + 0.1;
+        sci.shipTargetRotation = ship.rotation + 0.1;
       }
     }
 
@@ -91,16 +87,16 @@ export default class KeyboardAndMouseController extends BaseController {
     activePointer.updateWorldPoint(this.xenoGame.getMainCamera());
 
     sci.turretTargetRotation = Phaser.Math.Angle.Between(
-      shipX,
-      shipY,
+      ship.x,
+      ship.y,
       activePointer.worldX,
       activePointer.worldY,
     );
 
     if (controlStyle != KeyboardControlStyle.TANKCONTROLS) {
       sci.shipTargetRotation = Phaser.Math.Angle.Between(
-        shipX,
-        shipY,
+        ship.x,
+        ship.y,
         activePointer.worldX,
         activePointer.worldY,
       );

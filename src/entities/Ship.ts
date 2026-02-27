@@ -210,11 +210,7 @@ export default class Ship extends PhysicsEntity {
     this.ticksSinceEnergyMessage++;
     this.ticksSinceCooldownMessage++;
 
-    let sci: ShipControlInput = this.controller.getShipInput(
-      this.x,
-      this.y,
-      this.image.rotation,
-    );
+    let sci: ShipControlInput = this.controller.getShipInput(this);
 
     this.image.rotation = Phaser.Math.Angle.RotateTo(
       this.image.rotation,

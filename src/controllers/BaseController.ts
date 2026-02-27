@@ -1,3 +1,4 @@
+import type Ship from "../entities/Ship";
 import type ShipControlInput from "../types/ShipControlInput";
 import type XenoGame from "../XenoGame";
 
@@ -8,13 +9,9 @@ export default abstract class BaseController {
     this.xenoGame = xenoGame;
   }
 
-  getShipInput(
-    shipX: number,
-    shipY: number,
-    shipRotation: number,
-  ): ShipControlInput {
+  getShipInput(ship: Ship): ShipControlInput {
     let sci: ShipControlInput = {
-      shipTargetRotation: shipRotation,
+      shipTargetRotation: ship.rotation,
       turretTargetRotation: 0,
       thrust: {
         north: false,
@@ -28,13 +25,8 @@ export default abstract class BaseController {
       },
       systems: [false, false, false, false],
     };
-    return this.onControl(sci, shipX, shipY, shipRotation);
+    return this.onControl(sci, ship);
   }
 
-  abstract onControl(
-    sci: ShipControlInput,
-    shipX: number,
-    shipY: number,
-    shipRotation: number,
-  ): ShipControlInput;
+  abstract onControl(sci: ShipControlInput, ship: Ship): ShipControlInput;
 }
