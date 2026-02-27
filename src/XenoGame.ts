@@ -224,7 +224,7 @@ export default class XenoGame {
       XenoLog.ship.info("Enemy autofire set to " + this.enemyAutoFire);
     });
 
-    this.versionText = this.scene.add.text(5, 5, "Version 0.1.1");
+    this.versionText = this.scene.add.text(5, 5, "Version 0.2");
     this.versionText.setScrollFactor(0);
   }
 
