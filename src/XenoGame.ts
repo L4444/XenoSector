@@ -16,6 +16,7 @@ import AIController from "./controllers/AIController";
 import KeyboardAndMouseController from "./controllers/KeyboardAndMouseController";
 import { XenoLog } from "./helpers/XenoLogger";
 import type BaseEntity from "./entities/BaseEntity";
+import { KeyboardControlStyle } from "./types/GameSettings";
 
 export default class XenoGame {
   private scene!: GameScene;
@@ -30,6 +31,10 @@ export default class XenoGame {
   private enemyAutoFire: boolean = true;
 
   private versionText!: Phaser.GameObjects.Text;
+
+  private keyboardControlStyle: KeyboardControlStyle =
+    KeyboardControlStyle.RELATIVE;
+  private mouseLook: boolean = true;
 
   constructor(scene: GameScene) {
     this.scene = scene;
@@ -160,7 +165,7 @@ export default class XenoGame {
       {
         thrustPower: 0.03,
         mass: 100,
-        rotationSpeed: 0.2,
+        rotationSpeed: 0.05,
       },
     );
 
@@ -211,17 +216,42 @@ export default class XenoGame {
 
     // For testing things out
     // Note the Arrow Function gets the context from the GameScene as opposed to a function()
-    this.scene.input.keyboard?.on("keydown-R", (_event: KeyboardEvent) => {
-      console.log(" Pressed R");
+    this.scene.input.keyboard?.on("keydown", (event: KeyboardEvent) => {
+      if (event.key == "1") {
+        this.keyboardControlStyle = KeyboardControlStyle.ABSOLUTE;
+        XenoLog.ship.info(
+          "keyboardControlStyle set to  " + this.keyboardControlStyle,
+        );
+      }
 
-      this.player.explode();
-    });
+      if (event.key == "2") {
+        this.keyboardControlStyle = KeyboardControlStyle.RELATIVE;
+        XenoLog.ship.info(
+          "keyboardControlStyle set to  " + this.keyboardControlStyle,
+        );
+      }
 
-    this.scene.input.keyboard?.on("keydown-Q", (_event: KeyboardEvent) => {
-      console.log(" Pressed Q");
+      if (event.key == "3") {
+        this.keyboardControlStyle = KeyboardControlStyle.TANKCONTROLS;
+        XenoLog.ship.info(
+          "keyboardControlStyle set to  " + this.keyboardControlStyle,
+        );
+      }
 
-      this.enemyAutoFire = !this.enemyAutoFire;
-      XenoLog.ship.info("Enemy autofire set to " + this.enemyAutoFire);
+      if (event.key == "4") {
+        this.mouseLook = !this.mouseLook;
+        XenoLog.ship.info("mouseLook set to " + this.mouseLook);
+      }
+
+      if (event.key == "r") {
+        this.player.explode();
+        XenoLog.ship.info("Test explosion");
+      }
+
+      if (event.key == "q") {
+        this.enemyAutoFire = !this.enemyAutoFire;
+        XenoLog.ship.info("Enemy autofire set to " + this.enemyAutoFire);
+      }
     });
 
     this.versionText = this.scene.add.text(5, 5, "Version 0.2");
@@ -272,5 +302,13 @@ export default class XenoGame {
 
   getAlertManager(): AlertManager {
     return this.am;
+  }
+
+  getKeyboardControlStyle(): KeyboardControlStyle {
+    return this.keyboardControlStyle;
+  }
+
+  getMouseLook(): boolean {
+    return this.mouseLook;
   }
 }

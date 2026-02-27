@@ -11,7 +11,7 @@ export default class AIController extends BaseController {
   controlShip(ship: Ship): number {
     if (this.xenoGame.getEnemyAutoFire()) {
       if (ship.getCurrentEnergy() >= ship.getSystem(3).getEnergyCost()) {
-        ship.useSystem(3);
+        //ship.useSystem(3);
       }
     }
 

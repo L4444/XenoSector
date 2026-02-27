@@ -235,36 +235,41 @@ export default class Ship extends PhysicsEntity {
   }
 
   /// Controls
-  forward() {
-    //this.thrust(this.shipData.thrustPower);
-
+  thrustNorth() {
     this.image.applyForce(
       new Phaser.Math.Vector2(0, -this.shipData.thrustPower),
     );
   }
-
-  backward() {
-    //this.thrustBack(this.shipData.thrustPower);
+  thrustEast() {
+    this.image.applyForce(
+      new Phaser.Math.Vector2(this.shipData.thrustPower, 0),
+    );
+  }
+  thrustSouth() {
     this.image.applyForce(
       new Phaser.Math.Vector2(0, this.shipData.thrustPower),
     );
   }
-
-  left() {
-    //this.thrustLeft(this.shipData.thrustPower);
+  thrustWest() {
     this.image.applyForce(
       new Phaser.Math.Vector2(-this.shipData.thrustPower, 0),
     );
   }
 
-  right() {
-    //this.thrustRight(this.shipData.thrustPower);
-    this.image.applyForce(
-      new Phaser.Math.Vector2(this.shipData.thrustPower, 0),
-    );
+  thrustLeft() {
+    this.image.thrustLeft(this.shipData.thrustPower);
+  }
+  thrustRight() {
+    this.image.thrustRight(this.shipData.thrustPower);
+  }
+  thrustForward() {
+    this.image.thrust(this.shipData.thrustPower);
+  }
+  thrustBackward() {
+    this.image.thrustBack(this.shipData.thrustPower);
   }
 
-  useSystem(num: number) {
+  useSystem(num: number, fireForward: boolean) {
     // For easy shorthand
     let sys: ShipSystem = this.systems[num];
 
@@ -301,7 +306,29 @@ export default class Ship extends PhysicsEntity {
       return;
     }
 
-    sys.use();
+    let rotateMe = 0;
+
+    if (fireForward) {
+      rotateMe = this.rotation;
+    } else {
+      let activePointer = this.xenoGame.getMouse();
+      rotateMe = Phaser.Math.Angle.Between(
+        this.x,
+        this.y,
+        activePointer.worldX,
+        activePointer.worldY,
+      );
+    }
+
+    sys.use({
+      rotation: rotateMe,
+      x: this.x,
+      y: this.y,
+      velocityX: this.getVelocity().x,
+      velocityY: this.getVelocity().y,
+      isPlayerTeam: this.isPlayerTeam,
+      shipID: this.shipID,
+    });
     this.energy.reduceBy(sys.getEnergyCost());
     XenoLog.ship.trace(
       "\'" + " boop " + "\' Used \'" + sys.getSystemName() + "\'",

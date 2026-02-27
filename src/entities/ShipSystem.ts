@@ -1,6 +1,7 @@
 import type Ship from "../entities/Ship";
 
 import type ShipSystemData from "../types/ShipSystemData";
+import type ShipSystemUseData from "../types/ShipSystemUseData";
 import type XenoGame from "../XenoGame";
 import BaseEntity from "./BaseEntity";
 
@@ -24,11 +25,13 @@ export default class ShipSystem extends BaseEntity {
   }
 
   // This function will be called outside the class
-  use() {
+  use(shipSystemUseData: ShipSystemUseData) {
     this.cooldownRemaining = this.data.cooldownDuration;
     this.reuseRemaining = this.data.reuseDuration;
-    //this.useSound.play();
-    this.onActivate();
+
+    this.xenoGame
+      .getProjectileManager()
+      .shoot(shipSystemUseData, this.data.projectileData);
   }
 
   getSystemName(): string {
@@ -71,12 +74,5 @@ export default class ShipSystem extends BaseEntity {
 
   getProgress(): number {
     return this.cooldownRemaining / this.data.cooldownDuration;
-  }
-
-  // This function should be overrided in the child class
-  onActivate() {
-    this.xenoGame
-      .getProjectileManager()
-      .shoot(this.getParentShip(), this.data.projectileData);
   }
 }

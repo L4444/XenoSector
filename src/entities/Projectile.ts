@@ -1,10 +1,10 @@
 import type ProjectileData from "../types/ProjectileData";
-import type Ship from "./Ship";
 
 import { XenoLog } from "../helpers/XenoLogger";
 import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 import type XenoGame from "../XenoGame";
+import type ShipSystemUseData from "../types/ShipSystemUseData";
 
 export default class Projectile extends PhysicsEntity {
   private currentLifetime: number = 0;
@@ -93,17 +93,17 @@ export default class Projectile extends PhysicsEntity {
     return this.isPlayerTeam;
   }
 
-  fire(parent: Ship, projectileData: ProjectileData) {
-    this.image.x = parent.x;
-    this.image.y = parent.y;
+  fire(shipSystemUseData: ShipSystemUseData, projectileData: ProjectileData) {
+    this.image.x = shipSystemUseData.x;
+    this.image.y = shipSystemUseData.y;
     this.enable();
-    this.isPlayerTeam = parent.getIsPlayerTeam();
+    this.isPlayerTeam = shipSystemUseData.isPlayerTeam;
 
     this.image.setTexture(projectileData.textureName);
 
     // To prevent projectiles from colliding with the ship that is firing them
     // Set this after adjusting the physics body via setCircle() because that function resets the collision group
-    this.image.setCollisionGroup(-parent.getShipID());
+    this.image.setCollisionGroup(-shipSystemUseData.shipID);
 
     // The lifetime should be determined by the "range", faster projectiles have less lifetime
     // Multiply by 50 to get the rough distance
@@ -123,14 +123,14 @@ export default class Projectile extends PhysicsEntity {
     // Use vectors to set the path of the projectile, use the X axis to align with the player ship.
     let v = new Phaser.Math.Vector2(projectileData.speed, 0);
 
-    v.rotate(parent.rotation);
+    v.rotate(shipSystemUseData.rotation);
 
     this.image.setVelocity(
-      v.x + parent.getVelocity().x,
-      v.y + parent.getVelocity().y,
+      v.x + shipSystemUseData.velocityX,
+      v.y + shipSystemUseData.velocityY,
     );
 
-    this.image.rotation = parent.rotation;
+    this.image.rotation = shipSystemUseData.rotation;
 
     XenoLog.proj.debug(
       "\'" + projectileData.textureName + "\' fired",
