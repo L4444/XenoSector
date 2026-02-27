@@ -1,6 +1,7 @@
 import BaseController from "./BaseController";
 import type Ship from "../entities/Ship";
 import type XenoGame from "../XenoGame";
+import type ShipControlInput from "../types/ShipControlInput";
 
 export default class AIController extends BaseController {
   private targetShip!: Ship;
@@ -8,7 +9,8 @@ export default class AIController extends BaseController {
     super(xenoGame);
     this.targetShip = targetShip;
   }
-  controlShip(ship: Ship): number {
+  onControl(sci: ShipControlInput): ShipControlInput {
+    /*
     if (this.xenoGame.getEnemyAutoFire()) {
       if (ship.getCurrentEnergy() >= ship.getSystem(3).getEnergyCost()) {
         //ship.useSystem(3);
@@ -31,13 +33,13 @@ export default class AIController extends BaseController {
       //ship.right();
     }
 
-    let targetRotation = Phaser.Math.Angle.Between(
+    sci.targetRotation = Phaser.Math.Angle.Between(
       ship.x,
       ship.y,
       this.targetShip.x,
       this.targetShip.y,
     );
-
-    return targetRotation;
+*/
+    return sci;
   }
 }

@@ -7,6 +7,7 @@ import type ShipData from "../types/ShipData";
 import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 import XenoGame from "../XenoGame";
+import type ShipControlInput from "../types/ShipControlInput";
 
 export default class Ship extends PhysicsEntity {
   private static count: number = 0;
@@ -24,6 +25,7 @@ export default class Ship extends PhysicsEntity {
   private ticksSinceCooldownMessage: number = 0;
 
   private shipData: ShipData;
+  private turret!: Phaser.GameObjects.Image;
 
   constructor(
     xenoGame: XenoGame,
@@ -64,6 +66,8 @@ export default class Ship extends PhysicsEntity {
         alpha: { start: 0.5, end: 0, ease: "expo.out" },
       },
     );
+
+    this.turret = this.xenoGame.createBasicImage(0, 0, "pew-big-green");
 
     this.systems = new Array<ShipSystem>();
 
@@ -196,7 +200,7 @@ export default class Ship extends PhysicsEntity {
         this.image.y = 1800;
       } else {
         this.image.x = 0;
-        this.image.y = -1000;
+        this.image.y = 1000;
       }
 
       // Heal back to full
@@ -206,13 +210,79 @@ export default class Ship extends PhysicsEntity {
     this.ticksSinceEnergyMessage++;
     this.ticksSinceCooldownMessage++;
 
-    let targetRotation = this.controller.controlShip(this);
+    let sci: ShipControlInput = this.controller.getShipInput(
+      this.x,
+      this.y,
+      this.image.rotation,
+    );
 
     this.image.rotation = Phaser.Math.Angle.RotateTo(
       this.image.rotation,
-      targetRotation,
+      sci.shipTargetRotation,
       this.shipData.rotationSpeed,
     );
+
+    this.turret.rotation = Phaser.Math.Angle.RotateTo(
+      this.turret.rotation,
+      sci.turretTargetRotation,
+      this.shipData.rotationSpeed,
+    );
+
+    // The four cardinal directions
+    if (sci.thrust.north) {
+      this.image.applyForce(
+        new Phaser.Math.Vector2(0, -this.shipData.thrustPower),
+      );
+    }
+    if (sci.thrust.east) {
+      this.image.applyForce(
+        new Phaser.Math.Vector2(this.shipData.thrustPower, 0),
+      );
+    }
+    if (sci.thrust.south) {
+      this.image.applyForce(
+        new Phaser.Math.Vector2(0, this.shipData.thrustPower),
+      );
+    }
+    if (sci.thrust.west) {
+      this.image.applyForce(
+        new Phaser.Math.Vector2(-this.shipData.thrustPower, 0),
+      );
+    }
+
+    // Relative position
+    if (sci.thrust.forward) {
+      this.image.thrust(this.shipData.thrustPower);
+    }
+    if (sci.thrust.back) {
+      this.image.thrustBack(this.shipData.thrustPower);
+    }
+    if (sci.thrust.left) {
+      this.image.thrustLeft(this.shipData.thrustPower);
+    }
+    if (sci.thrust.right) {
+      this.image.thrustRight(this.shipData.thrustPower);
+    }
+
+    // Activate systems
+    if (sci.systems[0]) {
+      this.useSystem(0);
+    }
+
+    if (sci.systems[1]) {
+      this.useSystem(1);
+    }
+    if (sci.systems[2]) {
+      this.useSystem(2);
+    }
+    if (sci.systems[3]) {
+      this.useSystem(3);
+    }
+  }
+
+  postUpdate(): void {
+    this.turret.x = this.x;
+    this.turret.y = this.y;
   }
 
   takeDamage(damageAmount: number) {
@@ -235,26 +305,6 @@ export default class Ship extends PhysicsEntity {
   }
 
   /// Controls
-  thrustNorth() {
-    this.image.applyForce(
-      new Phaser.Math.Vector2(0, -this.shipData.thrustPower),
-    );
-  }
-  thrustEast() {
-    this.image.applyForce(
-      new Phaser.Math.Vector2(this.shipData.thrustPower, 0),
-    );
-  }
-  thrustSouth() {
-    this.image.applyForce(
-      new Phaser.Math.Vector2(0, this.shipData.thrustPower),
-    );
-  }
-  thrustWest() {
-    this.image.applyForce(
-      new Phaser.Math.Vector2(-this.shipData.thrustPower, 0),
-    );
-  }
 
   thrustLeft() {
     this.image.thrustLeft(this.shipData.thrustPower);
@@ -269,7 +319,7 @@ export default class Ship extends PhysicsEntity {
     this.image.thrustBack(this.shipData.thrustPower);
   }
 
-  useSystem(num: number, fireForward: boolean) {
+  useSystem(num: number) {
     // For easy shorthand
     let sys: ShipSystem = this.systems[num];
 
@@ -306,22 +356,8 @@ export default class Ship extends PhysicsEntity {
       return;
     }
 
-    let rotateMe = 0;
-
-    if (fireForward) {
-      rotateMe = this.rotation;
-    } else {
-      let activePointer = this.xenoGame.getMouse();
-      rotateMe = Phaser.Math.Angle.Between(
-        this.x,
-        this.y,
-        activePointer.worldX,
-        activePointer.worldY,
-      );
-    }
-
     sys.use({
-      rotation: rotateMe,
+      rotation: this.turret.rotation,
       x: this.x,
       y: this.y,
       velocityX: this.getVelocity().x,

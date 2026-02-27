@@ -1,7 +1,9 @@
 import BaseController from "./BaseController";
-import type Ship from "../entities/Ship";
-import type XenoGame from "../XenoGame";
+
+import XenoGame from "../XenoGame";
 import { KeyboardControlStyle } from "../types/GameSettings";
+import type ShipControlInput from "../types/ShipControlInput";
+import { XenoLog } from "../helpers/XenoLogger";
 
 export default class KeyboardAndMouseController extends BaseController {
   constructor(xenoGame: XenoGame) {
@@ -11,90 +13,99 @@ export default class KeyboardAndMouseController extends BaseController {
       throw new Error("No keyboard detected!");
     }
   }
-  controlShip(ship: Ship): number {
+  onControl(
+    sci: ShipControlInput,
+    shipX: number,
+    shipY: number,
+    shipRotation: number,
+  ): ShipControlInput {
     let keyboardInput = this.xenoGame.getKeyboard();
 
     let ko = keyboardInput?.addKeys("W,S,A,D,F,G") as Keys;
 
-    let targetRotation = ship.rotation;
     let controlStyle: KeyboardControlStyle =
       this.xenoGame.getKeyboardControlStyle();
+
     if (controlStyle == KeyboardControlStyle.ABSOLUTE) {
       if (ko.W.isDown) {
-        ship.thrustNorth();
+        sci.thrust.north = true;
       }
       if (ko.S.isDown) {
-        ship.thrustSouth();
+        sci.thrust.south = true;
       }
 
       if (ko.A.isDown) {
-        ship.thrustWest();
+        sci.thrust.west = true;
       }
       if (ko.D.isDown) {
-        ship.thrustEast();
+        sci.thrust.east = true;
       }
     }
 
     if (controlStyle == KeyboardControlStyle.RELATIVE) {
       if (ko.W.isDown) {
-        ship.thrustForward();
+        sci.thrust.forward = true;
       }
       if (ko.S.isDown) {
-        ship.thrustBackward();
+        sci.thrust.back = true;
       }
 
       if (ko.A.isDown) {
-        ship.thrustLeft();
+        sci.thrust.left = true;
       }
       if (ko.D.isDown) {
-        ship.thrustRight();
+        sci.thrust.right = true;
       }
     }
 
     if (controlStyle == KeyboardControlStyle.TANKCONTROLS) {
       if (ko.W.isDown) {
-        ship.thrustForward();
+        sci.thrust.forward = true;
       }
       if (ko.S.isDown) {
-        ship.thrustBackward();
+        sci.thrust.back = true;
       }
 
       if (ko.A.isDown) {
-        targetRotation = ship.rotation - 0.1;
+        sci.shipTargetRotation = shipRotation - 0.1;
       }
       if (ko.D.isDown) {
-        targetRotation = ship.rotation + 0.1;
+        sci.shipTargetRotation = shipRotation + 0.1;
       }
     }
 
     if (this.xenoGame.getMouse().leftButtonDown()) {
-      ship.useSystem(0, controlStyle != KeyboardControlStyle.TANKCONTROLS);
+      sci.systems[0] = true;
     }
 
     if (this.xenoGame.getMouse().rightButtonDown()) {
-      ship.useSystem(1, controlStyle != KeyboardControlStyle.TANKCONTROLS);
+      sci.systems[1] = true;
     }
 
     if (ko.F.isDown) {
-      ship.useSystem(2, controlStyle != KeyboardControlStyle.TANKCONTROLS);
+      sci.systems[2] = true;
     }
 
-    if (
-      this.xenoGame.getKeyboardControlStyle() !=
-      KeyboardControlStyle.TANKCONTROLS
-    ) {
-      let activePointer = this.xenoGame.getMouse();
+    let activePointer = this.xenoGame.getMouse();
 
-      activePointer.updateWorldPoint(this.xenoGame.getMainCamera());
-      targetRotation = Phaser.Math.Angle.Between(
-        ship.x,
-        ship.y,
+    activePointer.updateWorldPoint(this.xenoGame.getMainCamera());
+
+    sci.turretTargetRotation = Phaser.Math.Angle.Between(
+      shipX,
+      shipY,
+      activePointer.worldX,
+      activePointer.worldY,
+    );
+
+    if (controlStyle != KeyboardControlStyle.TANKCONTROLS) {
+      sci.shipTargetRotation = Phaser.Math.Angle.Between(
+        shipX,
+        shipY,
         activePointer.worldX,
         activePointer.worldY,
       );
     }
-
-    return targetRotation;
+    return sci;
   }
 }
 
