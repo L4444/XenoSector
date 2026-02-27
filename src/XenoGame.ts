@@ -33,7 +33,7 @@ export default class XenoGame {
   private versionText!: Phaser.GameObjects.Text;
 
   private keyboardControlStyle: KeyboardControlStyle =
-    KeyboardControlStyle.ABSOLUTE;
+    KeyboardControlStyle.RELATIVE;
   private mouseLook: boolean = true;
 
   constructor(scene: GameScene) {

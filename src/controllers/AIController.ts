@@ -2,7 +2,6 @@ import BaseController from "./BaseController";
 import type Ship from "../entities/Ship";
 import type XenoGame from "../XenoGame";
 import type ShipControlInput from "../types/ShipControlInput";
-import { KeyboardControlStyle } from "../types/GameSettings";
 
 export default class AIController extends BaseController {
   private targetShip!: Ship;
@@ -17,37 +16,37 @@ export default class AIController extends BaseController {
       if (ship.getCurrentEnergy() >= ship.getSystem(3).getEnergyCost()) {
         ship.useSystem(3);
       }
+
+      if (this.targetShip.x < ship.x) {
+        sci.thrust.west = true;
+      }
+
+      if (this.targetShip.x > ship.x) {
+        sci.thrust.east = true;
+      }
+
+      if (this.targetShip.y < ship.x) {
+        sci.thrust.north = true;
+      }
+
+      if (this.targetShip.y > ship.y) {
+        sci.thrust.south = true;
+      }
+
+      sci.turretTargetRotation = Phaser.Math.Angle.Between(
+        ship.x,
+        ship.y,
+        this.targetShip.x,
+        this.targetShip.y,
+      );
+
+      sci.shipTargetRotation = Phaser.Math.Angle.Between(
+        ship.x,
+        ship.y,
+        this.targetShip.x,
+        this.targetShip.y,
+      );
     }
-
-    if (this.targetShip.x < ship.x) {
-      sci.thrust.west = true;
-    }
-
-    if (this.targetShip.x > ship.x) {
-      sci.thrust.east = true;
-    }
-
-    if (this.targetShip.y < ship.x) {
-      sci.thrust.north = true;
-    }
-
-    if (this.targetShip.y > ship.y) {
-      sci.thrust.south = true;
-    }
-
-    sci.turretTargetRotation = Phaser.Math.Angle.Between(
-      ship.x,
-      ship.y,
-      this.targetShip.x,
-      this.targetShip.y,
-    );
-
-    sci.shipTargetRotation = Phaser.Math.Angle.Between(
-      ship.x,
-      ship.y,
-      this.targetShip.x,
-      this.targetShip.y,
-    );
 
     return sci;
   }

@@ -37,6 +37,9 @@ export default abstract class PhysicsEntity extends PositionalEntity {
       this.image.setStatic(true);
     }
 
+    // Disable angular momentum (Fixes issue #77), a weird bug that causes angular "drift"
+    this.image.setFixedRotation();
+
     this.image.setCollisionCategory(1);
   }
 
