@@ -188,23 +188,30 @@ export default class Ship extends PhysicsEntity {
     return this.image.rotation;
   }
 
+  respawn() {
+    // Play the explosion effect.
+    this.explode();
+
+    // Move their position back to spawn.
+    if (this.isPlayerTeam) {
+      this.image.x = 0;
+      this.image.y = 1800;
+    } else {
+      this.image.x = 0;
+      this.image.y = 1000;
+    }
+
+    // Reset velocity so the ship doesn't respawn at speed
+    this.image.setVelocity(0, 0);
+
+    // Heal back to full
+    this.hp.reset();
+  }
+
   preUpdate() {
     // Ship Death code
     if (this.hp.getCurrentValue() <= 0) {
-      // Play the explosion effect.
-      this.explode();
-
-      // Move their position back to spawn.
-      if (this.isPlayerTeam) {
-        this.image.x = 0;
-        this.image.y = 1800;
-      } else {
-        this.image.x = 0;
-        this.image.y = 1000;
-      }
-
-      // Heal back to full
-      this.hp.reset();
+      this.respawn();
     }
 
     this.ticksSinceEnergyMessage++;
