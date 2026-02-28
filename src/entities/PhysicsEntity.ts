@@ -1,5 +1,6 @@
+import type XenoCreator from "../helpers/XenoCreator";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
-import type XenoGame from "../XenoGame";
+
 import PositionalEntity from "./PositionalEntity";
 
 export default abstract class PhysicsEntity extends PositionalEntity {
@@ -7,7 +8,7 @@ export default abstract class PhysicsEntity extends PositionalEntity {
   public readonly physicsEntityName!: string;
   protected image!: Phaser.Physics.Matter.Image;
   constructor(
-    xenoGame: XenoGame,
+    xenoCreator: XenoCreator,
     x: number,
     y: number,
     textureKey: string,
@@ -15,12 +16,12 @@ export default abstract class PhysicsEntity extends PositionalEntity {
     physicsEntityType: PhysicsEntityType,
     isCircle: boolean,
   ) {
-    super(xenoGame);
+    super(xenoCreator);
     this.physicsEntityType = physicsEntityType;
     this.physicsEntityName = physicsEntityName;
 
     //this.image = scene.matter.add.image(x, y, texture);
-    this.image = xenoGame.createMatterImage(x, y, textureKey);
+    this.image = xenoCreator.createMatterImage(x, y, textureKey);
     this.image.setData("entity", this);
 
     // Set circle first because setCircle() resets the setStatic() flag

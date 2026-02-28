@@ -1,6 +1,6 @@
 import Asteroid from "../entities/Asteroid";
 
-import type XenoGame from "../XenoGame";
+import XenoCreator from "../helpers/XenoCreator";
 
 /**
  *
@@ -15,7 +15,7 @@ import type XenoGame from "../XenoGame";
  * @returns The created asteroid array
  */
 export default function createAsteroidGrid(
-  xenoGame: XenoGame,
+  xenoCreator: XenoCreator,
   x: number,
   y: number,
   totalAsteroids: number,
@@ -39,7 +39,7 @@ export default function createAsteroidGrid(
 
     asteroids.push(
       new Asteroid(
-        xenoGame,
+        xenoCreator,
         "Astroid" + i,
         x + gridX * spacing,
         y + gridY * spacing,

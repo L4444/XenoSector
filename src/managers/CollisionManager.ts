@@ -5,13 +5,13 @@ import Ship from "../entities/Ship";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 import type Projectile from "../entities/Projectile";
 
-import type XenoGame from "../XenoGame";
+import type GameScene from "../scenes/GameScene";
 
 export default class CollisionManager {
-  constructor(xenoGame: XenoGame) {
+  constructor(xenoCreator: GameScene) {
     XenoLog.coll.debug("Collision Manager created");
 
-    xenoGame.onCollisionStart(function (
+    xenoCreator.onCollisionStart(function (
       event: Phaser.Physics.Matter.Events.CollisionStartEvent,
     ) {
       event.pairs.forEach((pair) => {

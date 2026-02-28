@@ -1,15 +1,14 @@
 import Projectile from "../entities/Projectile";
 import type UseShipSystemData from "../types/UseShipSystemData";
-
-import type XenoGame from "../XenoGame";
+import XenoCreator from "../helpers/XenoCreator";
 
 export default class ProjectileManager {
   private projectiles: Array<Projectile> = new Array<Projectile>();
   private nextProjectile: number = 0;
 
-  constructor(xenoGame: XenoGame) {
+  constructor(xenoCreator: XenoCreator) {
     for (var i = 0; i < 100; i++) {
-      this.projectiles[i] = new Projectile(xenoGame, "Projectile" + i);
+      this.projectiles[i] = new Projectile(xenoCreator, "Projectile" + i);
     }
   }
 

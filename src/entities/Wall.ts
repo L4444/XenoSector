@@ -1,17 +1,18 @@
+import type XenoCreator from "../helpers/XenoCreator";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
-import type XenoGame from "../XenoGame";
+
 import PhysicsEntity from "./PhysicsEntity";
 
 export default class Wall extends PhysicsEntity {
   constructor(
-    xenoGame: XenoGame,
+    xenoCreator: XenoCreator,
     wallName: string,
     x: number,
     y: number,
     width: number,
     height: number,
   ) {
-    super(xenoGame, x, y, "red", wallName, PhysicsEntityType.STATIC, false);
+    super(xenoCreator, x, y, "red", wallName, PhysicsEntityType.STATIC, false);
 
     this.image.width = width;
     this.image.height = height;

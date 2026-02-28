@@ -1,4 +1,5 @@
-import type XenoGame from "../XenoGame";
+import type XenoCreator from "../helpers/XenoCreator";
+
 import PositionalEntity from "./PositionalEntity";
 
 import type ShipSystem from "./ShipSystem";
@@ -14,14 +15,19 @@ export default class UIElement extends PositionalEntity {
   private shipSystem!: ShipSystem;
 
   constructor(
-    xenoGame: XenoGame,
+    xenoCreator: XenoCreator,
+
     x: number,
     y: number,
     shipSystem: ShipSystem,
   ) {
-    super(xenoGame);
+    super(xenoCreator);
 
-    this.icon = xenoGame.createBasicImage(x, y, shipSystem.getUITextureName());
+    this.icon = xenoCreator.createBasicImage(
+      x,
+      y,
+      shipSystem.getUITextureName(),
+    );
     this.icon.setScrollFactor(0);
     this.icon.setScale(2);
 
@@ -29,12 +35,12 @@ export default class UIElement extends PositionalEntity {
 
     // The way this works is the "swish" covers the icon with a greyish filter
     // All it is a circular graphic "cut" into a square with the "swishMask"
-    this.swish = xenoGame.createGraphic();
+    this.swish = xenoCreator.createGraphic();
     this.swish.setScrollFactor(0);
     this.swish.x = this.x;
     this.swish.y = this.y;
 
-    this.swishMask = xenoGame.createGraphic();
+    this.swishMask = xenoCreator.createGraphic();
     this.swishMask.setScrollFactor(0);
     this.swishMask.x = this.x;
     this.swishMask.y = this.y;
@@ -45,21 +51,21 @@ export default class UIElement extends PositionalEntity {
     this.swish.setMask(this.swishMask.createGeometryMask());
 
     // Now add the text to the element
-    this.nameText = xenoGame.createText(
+    this.nameText = xenoCreator.createText(
       this.x - 32,
       this.y + 32,
       shipSystem.getSystemName(),
     );
     this.nameText.setScrollFactor(0);
 
-    this.keybindText = xenoGame.createText(
+    this.keybindText = xenoCreator.createText(
       this.x - 32,
       this.y - 32,
       shipSystem.getKeybind(),
     );
     this.keybindText.setScrollFactor(0);
 
-    this.energyCostText = xenoGame.createText(
+    this.energyCostText = xenoCreator.createText(
       this.x + 16,
       this.y - 32,
       shipSystem.getEnergyCost().toString(),

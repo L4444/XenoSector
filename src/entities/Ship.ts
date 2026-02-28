@@ -6,8 +6,11 @@ import type BaseController from "../controllers/BaseController";
 import type ShipData from "../types/ShipData";
 import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
-import XenoGame from "../XenoGame";
+
 import type ShipControlInput from "../types/ShipControlInput";
+import type XenoCreator from "../helpers/XenoCreator";
+import type ProjectileManager from "../managers/ProjectileManager";
+import AlertManager from "../managers/AlertManager";
 
 export default class Ship extends PhysicsEntity {
   private static count: number = 0;
@@ -27,8 +30,12 @@ export default class Ship extends PhysicsEntity {
   private shipData: ShipData;
   private turret!: Phaser.GameObjects.Image;
 
+  private alertManager!: AlertManager;
+
   constructor(
-    xenoGame: XenoGame,
+    xenoCreator: XenoCreator,
+    projectileManager: ProjectileManager,
+    alertManager: AlertManager,
     shipName: string,
     x: number,
     y: number,
@@ -37,7 +44,15 @@ export default class Ship extends PhysicsEntity {
     isPlayerTeam: boolean,
     shipData: ShipData,
   ) {
-    super(xenoGame, x, y, textureKey, shipName, PhysicsEntityType.SHIP, true);
+    super(
+      xenoCreator,
+      x,
+      y,
+      textureKey,
+      shipName,
+      PhysicsEntityType.SHIP,
+      true,
+    );
     XenoLog.ship.debug("Ship \'" + shipName + "\' Created", shipData);
 
     this.shipData = shipData;
@@ -48,11 +63,11 @@ export default class Ship extends PhysicsEntity {
     this.image.setMass(100);
 
     /// Put shield in it's own object class
-    this.shield = new Shield(xenoGame, this);
-    this.hp = new ValueBar(xenoGame, this, 0, 0x993333, 100, 100, 0.01);
-    this.energy = new ValueBar(xenoGame, this, 15, 0x9999ff, 70, 100, 0.5);
+    this.shield = new Shield(xenoCreator, this);
+    this.hp = new ValueBar(xenoCreator, this, 0, 0x993333, 100, 100, 0.01);
+    this.energy = new ValueBar(xenoCreator, this, 15, 0x9999ff, 70, 100, 0.5);
 
-    this.explodeParticleEmitter = xenoGame.createParticleEmitter(
+    this.explodeParticleEmitter = xenoCreator.createParticleEmitter(
       0,
       0,
       "i_0003",
@@ -67,84 +82,106 @@ export default class Ship extends PhysicsEntity {
       },
     );
 
-    this.turret = this.xenoGame.createBasicImage(0, 0, "pew-big-green");
+    this.turret = xenoCreator.createBasicImage(0, 0, "pew-big-green");
 
     this.systems = new Array<ShipSystem>();
 
-    let basicWeapon: ShipSystem = new ShipSystem(xenoGame, this, {
-      systemName: "Plasma Cannon",
-      cooldownDuration: 40,
-      reuseDuration: 40,
-      energyCost: 10,
-      projectileData: {
-        range: 15,
-        speed: 10,
-        textureName: "pew-blue",
-        damage: 20,
-        mass: 0,
+    let basicWeapon: ShipSystem = new ShipSystem(
+      projectileManager,
+      xenoCreator,
+      this,
+      {
+        systemName: "Plasma Cannon",
+        cooldownDuration: 40,
+        reuseDuration: 40,
+        energyCost: 10,
+        projectileData: {
+          range: 15,
+          speed: 10,
+          textureName: "pew-blue",
+          damage: 20,
+          mass: 0,
+        },
+        uiTextureName: "PlasmaCannonPlaceholder",
+        playerKeyBind: "M1",
       },
-      uiTextureName: "PlasmaCannonPlaceholder",
-      playerKeyBind: "M1",
-    });
+    );
 
     this.systems.push(basicWeapon);
 
-    let rapidFireWeapon: ShipSystem = new ShipSystem(xenoGame, this, {
-      systemName: "Machine Gun",
-      cooldownDuration: 3,
-      reuseDuration: 3,
-      energyCost: 15,
-      projectileData: {
-        range: 15,
-        speed: 20,
-        textureName: "pew-yellow",
-        damage: 15,
-        mass: 0.1,
+    let rapidFireWeapon: ShipSystem = new ShipSystem(
+      projectileManager,
+      xenoCreator,
+      this,
+      {
+        systemName: "Machine Gun",
+        cooldownDuration: 3,
+        reuseDuration: 3,
+        energyCost: 15,
+        projectileData: {
+          range: 15,
+          speed: 20,
+          textureName: "pew-yellow",
+          damage: 15,
+          mass: 0.1,
+        },
+        uiTextureName: "MachineGunPlaceholder",
+        playerKeyBind: "M2",
       },
-      uiTextureName: "MachineGunPlaceholder",
-      playerKeyBind: "M2",
-    });
+    );
 
     this.systems.push(rapidFireWeapon);
 
-    let heavyLongCooldownWeapon: ShipSystem = new ShipSystem(xenoGame, this, {
-      systemName: "Rad Blaster",
-      cooldownDuration: 60,
-      reuseDuration: 20,
-      energyCost: 10,
-      projectileData: {
-        range: 15,
-        speed: 10,
-        textureName: "pew-big-green",
-        damage: 20,
-        mass: 6400,
+    let heavyLongCooldownWeapon: ShipSystem = new ShipSystem(
+      projectileManager,
+      xenoCreator,
+      this,
+      {
+        systemName: "Rad Blaster",
+        cooldownDuration: 60,
+        reuseDuration: 20,
+        energyCost: 10,
+        projectileData: {
+          range: 15,
+          speed: 10,
+          textureName: "pew-big-green",
+          damage: 20,
+          mass: 6400,
+        },
+        uiTextureName: "RadBlasterPlaceholder",
+        playerKeyBind: "F",
       },
-      uiTextureName: "RadBlasterPlaceholder",
-      playerKeyBind: "F",
-    });
+    );
 
     this.systems.push(heavyLongCooldownWeapon);
 
-    let crapBlaster: ShipSystem = new ShipSystem(xenoGame, this, {
-      systemName: "Crap Blaster",
-      cooldownDuration: 40,
-      reuseDuration: 40,
-      energyCost: 0,
-      projectileData: {
-        range: 15,
-        speed: 10,
-        textureName: "beam",
-        damage: 0.5,
-        mass: 0,
+    let crapBlaster: ShipSystem = new ShipSystem(
+      projectileManager,
+      xenoCreator,
+      this,
+      {
+        systemName: "Crap Blaster",
+        cooldownDuration: 40,
+        reuseDuration: 40,
+        energyCost: 0,
+        projectileData: {
+          range: 15,
+          speed: 10,
+          textureName: "beam",
+          damage: 0.5,
+          mass: 0,
+        },
+        uiTextureName: "RadBlasterPlaceholder",
+        playerKeyBind: "X",
       },
-      uiTextureName: "RadBlasterPlaceholder",
-      playerKeyBind: "X",
-    });
+    );
 
     this.systems.push(crapBlaster);
 
     this.controller = controller;
     this.isPlayerTeam = isPlayerTeam;
+
+    this.alertManager = alertManager;
   }
 
   // GETTERS
@@ -376,7 +413,7 @@ export default class Ship extends PhysicsEntity {
         "Not enough energy to use: \'" + sys.getSystemName() + "\'";
       XenoLog.ship.debug(debugText);
       if (this.ticksSinceEnergyMessage > 50) {
-        this.xenoGame.getAlertManager().textPop(this.x, this.y, debugText);
+        this.alertManager.textPop(this.x, this.y, debugText);
 
         this.ticksSinceEnergyMessage = 0;
       }
@@ -388,7 +425,7 @@ export default class Ship extends PhysicsEntity {
       let debugText: string = "\'" + sys.getSystemName() + "\' isn\'t ready";
       XenoLog.ship.debug(debugText);
       if (this.ticksSinceCooldownMessage > 50) {
-        this.xenoGame.getAlertManager().textPop(this.x, this.y, debugText);
+        this.alertManager.textPop(this.x, this.y, debugText);
         this.ticksSinceCooldownMessage = 0;
       }
       return;

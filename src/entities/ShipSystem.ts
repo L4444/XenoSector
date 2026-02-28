@@ -1,8 +1,10 @@
 import type Ship from "../entities/Ship";
+import type XenoCreator from "../helpers/XenoCreator";
+import type ProjectileManager from "../managers/ProjectileManager";
 
 import type ShipSystemData from "../types/ShipSystemData";
 import type UseShipSystemData from "../types/UseShipSystemData";
-import type XenoGame from "../XenoGame";
+
 import BaseEntity from "./BaseEntity";
 
 export default class ShipSystem extends BaseEntity {
@@ -10,16 +12,19 @@ export default class ShipSystem extends BaseEntity {
   private parentShip!: Ship;
   private cooldownRemaining: number = 0;
   private reuseRemaining: number = 0;
+  private projectileManager!: ProjectileManager;
 
   constructor(
-    xenoGame: XenoGame,
+    projectileManager: ProjectileManager,
+    xenoCreator: XenoCreator,
     parentShip: Ship,
 
     shipSystemData: ShipSystemData,
   ) {
-    super(xenoGame);
+    super(xenoCreator);
 
     this.data = shipSystemData;
+    this.projectileManager = projectileManager;
 
     this.parentShip = parentShip;
   }
@@ -29,9 +34,7 @@ export default class ShipSystem extends BaseEntity {
     this.cooldownRemaining = this.data.cooldownDuration;
     this.reuseRemaining = this.data.reuseDuration;
 
-    this.xenoGame
-      .getProjectileManager()
-      .shoot(useShipSystemData, this.data.projectileData);
+    this.projectileManager.shoot(useShipSystemData, this.data.projectileData);
   }
 
   getSystemName(): string {

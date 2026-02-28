@@ -1,9 +1,10 @@
-import type XenoGame from "../XenoGame";
+import type XenoCreator from "../helpers/XenoCreator";
+
 import BaseEntity from "./BaseEntity";
 
 export default abstract class PositionalEntity extends BaseEntity {
-  constructor(xenoGame: XenoGame) {
-    super(xenoGame);
+  constructor(xenoCreator: XenoCreator) {
+    super(xenoCreator);
   }
 
   abstract get x(): number;

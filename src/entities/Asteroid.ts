@@ -1,5 +1,6 @@
+import type XenoCreator from "../helpers/XenoCreator";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
-import type XenoGame from "../XenoGame";
+
 import PhysicsEntity from "./PhysicsEntity";
 
 export default class Asteroid extends PhysicsEntity {
@@ -12,14 +13,14 @@ export default class Asteroid extends PhysicsEntity {
    *
    */
   constructor(
-    xenoGame: XenoGame,
+    xenoCreator: XenoCreator,
     asteroidName: string,
     x: number,
     y: number,
     tint: number = 0xffffff,
   ) {
     super(
-      xenoGame,
+      xenoCreator,
       x,
       y,
       "Asteroid",

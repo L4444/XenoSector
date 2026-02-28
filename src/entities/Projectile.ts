@@ -3,8 +3,9 @@ import type ProjectileData from "../types/ProjectileData";
 import { XenoLog } from "../helpers/XenoLogger";
 import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
-import type XenoGame from "../XenoGame";
+
 import type UseShipSystemData from "../types/UseShipSystemData";
+import type XenoCreator from "../helpers/XenoCreator";
 
 export default class Projectile extends PhysicsEntity {
   private currentLifetime: number = 0;
@@ -13,10 +14,10 @@ export default class Projectile extends PhysicsEntity {
   private toRemove: boolean = false;
   private isPlayerTeam!: boolean;
 
-  constructor(xenoGame: XenoGame, projectileName: string) {
+  constructor(xenoCreator: XenoCreator, projectileName: string) {
     // Do not set the mass to 0
     super(
-      xenoGame,
+      xenoCreator,
       0,
       0,
       "red",

@@ -1,8 +1,6 @@
-import type GameScene from "../scenes/GameScene";
-
 export default class GameBackground extends Phaser.GameObjects.TileSprite {
   constructor(
-    scene: GameScene,
+    scene: Phaser.Scene,
     textureName: string,
     scrollFactor: number,
     alphaFactor: number,

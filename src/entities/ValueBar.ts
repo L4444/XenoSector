@@ -1,7 +1,7 @@
 import type Ship from "./Ship";
 
 import BaseEntity from "./BaseEntity";
-import type XenoGame from "../XenoGame";
+import type XenoCreator from "../helpers/XenoCreator";
 
 export default class ValueBar extends BaseEntity {
   private barBack!: Phaser.GameObjects.Rectangle;
@@ -12,7 +12,7 @@ export default class ValueBar extends BaseEntity {
   private maxValue: number = -99;
   private passiveRegen: number = 0;
   constructor(
-    xenoGame: XenoGame,
+    xenoCreator: XenoCreator,
     parentShip: Ship,
     offset: number,
     colour: number,
@@ -20,8 +20,8 @@ export default class ValueBar extends BaseEntity {
     maxValue: number,
     passiveRegen: number = 0,
   ) {
-    super(xenoGame);
-    this.barBack = xenoGame.createRectangle(
+    super(xenoCreator);
+    this.barBack = xenoCreator.createRectangle(
       0, // x
       0, // y
       parentShip.displayWidth, // width
@@ -30,7 +30,7 @@ export default class ValueBar extends BaseEntity {
       1,
     );
 
-    this.barFront = xenoGame.createRectangle(
+    this.barFront = xenoCreator.createRectangle(
       0, // x
       0, // y
       parentShip.displayWidth, // width
