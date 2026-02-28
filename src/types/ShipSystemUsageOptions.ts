@@ -1,4 +1,4 @@
-export default interface UseShipSystemData {
+export default interface ShipSystemUsageOptions {
   x: number;
   y: number;
   velocityX: number;

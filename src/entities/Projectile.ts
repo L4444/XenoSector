@@ -4,7 +4,7 @@ import { XenoLog } from "../helpers/XenoLogger";
 import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 
-import type UseShipSystemData from "../types/UseShipSystemData";
+import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
 import type XenoCreator from "../helpers/XenoCreator";
 
 export default class Projectile extends PhysicsEntity {
@@ -66,7 +66,10 @@ export default class Projectile extends PhysicsEntity {
     return this.isPlayerTeam;
   }
 
-  fire(useShipSystemData: UseShipSystemData, projectileData: ProjectileData) {
+  fire(
+    useShipSystemData: ShipSystemUsageOptions,
+    projectileData: ProjectileData,
+  ) {
     this.setPosition(useShipSystemData.x, useShipSystemData.y);
 
     this.activate();

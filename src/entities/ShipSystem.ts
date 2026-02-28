@@ -3,7 +3,7 @@ import type XenoCreator from "../helpers/XenoCreator";
 import type ProjectileManager from "../managers/ProjectileManager";
 
 import type ShipSystemData from "../types/ShipSystemData";
-import type UseShipSystemData from "../types/UseShipSystemData";
+import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
 
 import BaseEntity from "./BaseEntity";
 
@@ -30,7 +30,7 @@ export default class ShipSystem extends BaseEntity {
   }
 
   // This function will be called outside the class
-  use(useShipSystemData: UseShipSystemData) {
+  use(useShipSystemData: ShipSystemUsageOptions) {
     this.cooldownRemaining = this.data.cooldownDuration;
     this.reuseRemaining = this.data.reuseDuration;
 
