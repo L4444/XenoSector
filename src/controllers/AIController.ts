@@ -2,18 +2,19 @@ import BaseController from "./BaseController";
 import type Ship from "../entities/Ship";
 
 import type ShipControlInput from "../types/ShipControlInput";
-import type GameScene from "../scenes/GameScene";
+
+import type XenoInput from "../helpers/XenoInput";
 
 export default class AIController extends BaseController {
   private targetShip!: Ship;
-  constructor(scene: GameScene, targetShip: Ship) {
-    super(scene);
+  constructor(xenoInput: XenoInput, targetShip: Ship) {
+    super(xenoInput);
     this.targetShip = targetShip;
   }
   onControl(sci: ShipControlInput, ship: Ship): ShipControlInput {
     // AI uses absolute
 
-    if (this.scene.getEnemyAutoFire()) {
+    if (this.xenoInput.getEnemyAutoFire()) {
       if (ship.getCurrentEnergy() >= ship.getSystem(3).getEnergyCost()) {
         ship.useSystem(3);
       }

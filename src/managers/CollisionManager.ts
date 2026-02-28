@@ -5,19 +5,18 @@ import Ship from "../entities/Ship";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 import type Projectile from "../entities/Projectile";
 
-import type GameScene from "../scenes/GameScene";
+export default abstract class CollisionManager {
+  static setupCollisions(scene: Phaser.Scene) {
+    XenoLog.coll.info("Setting up collisions");
 
-export default class CollisionManager {
-  constructor(xenoCreator: GameScene) {
-    XenoLog.coll.debug("Collision Manager created");
-
-    xenoCreator.onCollisionStart(function (
-      event: Phaser.Physics.Matter.Events.CollisionStartEvent,
-    ) {
-      event.pairs.forEach((pair) => {
-        checkPairs(pair);
-      });
-    });
+    scene.matter.world.on(
+      "collisionstart",
+      function (event: Phaser.Physics.Matter.Events.CollisionStartEvent) {
+        event.pairs.forEach((pair) => {
+          checkPairs(pair);
+        });
+      },
+    );
 
     function checkCollision(
       a: PhysicsEntity,

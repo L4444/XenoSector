@@ -1,6 +1,5 @@
 import AIController from "../controllers/AIController";
 import KeyboardAndMouseController from "../controllers/KeyboardAndMouseController";
-import { XenoLog } from "../helpers/XenoLogger";
 
 import GameBackground from "../entities/GameBackground";
 import createArena from "../factories/createArena";
@@ -17,7 +16,7 @@ import AlertManager from "../managers/AlertManager";
 
 import UIElement from "../entities/UIElement";
 
-import { KeyboardControlStyle } from "../types/GameSettings";
+import XenoInput from "../helpers/XenoInput";
 
 export default class GameScene extends Phaser.Scene {
   private player!: Ship;
@@ -25,18 +24,13 @@ export default class GameScene extends Phaser.Scene {
   private camera!: Phaser.Math.Vector2;
 
   private pm!: ProjectileManager;
-  private cm!: CollisionManager;
   private am!: AlertManager;
   private ui!: Array<UIElement>;
+  private xi!: XenoInput;
   private xenoCreator: XenoCreator = new XenoCreator(this);
-
-  private enemyAutoFire: boolean = false;
 
   private versionText!: Phaser.GameObjects.Text;
 
-  private keyboardControlStyle: KeyboardControlStyle =
-    KeyboardControlStyle.RELATIVE;
-  private mouseLook: boolean = true;
   constructor() {
     super("game");
   }
@@ -46,6 +40,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
+    this.xi = new XenoInput(this);
     // Create a parallax effect
     new GameBackground(this, "Blue Nebula 4 - 1024x1024", 0.2, 1);
     new GameBackground(this, "Blue Nebula 2 - 1024x1024", 1, 0.3);
@@ -57,6 +52,7 @@ export default class GameScene extends Phaser.Scene {
     createAsteroidGrid(this.xenoCreator, -300, -1500, 14, 2, 800);
 
     this.pm = new ProjectileManager(this.xenoCreator);
+    this.am = new AlertManager(this.xenoCreator);
 
     // Create Player
     this.player = new Ship(
@@ -67,7 +63,7 @@ export default class GameScene extends Phaser.Scene {
       0,
       1800,
       "Human-Fighter",
-      new KeyboardAndMouseController(this),
+      new KeyboardAndMouseController(this.xi),
       true,
       {
         thrustPower: 0.02,
@@ -90,7 +86,7 @@ export default class GameScene extends Phaser.Scene {
           1000,
           "Alien-Bomber",
 
-          new AIController(this, this.player),
+          new AIController(this.xi, this.player),
           false,
           {
             thrustPower: 0.02,
@@ -108,8 +104,6 @@ export default class GameScene extends Phaser.Scene {
     // Create the camera position vector
     this.camera = new Phaser.Math.Vector2(0, 0);
 
-    this.cm = new CollisionManager(this);
-
     // Create the HUD elements, showing cooldowns, energy costs and keybinds
     this.ui = new Array<UIElement>();
     for (let i = 0; i < 3; i++) {
@@ -122,78 +116,16 @@ export default class GameScene extends Phaser.Scene {
         ),
       );
     }
-
-    this.am = new AlertManager(this.xenoCreator);
+    /// All the game objects are created, setup collision bindings
+    CollisionManager.setupCollisions(this);
 
     // Disable mouse click context menu
     this.game.canvas.addEventListener("contextmenu", (e) => {
       e.preventDefault();
     });
 
-    // For testing things out
-    // Note the Arrow Function gets the context from the GameScene as opposed to a function()
-    this.input.keyboard?.on("keydown", (event: KeyboardEvent) => {
-      if (event.key == "1") {
-        this.keyboardControlStyle = KeyboardControlStyle.ABSOLUTE;
-        XenoLog.ship.info(
-          "keyboardControlStyle set to  " + this.keyboardControlStyle,
-        );
-      }
-
-      if (event.key == "2") {
-        this.keyboardControlStyle = KeyboardControlStyle.RELATIVE;
-        XenoLog.ship.info(
-          "keyboardControlStyle set to  " + this.keyboardControlStyle,
-        );
-      }
-
-      if (event.key == "3") {
-        this.keyboardControlStyle = KeyboardControlStyle.TANKCONTROLS;
-        XenoLog.ship.info(
-          "keyboardControlStyle set to  " + this.keyboardControlStyle,
-        );
-      }
-
-      if (event.key == "4") {
-        this.mouseLook = !this.mouseLook;
-        XenoLog.ship.info("mouseLook set to " + this.mouseLook);
-      }
-
-      if (event.key == "r") {
-        this.player.explode();
-        XenoLog.ship.info("Test explosion");
-      }
-
-      if (event.key == "q") {
-        this.enemyAutoFire = !this.enemyAutoFire;
-        XenoLog.ship.info("Enemy autofire set to " + this.enemyAutoFire);
-      }
-    });
-
     this.versionText = this.add.text(5, 5, "Version 0.2.1");
     this.versionText.setScrollFactor(0);
-  }
-
-  getKeyboard(): Phaser.Input.Keyboard.KeyboardPlugin | null {
-    return this.input.keyboard;
-  }
-
-  getMouse(): Phaser.Input.Pointer {
-    return this.input.activePointer;
-  }
-
-  getMainCamera(): Phaser.Cameras.Scene2D.Camera {
-    return this.cameras.main;
-  }
-
-  onCollisionStart(
-    colStart: (
-      event: Phaser.Physics.Matter.Events.CollisionStartEvent,
-      _bodyA: MatterJS.BodyType,
-      _bodyB: MatterJS.BodyType,
-    ) => void,
-  ) {
-    this.matter.world.on("collisionstart", colStart);
   }
 
   update() {
@@ -210,31 +142,5 @@ export default class GameScene extends Phaser.Scene {
 
     // Set the camera on the ship
     this.cameras.main.centerOn(this.camera.x, this.camera.y);
-  }
-
-  getCollisionManager(): CollisionManager {
-    // Added this so typescript won't complain about this.cm being unused
-    throw new Error("Why are you getting collision manager");
-    return this.cm;
-  }
-
-  getProjectileManager(): ProjectileManager {
-    return this.pm;
-  }
-
-  getEnemyAutoFire(): boolean {
-    return this.enemyAutoFire;
-  }
-
-  getAlertManager(): AlertManager {
-    return this.am;
-  }
-
-  getKeyboardControlStyle(): KeyboardControlStyle {
-    return this.keyboardControlStyle;
-  }
-
-  getMouseLook(): boolean {
-    return this.mouseLook;
   }
 }

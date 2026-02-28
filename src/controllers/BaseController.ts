@@ -1,12 +1,13 @@
 import type Ship from "../entities/Ship";
-import type GameScene from "../scenes/GameScene";
+import type XenoInput from "../helpers/XenoInput";
+
 import type ShipControlInput from "../types/ShipControlInput";
 
 export default abstract class BaseController {
-  protected scene!: GameScene;
+  protected xenoInput!: XenoInput;
 
-  constructor(scene: GameScene) {
-    this.scene = scene;
+  constructor(xenoInput: XenoInput) {
+    this.xenoInput = xenoInput;
   }
 
   getShipInput(ship: Ship): ShipControlInput {

@@ -4,23 +4,24 @@ import { KeyboardControlStyle } from "../types/GameSettings";
 import type ShipControlInput from "../types/ShipControlInput";
 
 import type Ship from "../entities/Ship";
-import type GameScene from "../scenes/GameScene";
+
+import type XenoInput from "../helpers/XenoInput";
 
 export default class KeyboardAndMouseController extends BaseController {
-  constructor(scene: GameScene) {
-    super(scene);
+  constructor(xenoInput: XenoInput) {
+    super(xenoInput);
 
-    if (this.scene.getKeyboard() == null) {
+    if (this.xenoInput.getKeyboard() == null) {
       throw new Error("No keyboard detected!");
     }
   }
   onControl(sci: ShipControlInput, ship: Ship): ShipControlInput {
-    let keyboardInput = this.scene.getKeyboard();
+    let keyboardInput = this.xenoInput.getKeyboard();
 
     let ko = keyboardInput?.addKeys("W,S,A,D,F,G,SPACE") as Keys;
 
     let controlStyle: KeyboardControlStyle =
-      this.scene.getKeyboardControlStyle();
+      this.xenoInput.getKeyboardControlStyle();
 
     if (controlStyle == KeyboardControlStyle.ABSOLUTE) {
       if (ko.W.isDown) {
@@ -74,7 +75,7 @@ export default class KeyboardAndMouseController extends BaseController {
       sci.brake = true;
     }
 
-    let activePointer = this.scene.getMouse();
+    let activePointer = this.xenoInput.getMouse();
 
     if (activePointer.leftButtonDown()) {
       sci.systems[0] = true;
@@ -88,7 +89,7 @@ export default class KeyboardAndMouseController extends BaseController {
       sci.systems[2] = true;
     }
 
-    activePointer.updateWorldPoint(this.scene.getMainCamera());
+    activePointer.updateWorldPoint(this.xenoInput.getMainCamera());
 
     sci.turretTargetRotation = Phaser.Math.Angle.Between(
       ship.x,
