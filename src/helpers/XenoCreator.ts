@@ -1,4 +1,5 @@
 import BaseEntity from "../entities/BaseEntity";
+import type { RenderDepth } from "../types/RenderDepth";
 
 export default class XenoCreator {
   scene!: Phaser.Scene;
@@ -11,16 +12,34 @@ export default class XenoCreator {
     x: number,
     y: number,
     textureKey: string,
+    renderDepth: RenderDepth,
+    isUI: boolean = false,
   ): Phaser.GameObjects.Image {
-    return this.scene.add.image(x, y, textureKey);
+    let obj: Phaser.GameObjects.Image = this.scene.add.image(x, y, textureKey);
+    if (isUI) {
+      obj.setScrollFactor(0);
+    }
+    obj.setDepth(renderDepth);
+    return obj;
   }
 
   createMatterImage(
     x: number,
     y: number,
     textureKey: string,
+    renderDepth: RenderDepth,
+    isUI: boolean = false,
   ): Phaser.Physics.Matter.Image {
-    return this.scene.matter.add.image(x, y, textureKey);
+    let obj: Phaser.Physics.Matter.Image = this.scene.matter.add.image(
+      x,
+      y,
+      textureKey,
+    );
+    if (isUI) {
+      obj.setScrollFactor(0);
+    }
+    obj.setDepth(renderDepth);
+    return obj;
   }
 
   createRectangle(
@@ -41,12 +60,35 @@ export default class XenoCreator {
     );
   }
 
-  createText(x: number, y: number, text: string): Phaser.GameObjects.Text {
-    return this.scene.add.text(x, y, text);
+  createText(
+    x: number,
+    y: number,
+    text: string,
+    renderDepth: RenderDepth,
+    isUI: boolean = false,
+  ): Phaser.GameObjects.Text {
+    let obj: Phaser.GameObjects.Text = this.scene.add.text(x, y, text);
+    if (isUI) {
+      obj.setScrollFactor(0);
+    }
+    obj.setDepth(renderDepth);
+    return obj;
   }
 
-  createGraphic(): Phaser.GameObjects.Graphics {
-    return this.scene.add.graphics();
+  createGraphic(
+    x: number,
+    y: number,
+    renderDepth: RenderDepth,
+    isUI: boolean = false,
+  ): Phaser.GameObjects.Graphics {
+    let obj: Phaser.GameObjects.Graphics = this.scene.add.graphics();
+    if (isUI) {
+      obj.setScrollFactor(0);
+    }
+    obj.x = x;
+    obj.y = y;
+    obj.setDepth(renderDepth);
+    return obj;
   }
 
   createParticleEmitter(

@@ -3,6 +3,7 @@ import { PhysicsEntityType } from "../types/PhysicsEntityType";
 
 import PositionalEntity from "./PositionalEntity";
 import { XenoLog } from "../helpers/XenoLogger";
+import { RenderDepth } from "../types/RenderDepth";
 
 export default abstract class PhysicsEntity extends PositionalEntity {
   public readonly physicsEntityType!: PhysicsEntityType;
@@ -24,7 +25,12 @@ export default abstract class PhysicsEntity extends PositionalEntity {
     this.physicsEntityName = physicsEntityName;
 
     //this.image = scene.matter.add.image(x, y, texture);
-    this.image = xenoCreator.createMatterImage(x, y, textureKey);
+    this.image = xenoCreator.createMatterImage(
+      x,
+      y,
+      textureKey,
+      RenderDepth.SHIPS,
+    );
     this.image.setData("entity", this);
 
     // Set circle first because setCircle() resets the setStatic() flag

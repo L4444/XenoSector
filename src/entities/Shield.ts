@@ -2,16 +2,22 @@ import type Ship from "./Ship";
 
 import BaseEntity from "./BaseEntity";
 import type XenoCreator from "../helpers/XenoCreator";
+import { RenderDepth } from "../types/RenderDepth";
 
 export default class Shield extends BaseEntity {
   private shieldImage!: Phaser.GameObjects.Image;
   private parentShip!: Ship;
 
-  constructor(xnoCreator: XenoCreator, parentShip: Ship) {
-    super(xnoCreator);
+  constructor(xenoCreator: XenoCreator, parentShip: Ship) {
+    super(xenoCreator);
     this.parentShip = parentShip;
 
-    this.shieldImage = xnoCreator.createBasicImage(0, 0, "Shield");
+    this.shieldImage = xenoCreator.createBasicImage(
+      0,
+      0,
+      "Shield",
+      RenderDepth.SHIELDS,
+    );
     this.shieldImage.displayWidth = parentShip.displayWidth;
     this.shieldImage.displayHeight = parentShip.displayHeight;
     this.shieldImage.alpha = 0.3;

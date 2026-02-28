@@ -11,6 +11,7 @@ import type ShipControlInput from "../types/ShipControlInput";
 import type XenoCreator from "../helpers/XenoCreator";
 import type ProjectileManager from "../managers/ProjectileManager";
 import AlertManager from "../managers/AlertManager";
+import { RenderDepth } from "../types/RenderDepth";
 
 export default class Ship extends PhysicsEntity {
   private static count: number = 0;
@@ -82,7 +83,12 @@ export default class Ship extends PhysicsEntity {
       },
     );
 
-    this.turret = xenoCreator.createBasicImage(0, 0, "pew-big-green");
+    this.turret = xenoCreator.createBasicImage(
+      0,
+      0,
+      "pew-big-green",
+      RenderDepth.TURRETS,
+    );
 
     this.systems = new Array<ShipSystem>();
 
