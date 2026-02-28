@@ -52,6 +52,7 @@ export default class Ship extends PhysicsEntity {
       shipName,
       PhysicsEntityType.SHIP,
       true,
+      100,
     );
     XenoLog.ship.debug("Ship \'" + shipName + "\' Created", shipData);
 
@@ -59,8 +60,7 @@ export default class Ship extends PhysicsEntity {
 
     Ship.count++;
     this.shipID = Ship.count;
-    this.image.setCollisionGroup(-this.shipID);
-    this.image.setMass(100);
+    this.setCollisionGroup(-this.shipID);
 
     /// Put shield in it's own object class
     this.shield = new Shield(xenoCreator, this);
@@ -119,7 +119,7 @@ export default class Ship extends PhysicsEntity {
         reuseDuration: 3,
         energyCost: 15,
         projectileData: {
-          range: 15,
+          range: 10,
           speed: 20,
           textureName: "pew-yellow",
           damage: 15,
@@ -201,45 +201,19 @@ export default class Ship extends PhysicsEntity {
     return this.systems[num];
   }
 
-  getVelocity(): Phaser.Types.Math.Vector2Like {
-    return this.image.getVelocity();
-  }
-
-  get x(): number {
-    return this.image.x;
-  }
-
-  get y(): number {
-    return this.image.y;
-  }
-
-  get displayWidth(): number {
-    return this.image.displayWidth;
-  }
-
-  get displayHeight(): number {
-    return this.image.displayHeight;
-  }
-
-  get rotation(): number {
-    return this.image.rotation;
-  }
-
   respawn() {
     // Play the explosion effect.
     this.explode();
 
     // Move their position back to spawn.
     if (this.isPlayerTeam) {
-      this.image.x = 0;
-      this.image.y = 1800;
+      this.setPosition(0, 1800);
     } else {
-      this.image.x = 0;
-      this.image.y = 1000;
+      this.setPosition(0, 1000);
     }
 
     // Reset velocity so the ship doesn't respawn at speed
-    this.image.setVelocity(0, 0);
+    this.setVelocity(0, 0);
 
     // Heal back to full
     this.hp.reset();
@@ -256,8 +230,8 @@ export default class Ship extends PhysicsEntity {
 
     let sci: ShipControlInput = this.controller.getShipInput(this);
 
-    this.image.rotation = Phaser.Math.Angle.RotateTo(
-      this.image.rotation,
+    this.rotation = Phaser.Math.Angle.RotateTo(
+      this.rotation,
       sci.shipTargetRotation,
       this.shipData.rotationSpeed,
     );
@@ -272,45 +246,37 @@ export default class Ship extends PhysicsEntity {
 
     // The four cardinal directions
     if (sci.thrust.north) {
-      this.image.applyForce(
-        new Phaser.Math.Vector2(0, -this.shipData.thrustPower),
-      );
+      this.applyForce(0, -this.shipData.thrustPower);
       isThrust = true;
     }
     if (sci.thrust.east) {
-      this.image.applyForce(
-        new Phaser.Math.Vector2(this.shipData.thrustPower, 0),
-      );
+      this.applyForce(this.shipData.thrustPower, 0);
       isThrust = true;
     }
     if (sci.thrust.south) {
-      this.image.applyForce(
-        new Phaser.Math.Vector2(0, this.shipData.thrustPower),
-      );
+      this.applyForce(0, this.shipData.thrustPower);
       isThrust = true;
     }
     if (sci.thrust.west) {
-      this.image.applyForce(
-        new Phaser.Math.Vector2(-this.shipData.thrustPower, 0),
-      );
+      this.applyForce(-this.shipData.thrustPower, 0);
       isThrust = true;
     }
 
     // Relative position
     if (sci.thrust.forward) {
-      this.image.thrust(this.shipData.thrustPower);
+      this.thrustForward(this.shipData.thrustPower);
       isThrust = true;
     }
     if (sci.thrust.back) {
-      this.image.thrustBack(this.shipData.thrustPower);
+      this.thrustBack(this.shipData.thrustPower);
       isThrust = true;
     }
     if (sci.thrust.left) {
-      this.image.thrustLeft(this.shipData.thrustPower);
+      this.thrustLeft(this.shipData.thrustPower);
       isThrust = true;
     }
     if (sci.thrust.right) {
-      this.image.thrustRight(this.shipData.thrustPower);
+      this.thrustRight(this.shipData.thrustPower);
       isThrust = true;
     }
 
@@ -329,15 +295,13 @@ export default class Ship extends PhysicsEntity {
       this.useSystem(3);
     }
 
-    let vel = this.image.getVelocity();
+    let vel = this.getVelocity();
     let maxSpeed = this.shipData.maxSpeed;
 
     const currentSpeed = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
 
-    // Activate the brake to slow down
+    // If we are not thrusting, slow down gently
     if (!isThrust) {
-      //this.image.setVelocity(velocity.x * drag, velocity.y * drag);
-
       const brakeThruster: Phaser.Math.Vector2 = new Phaser.Math.Vector2(
         -vel.x,
         -vel.y,
@@ -345,13 +309,13 @@ export default class Ship extends PhysicsEntity {
 
       brakeThruster.scale(0.005);
 
-      this.image.applyForce(brakeThruster);
+      this.applyForce(brakeThruster.x, brakeThruster.y);
     }
 
     // Limit according to max speed
     if (currentSpeed > maxSpeed) {
       const scale = maxSpeed / currentSpeed;
-      this.image.setVelocity(vel.x * scale, vel.y * scale);
+      this.setVelocity(vel.x * scale, vel.y * scale);
     }
   }
 
@@ -377,21 +341,6 @@ export default class Ship extends PhysicsEntity {
     this.explodeParticleEmitter.x = this.x;
     this.explodeParticleEmitter.y = this.y;
     this.explodeParticleEmitter.explode(32);
-  }
-
-  /// Controls
-
-  thrustLeft() {
-    this.image.thrustLeft(this.shipData.thrustPower);
-  }
-  thrustRight() {
-    this.image.thrustRight(this.shipData.thrustPower);
-  }
-  thrustForward() {
-    this.image.thrust(this.shipData.thrustPower);
-  }
-  thrustBackward() {
-    this.image.thrustBack(this.shipData.thrustPower);
   }
 
   useSystem(num: number) {

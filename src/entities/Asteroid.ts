@@ -27,15 +27,15 @@ export default class Asteroid extends PhysicsEntity {
       asteroidName,
       PhysicsEntityType.STATIC,
       true,
+      100,
     );
 
-    // Use phasers nice colour function to convert it to hex
-    this.image.tint = tint;
+    this.setTint(tint);
 
-    this.spinSpeed = (Math.random() - 0.5) * 3;
+    this.spinSpeed = 0.01;
   }
 
   preUpdate() {
-    this.image.angle += this.spinSpeed;
+    this.rotation += this.spinSpeed;
   }
 }

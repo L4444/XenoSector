@@ -103,7 +103,7 @@ export default abstract class CollisionManager {
       }
 
       // TODO: Disable if energy weapon against shields?
-      projectileHit.disable();
+      projectileHit.deactivate();
     }
 
     function handleProjectileStatic(
@@ -113,7 +113,7 @@ export default abstract class CollisionManager {
       let projectileHit: Projectile = projectile as Projectile;
 
       logCollision("Projectile", "Static", projectileHit, staticObj);
-      projectileHit.disable();
+      projectileHit.deactivate();
     }
 
     function logCollision(

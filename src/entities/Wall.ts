@@ -12,12 +12,18 @@ export default class Wall extends PhysicsEntity {
     width: number,
     height: number,
   ) {
-    super(xenoCreator, x, y, "red", wallName, PhysicsEntityType.STATIC, false);
+    super(
+      xenoCreator,
+      x,
+      y,
+      "red",
+      wallName,
+      PhysicsEntityType.STATIC,
+      false,
+      100,
+    );
 
-    this.image.width = width;
-    this.image.height = height;
-    this.image.displayWidth = width;
-    this.image.displayHeight = height;
+    this.setDimensions(width, height);
   }
 
   preUpdate() {}

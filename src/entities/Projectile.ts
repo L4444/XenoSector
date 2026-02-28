@@ -11,7 +11,7 @@ export default class Projectile extends PhysicsEntity {
   private currentLifetime: number = 0;
   private totalLifetime: number = 0;
   private damage!: number;
-  private toRemove: boolean = false;
+
   private isPlayerTeam!: boolean;
 
   constructor(xenoCreator: XenoCreator, projectileName: string) {
@@ -24,23 +24,16 @@ export default class Projectile extends PhysicsEntity {
       projectileName,
       PhysicsEntityType.PROJECTILE,
       true,
+      1,
     );
 
-    // For clean looking collision detection, projectile hitbox should be very small
-    // FIX
-    //this.image.setCircle(30);
-
-    // Only collide with non-projectiles
-    this.image.setCollisionCategory(2);
-    this.image.setCollidesWith(1);
-
-    // Start disabled, ready to fire
-    this.disable();
+    // Start disabled (deactivated), ready to fire
+    this.deactivate();
   }
   // time: number, delta: number
   preUpdate() {
     // Only update "active" (visible) projectiles
-    if (this.image.visible) {
+    if (this.isActive()) {
       this.currentLifetime--;
 
       // The fading code I pulled out of copilot.
@@ -50,30 +43,18 @@ export default class Projectile extends PhysicsEntity {
 
       if (t > fadeStart) {
         // Not in fade window yet → stay fully visible
-        this.image.alpha = 1;
+        this.setAlpha(1);
       } else {
         // Normalize t inside the fade window (1 → 0)
         const x = t / fadeStart;
 
         // Exponential fade
-        this.image.alpha = Math.exp((x - 1) * 2);
+        this.setAlpha(Math.exp((x - 1) * 2));
       }
 
       if (this.currentLifetime <= 0) {
-        this.disable();
+        this.deactivate();
       }
-    }
-  }
-
-  postUpdate() {
-    if (this.toRemove) {
-      XenoLog.proj.debug("Removed");
-      this.image.setVisible(false);
-      this.image.setCollidesWith(0);
-      this.image.setVelocity(0);
-      this.image.setAngularVelocity(0);
-      this.image.setAngle(0);
-      this.toRemove = false;
     }
   }
 
@@ -81,30 +62,21 @@ export default class Projectile extends PhysicsEntity {
     return this.damage;
   }
 
-  disable() {
-    this.toRemove = true;
-  }
-
-  enable() {
-    this.image.setVisible(true);
-    this.image.setCollidesWith(1);
-  }
-
   getIsPlayerTeam(): boolean {
     return this.isPlayerTeam;
   }
 
   fire(useShipSystemData: UseShipSystemData, projectileData: ProjectileData) {
-    this.image.x = useShipSystemData.x;
-    this.image.y = useShipSystemData.y;
-    this.enable();
+    this.setPosition(useShipSystemData.x, useShipSystemData.y);
+
+    this.activate();
     this.isPlayerTeam = useShipSystemData.isPlayerTeam;
 
-    this.image.setTexture(projectileData.textureName);
+    this.setTexture(projectileData.textureName);
 
     // To prevent projectiles from colliding with the ship that is firing them
     // Set this after adjusting the physics body via setCircle() because that function resets the collision group
-    this.image.setCollisionGroup(-useShipSystemData.shipID);
+    this.setCollisionGroup(-useShipSystemData.shipID);
 
     // The lifetime should be determined by the "range", faster projectiles have less lifetime
     // Multiply by 50 to get the rough distance
@@ -115,10 +87,10 @@ export default class Projectile extends PhysicsEntity {
     // If a projectile has no mass then use it only for collision detection
     // and not for "physics" e.g. knocking ships around
     if (projectileData.mass == 0) {
-      this.image.setSensor(true);
+      this.setSensor(true);
     } else {
-      this.image.setSensor(false);
-      this.image.setMass(projectileData.mass);
+      this.setSensor(false);
+      this.setMass(projectileData.mass);
     }
 
     // Use vectors to set the path of the projectile, use the X axis to align with the player ship.
@@ -126,12 +98,12 @@ export default class Projectile extends PhysicsEntity {
 
     v.rotate(useShipSystemData.rotation);
 
-    this.image.setVelocity(
+    this.setVelocity(
       v.x + useShipSystemData.velocityX,
       v.y + useShipSystemData.velocityY,
     );
 
-    this.image.rotation = useShipSystemData.rotation;
+    this.rotation = useShipSystemData.rotation;
 
     XenoLog.proj.debug(
       "\'" + projectileData.textureName + "\' fired",
