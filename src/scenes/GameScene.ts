@@ -14,7 +14,7 @@ import ProjectileManager from "../managers/ProjectileManager";
 import CollisionManager from "../managers/CollisionManager";
 import AlertManager from "../managers/AlertManager";
 
-import UIElement from "../entities/UIElement";
+import CooldownIcon from "../entities/CooldownIcon";
 
 import XenoInput from "../helpers/XenoInput";
 
@@ -23,10 +23,10 @@ export default class GameScene extends Phaser.Scene {
   private enemies!: Array<Ship>;
   private camera!: Phaser.Math.Vector2;
 
-  private pm!: ProjectileManager;
-  private am!: AlertManager;
-  private ui!: Array<UIElement>;
-  private xi!: XenoInput;
+  private projectileManager!: ProjectileManager;
+  private alertManager!: AlertManager;
+  private cooldownIcons!: Array<CooldownIcon>;
+  private xenoInput!: XenoInput;
   private xenoCreator: XenoCreator = new XenoCreator(this);
 
   private versionText!: Phaser.GameObjects.Text;
@@ -40,82 +40,32 @@ export default class GameScene extends Phaser.Scene {
   }
 
   create() {
-    this.xi = new XenoInput(this);
-    // Create a parallax effect
-    new GameBackground(this, "Blue Nebula 4 - 1024x1024", 0.2, 1);
-    new GameBackground(this, "Blue Nebula 2 - 1024x1024", 1, 0.3);
+    this.xenoInput = new XenoInput(this);
 
-    // Create the walls around the world
-    createArena(this.xenoCreator, 1000, 2000, 50);
+    // Create the parallax background
+    this.createBackground();
 
-    // Create asteroids to help player orient themselves
-    createAsteroidGrid(this.xenoCreator, -300, -1500, 14, 2, 800);
+    // Create asteroids and walls
+    this.createStatics();
 
-    this.pm = new ProjectileManager(this.xenoCreator);
-    this.am = new AlertManager(this.xenoCreator);
+    // Create projectiles (before ships, so that they are hidden underneith them)
+    this.projectileManager = new ProjectileManager(this.xenoCreator);
 
-    // Create Player
-    this.player = new Ship(
-      this.xenoCreator,
-      this.pm,
-      this.am,
-      "Player Ship",
-      0,
-      1800,
-      "Human-Fighter",
-      new KeyboardAndMouseController(this.xi),
-      true,
-      {
-        thrustPower: 0.02,
-        mass: 100,
-        rotationSpeed: 0.05,
-        maxSpeed: 6,
-      },
-    );
+    // Create the alert manager (that creates text popups)
+    this.alertManager = new AlertManager(this.xenoCreator);
 
-    this.enemies = new Array<Ship>();
-
-    for (let i = 0; i < 1; i++) {
-      this.enemies.push(
-        new Ship(
-          this.xenoCreator,
-          this.pm,
-          this.am,
-          "Enemy Ship " + i,
-          i * 300,
-          1000,
-          "Alien-Bomber",
-
-          new AIController(this.xi, this.player),
-          false,
-          {
-            thrustPower: 0.02,
-            mass: 100,
-            rotationSpeed: 0.05,
-            maxSpeed: 3,
-          },
-        ),
-      );
-    }
+    // Create the player and the enemies, requires the alert manager.
+    this.createShips();
 
     // Turn off gravity (we are in space)
     this.matter.world.setGravity(0, 0);
 
-    // Create the camera position vector
+    // Create the camera position vector (TODO: Put this in a camera manager)
     this.camera = new Phaser.Math.Vector2(0, 0);
 
     // Create the HUD elements, showing cooldowns, energy costs and keybinds
-    this.ui = new Array<UIElement>();
-    for (let i = 0; i < 3; i++) {
-      this.ui.push(
-        new UIElement(
-          this.xenoCreator,
-          400 + i * (64 + 32),
-          750,
-          this.player.getSystem(i),
-        ),
-      );
-    }
+    this.createHUD();
+
     /// All the game objects are created, setup collision bindings
     CollisionManager.setupCollisions(this);
 
@@ -142,5 +92,78 @@ export default class GameScene extends Phaser.Scene {
 
     // Set the camera on the ship
     this.cameras.main.centerOn(this.camera.x, this.camera.y);
+  }
+
+  private createBackground() {
+    // Create a parallax effect
+    new GameBackground(this, "Blue Nebula 4 - 1024x1024", 0.2, 1);
+    new GameBackground(this, "Blue Nebula 2 - 1024x1024", 1, 0.3);
+  }
+
+  private createStatics() {
+    // Create the walls around the world
+    createArena(this.xenoCreator, 1000, 2000, 50);
+
+    // Create asteroids to help player orient themselves
+    createAsteroidGrid(this.xenoCreator, -300, -1500, 14, 2, 800);
+  }
+
+  private createShips() {
+    this.player = new Ship(
+      this.xenoCreator,
+      this.projectileManager,
+      this.alertManager,
+      "Player Ship",
+      0,
+      1800,
+      "Human-Fighter",
+      new KeyboardAndMouseController(this.xenoInput),
+      true,
+      {
+        thrustPower: 0.02,
+        mass: 100,
+        rotationSpeed: 0.05,
+        maxSpeed: 6,
+      },
+    );
+
+    this.enemies = new Array<Ship>();
+
+    for (let i = 0; i < 1; i++) {
+      this.enemies.push(
+        new Ship(
+          this.xenoCreator,
+          this.projectileManager,
+          this.alertManager,
+          "Enemy Ship " + i,
+          i * 300,
+          1000,
+          "Alien-Bomber",
+
+          new AIController(this.xenoInput, this.player),
+          false,
+          {
+            thrustPower: 0.02,
+            mass: 100,
+            rotationSpeed: 0.05,
+            maxSpeed: 3,
+          },
+        ),
+      );
+    }
+  }
+
+  private createHUD() {
+    this.cooldownIcons = new Array<CooldownIcon>();
+    for (let i = 0; i < 3; i++) {
+      this.cooldownIcons.push(
+        new CooldownIcon(
+          this.xenoCreator,
+          400 + i * (64 + 32),
+          750,
+          this.player.getSystem(i),
+        ),
+      );
+    }
   }
 }
