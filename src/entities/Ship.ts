@@ -123,7 +123,7 @@ export default class Ship extends PhysicsEntity {
           speed: 20,
           textureName: "pew-yellow",
           damage: 15,
-          mass: 0.1,
+          mass: 0,
         },
         uiTextureName: "MachineGunPlaceholder",
         playerKeyBind: "M2",
@@ -143,7 +143,7 @@ export default class Ship extends PhysicsEntity {
         energyCost: 10,
         projectileData: {
           range: 15,
-          speed: 10,
+          speed: 20,
           textureName: "pew-big-green",
           damage: 20,
           mass: 6400,

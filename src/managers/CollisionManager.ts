@@ -102,7 +102,6 @@ export default abstract class CollisionManager {
         shipHit.takeDamage(projectileHit.getDamage());
       }
 
-      // TODO: Disable if energy weapon against shields?
       projectileHit.deactivate();
     }
 
