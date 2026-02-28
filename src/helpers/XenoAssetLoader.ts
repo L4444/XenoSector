@@ -4,6 +4,7 @@ export default abstract class XenoAssetLoader {
   constructor() {}
 
   static loadAssets(scene: Phaser.Scene) {
+    // Backgrounds
     XenoAssetLoader.loadImage(
       scene,
       "/assets/backgrounds/Blue Nebula 4 - 1024x1024.png",
@@ -12,6 +13,8 @@ export default abstract class XenoAssetLoader {
       scene,
       "/assets/backgrounds/Blue Nebula 2 - 1024x1024.png",
     );
+
+    /// Ships
     XenoAssetLoader.loadImage(scene, "/assets/ships/Human-Fighter.png", true);
     XenoAssetLoader.loadImage(
       scene,
@@ -22,6 +25,7 @@ export default abstract class XenoAssetLoader {
 
     XenoAssetLoader.loadImage(scene, "/assets/border/red.png");
 
+    // Projectile weapons
     XenoAssetLoader.loadImage(
       scene,
       "/assets/projectiles/pew-yellow.png",
@@ -39,12 +43,20 @@ export default abstract class XenoAssetLoader {
 
     XenoAssetLoader.loadImage(scene, "/assets/ships/Shield.png");
 
+    // My Programmer Art icons
     XenoAssetLoader.loadImage(scene, "/assets/ui/MachineGunPlaceholder.png");
-
     XenoAssetLoader.loadImage(scene, "/assets/ui/PlasmaCannonPlaceholder.png");
-
     XenoAssetLoader.loadImage(scene, "/assets/ui/RadBlasterPlaceholder.png");
 
+    // Professional looking icons
+    XenoAssetLoader.loadImage(scene, "/assets/icons/machinegun-icon.png");
+    XenoAssetLoader.loadImage(scene, "/assets/icons/target-icon.png");
+    XenoAssetLoader.loadImage(scene, "/assets/icons/rad-icon.png");
+
+    // and the background for the icons
+    XenoAssetLoader.loadImage(scene, "/assets/icons/Button02.png");
+
+    // Explosion particle effect
     XenoAssetLoader.loadImage(scene, "/assets/particles/i_0003.png");
   }
 

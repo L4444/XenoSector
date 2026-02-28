@@ -102,7 +102,7 @@ export default class Ship extends PhysicsEntity {
           damage: 20,
           mass: 0,
         },
-        uiTextureName: "PlasmaCannonPlaceholder",
+        uiTextureName: "target-icon",
         playerKeyBind: "M1",
       },
     );
@@ -125,7 +125,7 @@ export default class Ship extends PhysicsEntity {
           damage: 15,
           mass: 0,
         },
-        uiTextureName: "MachineGunPlaceholder",
+        uiTextureName: "machinegun-icon",
         playerKeyBind: "M2",
       },
     );
@@ -148,7 +148,7 @@ export default class Ship extends PhysicsEntity {
           damage: 20,
           mass: 6400,
         },
-        uiTextureName: "RadBlasterPlaceholder",
+        uiTextureName: "rad-icon",
         playerKeyBind: "F",
       },
     );

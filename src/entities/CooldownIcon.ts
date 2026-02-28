@@ -5,6 +5,7 @@ import PositionalEntity from "./PositionalEntity";
 import type ShipSystem from "./ShipSystem";
 
 export default class UIElement extends PositionalEntity {
+  private back!: Phaser.GameObjects.Image;
   private icon!: Phaser.GameObjects.Image;
   private swish!: Phaser.GameObjects.Graphics;
   private swishMask!: Phaser.GameObjects.Graphics;
@@ -23,13 +24,17 @@ export default class UIElement extends PositionalEntity {
   ) {
     super(xenoCreator);
 
+    this.back = xenoCreator.createBasicImage(x, y, "Button02");
+    this.back.setScrollFactor(0);
+    this.back.setScale(1.2);
+
     this.icon = xenoCreator.createBasicImage(
       x,
       y,
       shipSystem.getUITextureName(),
     );
     this.icon.setScrollFactor(0);
-    this.icon.setScale(2);
+    this.icon.tint = 0x669999;
 
     this.shipSystem = shipSystem;
 
@@ -39,6 +44,8 @@ export default class UIElement extends PositionalEntity {
     this.swish.setScrollFactor(0);
     this.swish.x = this.x;
     this.swish.y = this.y;
+
+    // Note: We set the swish's colour in the preupdate() function
 
     this.swishMask = xenoCreator.createGraphic();
     this.swishMask.setScrollFactor(0);
@@ -57,19 +64,18 @@ export default class UIElement extends PositionalEntity {
       shipSystem.getSystemName(),
     );
     this.nameText.setScrollFactor(0);
+    this.nameText.setFontSize(8);
 
     this.keybindText = xenoCreator.createText(
       this.x - 32,
-      this.y - 32,
+      this.y - 46,
       shipSystem.getKeybind(),
     );
+    this.keybindText.setColor("#FFFFFF");
+    this.keybindText.setBackgroundColor("#000000");
     this.keybindText.setScrollFactor(0);
 
-    this.energyCostText = xenoCreator.createText(
-      this.x + 16,
-      this.y - 32,
-      shipSystem.getEnergyCost().toString(),
-    );
+    this.energyCostText = xenoCreator.createText(this.x + 10, this.y - 46, "");
     this.energyCostText.setColor("#00ffaa");
     this.energyCostText.setScrollFactor(0);
   }
@@ -78,7 +84,7 @@ export default class UIElement extends PositionalEntity {
     let progress: number = this.shipSystem.getProgress();
 
     this.swish.clear();
-    this.swish.fillStyle(0x999999, 0.6);
+    this.swish.fillStyle(0x999999, 0.8);
 
     this.swish.beginPath();
     this.swish.moveTo(0, 0);

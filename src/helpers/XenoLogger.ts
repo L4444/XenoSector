@@ -20,6 +20,6 @@ export const XenoLog = {
   }),
   load: baseLogger.getSubLogger({
     name: "loadImage",
-    minLevel: 3,
+    minLevel: 1,
   }),
 };
