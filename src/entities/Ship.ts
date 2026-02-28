@@ -231,40 +231,50 @@ export default class Ship extends PhysicsEntity {
       this.shipData.rotationSpeed,
     );
 
+    let isThrust: boolean = false;
+
     // The four cardinal directions
     if (sci.thrust.north) {
       this.image.applyForce(
         new Phaser.Math.Vector2(0, -this.shipData.thrustPower),
       );
+      isThrust = true;
     }
     if (sci.thrust.east) {
       this.image.applyForce(
         new Phaser.Math.Vector2(this.shipData.thrustPower, 0),
       );
+      isThrust = true;
     }
     if (sci.thrust.south) {
       this.image.applyForce(
         new Phaser.Math.Vector2(0, this.shipData.thrustPower),
       );
+      isThrust = true;
     }
     if (sci.thrust.west) {
       this.image.applyForce(
         new Phaser.Math.Vector2(-this.shipData.thrustPower, 0),
       );
+      isThrust = true;
     }
 
     // Relative position
     if (sci.thrust.forward) {
       this.image.thrust(this.shipData.thrustPower);
+      isThrust = true;
     }
     if (sci.thrust.back) {
       this.image.thrustBack(this.shipData.thrustPower);
+      isThrust = true;
     }
     if (sci.thrust.left) {
       this.image.thrustLeft(this.shipData.thrustPower);
+      isThrust = true;
     }
     if (sci.thrust.right) {
       this.image.thrustRight(this.shipData.thrustPower);
+      isThrust = true;
     }
 
     // Activate systems
@@ -282,27 +292,29 @@ export default class Ship extends PhysicsEntity {
       this.useSystem(3);
     }
 
-    let velocity = this.image.getVelocity();
+    let vel = this.image.getVelocity();
     let maxSpeed = this.shipData.maxSpeed;
 
-    const currentSpeed = Math.sqrt(
-      velocity.x * velocity.x + velocity.y * velocity.y,
-    );
-
-    const drag: number = 0.95;
+    const currentSpeed = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
 
     // Activate the brake to slow down
-    if (sci.brake) {
-      this.image.setVelocity(velocity.x * drag, velocity.y * drag);
-      if (currentSpeed < 1) {
-        this.image.setVelocity(0, 0);
-      }
+    if (!isThrust) {
+      //this.image.setVelocity(velocity.x * drag, velocity.y * drag);
+
+      const brakeThruster: Phaser.Math.Vector2 = new Phaser.Math.Vector2(
+        -vel.x,
+        -vel.y,
+      );
+
+      brakeThruster.scale(0.005);
+
+      this.image.applyForce(brakeThruster);
     }
 
     // Limit according to max speed
     if (currentSpeed > maxSpeed) {
       const scale = maxSpeed / currentSpeed;
-      this.image.setVelocity(velocity.x * scale, velocity.y * scale);
+      this.image.setVelocity(vel.x * scale, vel.y * scale);
     }
   }
 

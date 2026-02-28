@@ -28,7 +28,7 @@ export default class XenoGame {
   private cm!: CollisionManager;
   private am!: AlertManager;
   private ui!: Array<UIElement>;
-  private enemyAutoFire: boolean = true;
+  private enemyAutoFire: boolean = false;
 
   private versionText!: Phaser.GameObjects.Text;
 
@@ -172,7 +172,7 @@ export default class XenoGame {
 
     this.enemies = new Array<Ship>();
 
-    for (let i = 0; i < 0; i++) {
+    for (let i = 0; i < 1; i++) {
       this.enemies.push(
         new Ship(
           this,
