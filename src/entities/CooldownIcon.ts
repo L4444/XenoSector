@@ -1,10 +1,10 @@
-import type XenoCreator from "../helpers/XenoCreator";
+import XenoCreator from "../helpers/XenoCreator";
 
-import PositionalEntity from "./PositionalEntity";
+import BaseEntity from "./BaseEntity";
 
 import type ShipSystem from "./ShipSystem";
 
-export default class UIElement extends PositionalEntity {
+export default class CooldownIcon extends BaseEntity {
   private back!: Phaser.GameObjects.Image;
   private icon!: Phaser.GameObjects.Image;
   private swish!: Phaser.GameObjects.Graphics;
@@ -13,44 +13,42 @@ export default class UIElement extends PositionalEntity {
   private keybindText!: Phaser.GameObjects.Text;
   private energyCostText!: Phaser.GameObjects.Text;
 
+  private xenoCreator!: XenoCreator;
+
   private shipSystem!: ShipSystem;
+
+  private SWISH_FILL_COLOUR: number = 0x666666;
+  private SWISH_FILL_ALPHA: number = 0.8;
+
+  private posX: number = 0;
+  private posY: number = 0;
 
   constructor(
     xenoCreator: XenoCreator,
-
     x: number,
     y: number,
     shipSystem: ShipSystem,
   ) {
     super(xenoCreator);
-
-    this.back = xenoCreator.createBasicImage(x, y, "Button02");
-    this.back.setScrollFactor(0);
-    this.back.setScale(1.2);
-
-    this.icon = xenoCreator.createBasicImage(
-      x,
-      y,
-      shipSystem.getUITextureName(),
-    );
-    this.icon.setScrollFactor(0);
-    this.icon.tint = 0x669999;
+    this.xenoCreator = xenoCreator;
+    this.posX = x;
+    this.posY = y;
 
     this.shipSystem = shipSystem;
 
+    this.back = this.quickImage(0, 0, "Button02", "#FFFFFF");
+
+    this.back.setScale(1.25);
+
+    this.icon = this.quickImage(0, 0, shipSystem.getUITextureName(), "#669999");
+
     // The way this works is the "swish" covers the icon with a greyish filter
     // All it is a circular graphic "cut" into a square with the "swishMask"
-    this.swish = xenoCreator.createGraphic();
-    this.swish.setScrollFactor(0);
-    this.swish.x = this.x;
-    this.swish.y = this.y;
+    this.swish = this.quickGraphic(0, 0);
 
     // Note: We set the swish's colour in the preupdate() function
 
-    this.swishMask = xenoCreator.createGraphic();
-    this.swishMask.setScrollFactor(0);
-    this.swishMask.x = this.x;
-    this.swishMask.y = this.y;
+    this.swishMask = this.quickGraphic(0, 0);
 
     this.swishMask.fillStyle(0x000000, 0);
     this.swishMask.fillRect(-32, -32, 64, 64);
@@ -58,34 +56,78 @@ export default class UIElement extends PositionalEntity {
     this.swish.setMask(this.swishMask.createGeometryMask());
 
     // Now add the text to the element
-    this.nameText = xenoCreator.createText(
-      this.x - 32,
-      this.y + 32,
-      shipSystem.getSystemName(),
+    this.nameText = this.quickText(
+      -30,
+      +15,
+      shipSystem.getSystemName().split(" ")[0] +
+        "\n" +
+        shipSystem.getSystemName().split(" ")[1],
+      "#FFFFFF",
     );
-    this.nameText.setScrollFactor(0);
+
     this.nameText.setFontSize(8);
 
-    this.keybindText = xenoCreator.createText(
-      this.x - 32,
-      this.y - 46,
+    this.keybindText = this.quickText(
+      -30,
+      -30,
       shipSystem.getKeybind(),
+      "#FFFFFF",
     );
-    this.keybindText.setColor("#FFFFFF");
-    this.keybindText.setBackgroundColor("#000000");
-    this.keybindText.setScrollFactor(0);
+  }
 
-    this.energyCostText = xenoCreator.createText(this.x + 10, this.y - 46, "");
-    this.energyCostText.setColor("#00ffaa");
-    this.energyCostText.setScrollFactor(0);
+  quickText(
+    offsetX: number,
+    offsetY: number,
+    text: string,
+    colour: string | CanvasGradient,
+  ): Phaser.GameObjects.Text {
+    let obj: Phaser.GameObjects.Text = this.xenoCreator.createText(
+      this.posX + offsetX,
+      this.posY + offsetY,
+      text,
+    );
+    obj.setColor(colour);
+    obj.setScrollFactor(0);
+
+    return obj;
+  }
+
+  quickGraphic(offsetX: number, offsetY: number): Phaser.GameObjects.Graphics {
+    let obj: Phaser.GameObjects.Graphics = this.xenoCreator.createGraphic();
+    obj.x = this.posX + offsetX;
+    obj.y = this.posY + offsetY;
+
+    obj.setScrollFactor(0);
+
+    return obj;
+  }
+
+  quickImage(
+    offsetX: number,
+    offsetY: number,
+    textureKey: string,
+    _colour: string,
+  ): Phaser.GameObjects.Image {
+    let obj: Phaser.GameObjects.Image = this.xenoCreator.createBasicImage(
+      this.posX + offsetX,
+      this.posY + offsetY,
+      textureKey,
+    );
+    let convertedToHex: string = _colour.split("#")[1];
+
+    obj.tint = Number.parseInt(convertedToHex, 16);
+
+    obj.setScrollFactor(0);
+
+    return obj;
   }
 
   preUpdate() {
     let progress: number = this.shipSystem.getProgress();
+    //const testMe: number = 0.5;
 
     this.swish.clear();
-    this.swish.fillStyle(0x999999, 0.8);
-
+    this.swish.fillStyle(this.SWISH_FILL_COLOUR, this.SWISH_FILL_ALPHA);
     this.swish.beginPath();
     this.swish.moveTo(0, 0);
     this.swish.arc(
@@ -108,3 +150,13 @@ export default class UIElement extends PositionalEntity {
     return this.icon.y;
   }
 }
+
+/*
+const UIType = {
+  IMAGE: "IMAGE",
+  GRAPHIC: "GRAPHIC",
+  TEXT: "TEXT",
+};
+
+type UIType = (typeof UIType)[keyof typeof UIType];
+*/

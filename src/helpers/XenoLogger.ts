@@ -22,4 +22,8 @@ export const XenoLog = {
     name: "loadImage",
     minLevel: 1,
   }),
+  gene: baseLogger.getSubLogger({
+    name: "General",
+    minLevel: 1,
+  }),
 };
