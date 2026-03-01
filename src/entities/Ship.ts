@@ -244,7 +244,7 @@ export default class Ship extends PhysicsEntity {
   preUpdate() {
     // Ship Death code
     if (this.hp.getCurrentValue() <= 0) {
-      //this.respawn();
+      this.respawn();
     }
 
     this.ticksSinceEnergyMessage++;
