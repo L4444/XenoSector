@@ -3,49 +3,52 @@ import type Ship from "./Ship";
 import BaseEntity from "./BaseEntity";
 import type XenoCreator from "../helpers/XenoCreator";
 import { RenderDepth } from "../types/RenderDepth";
+import { ValueBarType } from "../types/ValueBarType";
 
-export default class ValueBar extends BaseEntity {
+export default abstract class BaseValueBar extends BaseEntity {
   private barBack!: Phaser.GameObjects.Image;
 
-  private barFront!: Phaser.GameObjects.Rectangle;
   private parentShip!: Ship;
   private offset!: number;
   private currentValue: number = -99;
   private maxValue: number = -99;
+  private barFrontColour!: number;
+
+  protected BORDER_THICKNESS: number = 3;
 
   constructor(
     xenoCreator: XenoCreator,
     parentShip: Ship,
     offset: number,
-    colour: number,
-    borderColour: string,
+    valueBarType: ValueBarType,
     startingValue: number,
     maxValue: number,
   ) {
     super(xenoCreator);
-    this.barBack = xenoCreator.createBasicImage(
-      0, // x - Set on update!
-      0, // y- Set on update!
-      "ValueBar2pxGradient",
-      RenderDepth.UI,
-      borderColour,
-    );
-
-    this.barFront = xenoCreator.createRectangle(
-      0, // x - Set on update!
-      0, // y- Set on update!
-      2, // width - Set on update!
-      3, // height
-      colour, // rgb colour
-      1,
-      RenderDepth.UI,
-    );
-
     this.parentShip = parentShip;
     this.offset = offset;
 
     this.currentValue = startingValue;
     this.maxValue = maxValue;
+
+    if (valueBarType == ValueBarType.HP) {
+      this.barFrontColour = 0xffffff;
+    }
+    if (valueBarType == ValueBarType.ENERGY) {
+      this.barFrontColour = 0x00ff00;
+    }
+
+    let barBackColour: string = parentShip.getIsPlayerTeam()
+      ? "#66CCFF"
+      : "#FF9999";
+
+    this.barBack = xenoCreator.createBasicImage(
+      0, // x - Set on update!
+      0, // y- Set on update!
+      "ValueBar2pxGradient",
+      RenderDepth.UI,
+      barBackColour,
+    );
   }
 
   reduceBy(value: number) {
@@ -73,13 +76,20 @@ export default class ValueBar extends BaseEntity {
     this.barBack.y =
       this.parentShip.y + this.offset - this.parentShip.displayHeight / 2;
 
-    this.barFront.x =
-      this.parentShip.x +
-      ((this.currentValue / this.maxValue) * this.parentShip.displayWidth) / 2 -
-      this.parentShip.displayWidth / 2;
-
-    this.barFront.y = this.barBack.y;
-    this.barFront.displayWidth =
-      (this.currentValue / this.maxValue) * this.parentShip.displayWidth - 6;
+    this.updateFront(
+      this.barBack.x,
+      this.barBack.y,
+      this.parentShip.displayWidth,
+      this.currentValue / this.maxValue,
+      this.barFrontColour,
+    );
   }
+
+  abstract updateFront(
+    x: number,
+    y: number,
+    width: number,
+    progress: number,
+    colour: number,
+  ): void;
 }

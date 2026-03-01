@@ -1,6 +1,6 @@
 import ShipSystem from "../entities/ShipSystem";
 import Shield from "./Shield";
-import ValueBar from "./ValueBar";
+
 import { XenoLog } from "../helpers/XenoLogger";
 import type BaseController from "../controllers/BaseController";
 import type ShipData from "../types/ShipData";
@@ -12,13 +12,16 @@ import type XenoCreator from "../helpers/XenoCreator";
 import type ProjectileManager from "../managers/ProjectileManager";
 import AlertManager from "../managers/AlertManager";
 import { RenderDepth } from "../types/RenderDepth";
+import { ValueBarType } from "../types/ValueBarType";
+import SlicedValueBar from "./SlicedValueBar";
+import SmoothValueBar from "./SmoothValueBar";
 
 export default class Ship extends PhysicsEntity {
   private static count: number = 0;
   private shipID!: number;
   private shield!: Shield;
-  private hp!: ValueBar;
-  private energy!: ValueBar;
+  private hp!: SmoothValueBar;
+  private energy!: SlicedValueBar;
   private systems!: Array<ShipSystem>;
 
   private controller!: BaseController;
@@ -68,23 +71,19 @@ export default class Ship extends PhysicsEntity {
     /// Put shield in it's own object class
     this.shield = new Shield(xenoCreator, this);
 
-    let barBorderColour: string = isPlayerTeam ? "#66CCFF" : "#FF9999";
-
-    this.hp = new ValueBar(
+    this.hp = new SmoothValueBar(
       xenoCreator,
       this,
       0, // offset
-      0x6666ff,
-      barBorderColour,
+      ValueBarType.HP,
       100,
       100,
     );
-    this.energy = new ValueBar(
+    this.energy = new SlicedValueBar(
       xenoCreator,
       this,
       10, // offset
-      0xcccc00,
-      barBorderColour,
+      ValueBarType.ENERGY,
       70,
       100,
     );
@@ -245,7 +244,7 @@ export default class Ship extends PhysicsEntity {
   preUpdate() {
     // Ship Death code
     if (this.hp.getCurrentValue() <= 0) {
-      this.respawn();
+      //this.respawn();
     }
 
     this.ticksSinceEnergyMessage++;
@@ -341,8 +340,8 @@ export default class Ship extends PhysicsEntity {
       this.setVelocity(vel.x * scale, vel.y * scale);
     }
 
-    // Regen health and energy
-    this.hp.increaseBy(0.01);
+    // Regen energy
+
     this.energy.increaseBy(0.5);
   }
 
