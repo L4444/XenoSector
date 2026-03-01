@@ -81,6 +81,7 @@ export default class Ship extends PhysicsEntity {
         scale: 0.25,
         alpha: { start: 0.5, end: 0, ease: "expo.out" },
       },
+      RenderDepth.SHIPS,
     );
 
     this.turret = xenoCreator.createBasicImage(

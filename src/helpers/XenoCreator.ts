@@ -8,18 +8,30 @@ export default class XenoCreator {
     this.scene = scene;
   }
 
+  private setupGameObject(obj: any, isUI: boolean, renderDepth: RenderDepth) {
+    if (isUI) {
+      obj.setScrollFactor(0);
+    }
+    obj.setDepth(renderDepth);
+  }
+
+  private convertStringColourToTint(stringColour: string): number {
+    let convertedToTint: string = stringColour.split("#")[1];
+    return Number.parseInt(convertedToTint, 16);
+  }
+
   createBasicImage(
     x: number,
     y: number,
     textureKey: string,
     renderDepth: RenderDepth,
+    colour: string = "#FFFFFF",
     isUI: boolean = false,
   ): Phaser.GameObjects.Image {
     let obj: Phaser.GameObjects.Image = this.scene.add.image(x, y, textureKey);
-    if (isUI) {
-      obj.setScrollFactor(0);
-    }
-    obj.setDepth(renderDepth);
+
+    obj.tint = this.convertStringColourToTint(colour);
+    this.setupGameObject(obj, isUI, renderDepth);
     return obj;
   }
 
@@ -28,6 +40,7 @@ export default class XenoCreator {
     y: number,
     textureKey: string,
     renderDepth: RenderDepth,
+    colour: string = "#FFFFFF",
     isUI: boolean = false,
   ): Phaser.Physics.Matter.Image {
     let obj: Phaser.Physics.Matter.Image = this.scene.matter.add.image(
@@ -35,10 +48,8 @@ export default class XenoCreator {
       y,
       textureKey,
     );
-    if (isUI) {
-      obj.setScrollFactor(0);
-    }
-    obj.setDepth(renderDepth);
+    obj.tint = this.convertStringColourToTint(colour);
+    this.setupGameObject(obj, isUI, renderDepth);
     return obj;
   }
 
@@ -49,8 +60,10 @@ export default class XenoCreator {
     height: number,
     fillColour: number,
     fillAlpha: number,
+    renderDepth: RenderDepth,
+    isUI: boolean = false,
   ): Phaser.GameObjects.Rectangle {
-    return this.scene.add.rectangle(
+    let obj: Phaser.GameObjects.Rectangle = this.scene.add.rectangle(
       x, // x
       y, // y
       width, // width
@@ -58,6 +71,8 @@ export default class XenoCreator {
       fillColour, // rgb colour
       fillAlpha,
     );
+    this.setupGameObject(obj, isUI, renderDepth);
+    return obj;
   }
 
   createText(
@@ -65,13 +80,14 @@ export default class XenoCreator {
     y: number,
     text: string,
     renderDepth: RenderDepth,
+    colour: string = "#FFFFFF",
     isUI: boolean = false,
   ): Phaser.GameObjects.Text {
-    let obj: Phaser.GameObjects.Text = this.scene.add.text(x, y, text);
-    if (isUI) {
-      obj.setScrollFactor(0);
-    }
-    obj.setDepth(renderDepth);
+    let obj: Phaser.GameObjects.Text = this.scene.add.text(x, y, text, {
+      color: colour,
+    });
+
+    this.setupGameObject(obj, isUI, renderDepth);
     return obj;
   }
 
@@ -96,8 +112,13 @@ export default class XenoCreator {
     y: number,
     textureKey: string,
     config: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig,
+    renderDepth: RenderDepth,
+    isUI: boolean = false,
   ): Phaser.GameObjects.Particles.ParticleEmitter {
-    return this.scene.add.particles(x, y, textureKey, config);
+    let obj: Phaser.GameObjects.Particles.ParticleEmitter =
+      this.scene.add.particles(x, y, textureKey, config);
+    this.setupGameObject(obj, isUI, renderDepth);
+    return obj;
   }
 
   setupPostUpdate(postUpdate: () => void, baseEntity: BaseEntity): void {

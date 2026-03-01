@@ -2,6 +2,7 @@ import type Ship from "./Ship";
 
 import BaseEntity from "./BaseEntity";
 import type XenoCreator from "../helpers/XenoCreator";
+import { RenderDepth } from "../types/RenderDepth";
 
 export default class ValueBar extends BaseEntity {
   private barBack!: Phaser.GameObjects.Rectangle;
@@ -28,6 +29,7 @@ export default class ValueBar extends BaseEntity {
       10, // height
       0x000000, // rgb colour
       1,
+      RenderDepth.UI,
     );
 
     this.barFront = xenoCreator.createRectangle(
@@ -37,6 +39,7 @@ export default class ValueBar extends BaseEntity {
       5, // height
       colour, // rgb colour
       1,
+      RenderDepth.UI,
     );
 
     this.parentShip = parentShip;

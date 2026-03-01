@@ -20,9 +20,6 @@ export default class CooldownIcon extends BaseEntity {
   private SWISH_FILL_COLOUR: number = 0x666666;
   private SWISH_FILL_ALPHA: number = 0.8;
 
-  private posX: number = 0;
-  private posY: number = 0;
-
   constructor(
     xenoCreator: XenoCreator,
     x: number,
@@ -31,24 +28,36 @@ export default class CooldownIcon extends BaseEntity {
   ) {
     super(xenoCreator);
     this.xenoCreator = xenoCreator;
-    this.posX = x;
-    this.posY = y;
 
     this.shipSystem = shipSystem;
 
-    this.back = this.quickImage(0, 0, "Button02", "#FFFFFF");
+    this.back = this.xenoCreator.createBasicImage(
+      x,
+      y,
+      "Button02",
+      RenderDepth.UI,
+      "#FFFFFF",
+      true,
+    );
 
     this.back.setScale(1.25);
 
-    this.icon = this.quickImage(0, 0, shipSystem.getUITextureName(), "#669999");
+    this.icon = this.xenoCreator.createBasicImage(
+      x,
+      y,
+      shipSystem.getUITextureName(),
+      RenderDepth.UI,
+      "#669999",
+      true,
+    );
 
     // The way this works is the "swish" covers the icon with a greyish filter
     // All it is a circular graphic "cut" into a square with the "swishMask"
-    this.swish = this.xenoCreator.createGraphic(0, 0, RenderDepth.UI, true);
+    this.swish = this.xenoCreator.createGraphic(x, y, RenderDepth.UI, true);
 
     // Note: We set the swish's colour in the preupdate() function
 
-    this.swishMask = this.xenoCreator.createGraphic(0, 0, RenderDepth.UI, true);
+    this.swishMask = this.xenoCreator.createGraphic(x, y, RenderDepth.UI, true);
 
     this.swishMask.fillStyle(0x000000, 0);
     this.swishMask.fillRect(-32, -32, 64, 64);
@@ -56,46 +65,31 @@ export default class CooldownIcon extends BaseEntity {
     this.swish.setMask(this.swishMask.createGeometryMask());
 
     // Now add the text to the element
-    this.nameText = this.xenoCreator.createText(
-      -30,
-      +15,
+    let splitSystemName: string =
       shipSystem.getSystemName().split(" ")[0] +
-        "\n" +
-        shipSystem.getSystemName().split(" ")[1],
+      "\n" +
+      shipSystem.getSystemName().split(" ")[1];
+
+    this.nameText = this.xenoCreator.createText(
+      x - 30,
+      y + 15,
+      splitSystemName,
       RenderDepth.UI,
+      "#FFFFFF",
       true,
     );
 
     this.nameText.setFontSize(8);
 
     this.keybindText = this.xenoCreator.createText(
-      -30,
-      -30,
+      x - 30,
+      y - 30,
       shipSystem.getKeybind(),
       RenderDepth.UI,
+      "#FFFFFF",
       true,
     );
     this.keybindText.setFontSize(10);
-  }
-
-  quickImage(
-    offsetX: number,
-    offsetY: number,
-    textureKey: string,
-    _colour: string,
-  ): Phaser.GameObjects.Image {
-    let obj: Phaser.GameObjects.Image = this.xenoCreator.createBasicImage(
-      this.posX + offsetX,
-      this.posY + offsetY,
-      textureKey,
-      RenderDepth.UI,
-      true,
-    );
-    let convertedToHex: string = _colour.split("#")[1];
-
-    obj.tint = Number.parseInt(convertedToHex, 16);
-
-    return obj;
   }
 
   preUpdate() {
