@@ -65,8 +65,8 @@ export default class Ship extends PhysicsEntity {
 
     /// Put shield in it's own object class
     this.shield = new Shield(xenoCreator, this);
-    this.hp = new ValueBar(xenoCreator, this, 0, 0x993333, 100, 100, 0.01);
-    this.energy = new ValueBar(xenoCreator, this, 15, 0x9999ff, 70, 100, 0.5);
+    this.hp = new ValueBar(xenoCreator, this, 0, 0x993333, 100, 100);
+    this.energy = new ValueBar(xenoCreator, this, 15, 0x9999ff, 70, 100);
 
     this.explodeParticleEmitter = xenoCreator.createParticleEmitter(
       0,
@@ -324,6 +324,10 @@ export default class Ship extends PhysicsEntity {
       const scale = maxSpeed / currentSpeed;
       this.setVelocity(vel.x * scale, vel.y * scale);
     }
+
+    // Regen health and energy
+    this.hp.increaseBy(0.01);
+    this.energy.increaseBy(0.5);
   }
 
   postUpdate(): void {

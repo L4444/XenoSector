@@ -19,7 +19,6 @@ export default class ValueBar extends BaseEntity {
     colour: number,
     startingValue: number,
     maxValue: number,
-    passiveRegen: number = 0,
   ) {
     super(xenoCreator);
     this.barBack = xenoCreator.createRectangle(
@@ -47,11 +46,14 @@ export default class ValueBar extends BaseEntity {
 
     this.currentValue = startingValue;
     this.maxValue = maxValue;
-    this.passiveRegen = passiveRegen;
   }
 
   reduceBy(value: number) {
     this.currentValue -= value;
+  }
+
+  increaseBy(value: number) {
+    this.currentValue += value;
   }
 
   reset() {
@@ -63,7 +65,6 @@ export default class ValueBar extends BaseEntity {
   }
 
   postUpdate() {
-    this.currentValue += this.passiveRegen;
     // Cap currentValue, it should never be negative
     if (this.currentValue < 0) {
       this.currentValue = 0;
