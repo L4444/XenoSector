@@ -16,6 +16,12 @@ export default abstract class BaseValueBar extends BaseEntity {
 
   protected BORDER_THICKNESS: number = 3;
 
+  private readonly PLAYER_BORDER_COLOUR: string = "#66CCFF";
+  private readonly ENEMY_BORDER_COLOUR: string = "#FF9999";
+
+  private readonly HP_FRONT_COLOUR: number = 0xffffff;
+  private readonly ENERGY_FRONT_COLOUR: number = 0x00ff00;
+
   constructor(
     xenoCreator: XenoCreator,
     parentShip: Ship,
@@ -32,15 +38,15 @@ export default abstract class BaseValueBar extends BaseEntity {
     this.maxValue = maxValue;
 
     if (valueBarType == ValueBarType.HP) {
-      this.barFrontColour = 0xffffff;
+      this.barFrontColour = this.HP_FRONT_COLOUR;
     }
     if (valueBarType == ValueBarType.ENERGY) {
-      this.barFrontColour = 0x00ff00;
+      this.barFrontColour = this.ENERGY_FRONT_COLOUR;
     }
 
     let barBackColour: string = parentShip.getIsPlayerTeam()
-      ? "#66CCFF"
-      : "#FF9999";
+      ? this.PLAYER_BORDER_COLOUR
+      : this.ENEMY_BORDER_COLOUR;
 
     this.barBack = xenoCreator.createBasicImage(
       0, // x - Set on update!
