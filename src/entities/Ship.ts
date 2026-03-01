@@ -1,6 +1,6 @@
 import ShipSystem from "../entities/ShipSystem";
 import Shield from "./Shield";
-import ValueBar from "./ValueBar";
+
 import { XenoLog } from "../helpers/XenoLogger";
 import type BaseController from "../controllers/BaseController";
 import type ShipData from "../types/ShipData";
@@ -12,13 +12,16 @@ import type XenoCreator from "../helpers/XenoCreator";
 import type ProjectileManager from "../managers/ProjectileManager";
 import AlertManager from "../managers/AlertManager";
 import { RenderDepth } from "../types/RenderDepth";
+import { ValueBarType } from "../types/ValueBarType";
+import SlicedValueBar from "./SlicedValueBar";
+import SmoothValueBar from "./SmoothValueBar";
 
 export default class Ship extends PhysicsEntity {
   private static count: number = 0;
   private shipID!: number;
   private shield!: Shield;
-  private hp!: ValueBar;
-  private energy!: ValueBar;
+  private hp!: SmoothValueBar;
+  private energy!: SlicedValueBar;
   private systems!: Array<ShipSystem>;
 
   private controller!: BaseController;
@@ -56,17 +59,34 @@ export default class Ship extends PhysicsEntity {
       100,
     );
     XenoLog.ship.debug("Ship \'" + shipName + "\' Created", shipData);
-
-    this.shipData = shipData;
-
     Ship.count++;
     this.shipID = Ship.count;
     this.setCollisionGroup(-this.shipID);
+    this.shipData = shipData;
+    this.controller = controller;
+    this.isPlayerTeam = isPlayerTeam;
+
+    this.alertManager = alertManager;
 
     /// Put shield in it's own object class
     this.shield = new Shield(xenoCreator, this);
-    this.hp = new ValueBar(xenoCreator, this, 0, 0x993333, 100, 100, 0.01);
-    this.energy = new ValueBar(xenoCreator, this, 15, 0x9999ff, 70, 100, 0.5);
+
+    this.hp = new SmoothValueBar(
+      xenoCreator,
+      this,
+      0, // offset
+      ValueBarType.HP,
+      100,
+      100,
+    );
+    this.energy = new SlicedValueBar(
+      xenoCreator,
+      this,
+      10, // offset
+      ValueBarType.ENERGY,
+      70,
+      100,
+    );
 
     this.explodeParticleEmitter = xenoCreator.createParticleEmitter(
       0,
@@ -184,11 +204,6 @@ export default class Ship extends PhysicsEntity {
     );
 
     this.systems.push(crapBlaster);
-
-    this.controller = controller;
-    this.isPlayerTeam = isPlayerTeam;
-
-    this.alertManager = alertManager;
   }
 
   // GETTERS
@@ -324,6 +339,10 @@ export default class Ship extends PhysicsEntity {
       const scale = maxSpeed / currentSpeed;
       this.setVelocity(vel.x * scale, vel.y * scale);
     }
+
+    // Regen energy
+
+    this.energy.increaseBy(0.5);
   }
 
   postUpdate(): void {
