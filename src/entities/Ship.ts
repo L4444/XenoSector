@@ -121,7 +121,7 @@ export default class Ship extends PhysicsEntity {
         systemName: "Plasma Cannon",
         cooldownDuration: 40,
         reuseDuration: 40,
-        energyCost: 10,
+        energyCost: 0,
         projectileData: {
           range: 15,
           speed: 10,
@@ -131,6 +131,8 @@ export default class Ship extends PhysicsEntity {
         },
         uiTextureName: "target-icon",
         playerKeyBind: "M1",
+        maxCharges: 4,
+        chargeDuration: 60,
       },
     );
 
@@ -144,16 +146,18 @@ export default class Ship extends PhysicsEntity {
         systemName: "Machine Gun",
         cooldownDuration: 3,
         reuseDuration: 3,
-        energyCost: 15,
+        energyCost: 0,
         projectileData: {
           range: 10,
           speed: 20,
           textureName: "pew-yellow",
-          damage: 15,
+          damage: 1,
           mass: 0,
         },
         uiTextureName: "machinegun-icon",
         playerKeyBind: "M2",
+        maxCharges: 100,
+        chargeDuration: 20,
       },
     );
 
@@ -177,6 +181,8 @@ export default class Ship extends PhysicsEntity {
         },
         uiTextureName: "rad-icon",
         playerKeyBind: "F",
+        maxCharges: 1,
+        chargeDuration: 60,
       },
     );
 
@@ -200,6 +206,8 @@ export default class Ship extends PhysicsEntity {
         },
         uiTextureName: "RadBlasterPlaceholder",
         playerKeyBind: "X",
+        maxCharges: 1,
+        chargeDuration: 40,
       },
     );
 
@@ -397,7 +405,8 @@ export default class Ship extends PhysicsEntity {
 
     // If the system isn't ready to usem don't use it
     if (!sys.isOffCooldown()) {
-      let debugText: string = "\'" + sys.getSystemName() + "\' isn\'t ready";
+      let debugText: string =
+        "\'" + sys.getSystemName() + "\' has no charges/cooldown";
       XenoLog.ship.debug(debugText);
       if (this.ticksSinceCooldownMessage > 50) {
         this.alertManager.textPop(this.x, this.y, debugText);

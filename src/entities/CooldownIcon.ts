@@ -12,6 +12,7 @@ export default class CooldownIcon extends BaseEntity {
   private swishMask!: Phaser.GameObjects.Graphics;
   private nameText!: Phaser.GameObjects.Text;
   private keybindText!: Phaser.GameObjects.Text;
+  private chargesText!: Phaser.GameObjects.Text;
 
   private xenoCreator!: XenoCreator;
 
@@ -90,6 +91,16 @@ export default class CooldownIcon extends BaseEntity {
       true,
     );
     this.keybindText.setFontSize(10);
+
+    this.chargesText = this.xenoCreator.createText(
+      x - 30,
+      y - 50,
+      "ERR",
+      RenderDepth.UI,
+      "#FFFFFF",
+      true,
+    );
+    this.chargesText.setFontSize(20);
   }
 
   preUpdate() {
@@ -109,6 +120,8 @@ export default class CooldownIcon extends BaseEntity {
     );
     this.swish.closePath();
     this.swish.fillPath();
+
+    this.chargesText.text = this.shipSystem.getCharges().toString();
   }
 
   get x(): number {

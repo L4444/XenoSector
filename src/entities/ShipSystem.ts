@@ -12,7 +12,9 @@ export default class ShipSystem extends BaseEntity {
   private parentShip!: Ship;
   private cooldownRemaining: number = 0;
   private reuseRemaining: number = 0;
+  private chargeTimeRemaining: number = 0;
   private projectileManager!: ProjectileManager;
+  private currentCharges!: number;
 
   constructor(
     projectileManager: ProjectileManager,
@@ -25,16 +27,19 @@ export default class ShipSystem extends BaseEntity {
 
     this.data = shipSystemData;
     this.projectileManager = projectileManager;
-
+    this.currentCharges = this.data.maxCharges;
     this.parentShip = parentShip;
   }
 
   // This function will be called outside the class
   use(useShipSystemData: ShipSystemUsageOptions) {
+    this.chargeTimeRemaining = this.data.chargeDuration;
     this.cooldownRemaining = this.data.cooldownDuration;
     this.reuseRemaining = this.data.reuseDuration;
 
     this.projectileManager.shoot(useShipSystemData, this.data.projectileData);
+
+    this.currentCharges--;
   }
 
   getSystemName(): string {
@@ -58,6 +63,17 @@ export default class ShipSystem extends BaseEntity {
       this.cooldownRemaining--;
     }
 
+    if (this.chargeTimeRemaining > 0) {
+      this.chargeTimeRemaining--;
+    }
+
+    if (this.chargeTimeRemaining == 0) {
+      if (this.currentCharges < this.data.maxCharges) {
+        this.currentCharges++;
+        this.chargeTimeRemaining = this.data.chargeDuration;
+      }
+    }
+
     if (this.reuseRemaining > 0) {
       this.reuseRemaining--;
     }
@@ -68,7 +84,7 @@ export default class ShipSystem extends BaseEntity {
   }
 
   isOffCooldown() {
-    return this.cooldownRemaining == 0;
+    return this.currentCharges > 0 && this.cooldownRemaining == 0;
   }
 
   getEnergyCost(): number {
@@ -77,5 +93,9 @@ export default class ShipSystem extends BaseEntity {
 
   getProgress(): number {
     return this.cooldownRemaining / this.data.cooldownDuration;
+  }
+
+  getCharges(): number {
+    return this.currentCharges;
   }
 }
