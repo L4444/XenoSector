@@ -43,18 +43,18 @@ export default abstract class XenoAssetLoader {
 
     XenoAssetLoader.loadImage(scene, "/assets/ships/Shield.png");
 
-    // My Programmer Art icons
-    XenoAssetLoader.loadImage(scene, "/assets/ui/MachineGunPlaceholder.png");
-    XenoAssetLoader.loadImage(scene, "/assets/ui/PlasmaCannonPlaceholder.png");
-    XenoAssetLoader.loadImage(scene, "/assets/ui/RadBlasterPlaceholder.png");
-
     // Professional looking icons
     XenoAssetLoader.loadImage(scene, "/assets/icons/machinegun-icon.png");
     XenoAssetLoader.loadImage(scene, "/assets/icons/target-icon.png");
     XenoAssetLoader.loadImage(scene, "/assets/icons/rad-icon.png");
 
-    // and the background for the icons
-    XenoAssetLoader.loadImage(scene, "/assets/icons/Button02.png");
+    // Professional looking UI
+    XenoAssetLoader.loadImage(scene, "/assets/ui/Button02.png");
+
+    // My placeholder UI
+    XenoAssetLoader.loadImage(scene, "/assets/ui/ValueBar1pxSolid.png");
+    XenoAssetLoader.loadImage(scene, "/assets/ui/ValueBar2pxSolid.png");
+    XenoAssetLoader.loadImage(scene, "/assets/ui/ValueBar2pxGradient.png");
 
     // Explosion particle effect
     XenoAssetLoader.loadImage(scene, "/assets/particles/i_0003.png");

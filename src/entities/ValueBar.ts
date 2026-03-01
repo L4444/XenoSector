@@ -5,37 +5,37 @@ import type XenoCreator from "../helpers/XenoCreator";
 import { RenderDepth } from "../types/RenderDepth";
 
 export default class ValueBar extends BaseEntity {
-  private barBack!: Phaser.GameObjects.Rectangle;
+  private barBack!: Phaser.GameObjects.Image;
+
   private barFront!: Phaser.GameObjects.Rectangle;
   private parentShip!: Ship;
   private offset!: number;
   private currentValue: number = -99;
   private maxValue: number = -99;
-  private passiveRegen: number = 0;
+
   constructor(
     xenoCreator: XenoCreator,
     parentShip: Ship,
     offset: number,
     colour: number,
+    borderColour: string,
     startingValue: number,
     maxValue: number,
   ) {
     super(xenoCreator);
-    this.barBack = xenoCreator.createRectangle(
-      0, // x
-      0, // y
-      parentShip.displayWidth, // width
-      10, // height
-      0x000000, // rgb colour
-      1,
+    this.barBack = xenoCreator.createBasicImage(
+      0, // x - Set on update!
+      0, // y- Set on update!
+      "ValueBar2pxGradient",
       RenderDepth.UI,
+      borderColour,
     );
 
     this.barFront = xenoCreator.createRectangle(
-      0, // x
-      0, // y
-      parentShip.displayWidth, // width
-      5, // height
+      0, // x - Set on update!
+      0, // y- Set on update!
+      2, // width - Set on update!
+      3, // height
       colour, // rgb colour
       1,
       RenderDepth.UI,
@@ -66,16 +66,7 @@ export default class ValueBar extends BaseEntity {
 
   postUpdate() {
     // Cap currentValue, it should never be negative
-    if (this.currentValue < 0) {
-      this.currentValue = 0;
-    }
-
-    // It should also never be greater than the max value
-    if (this.currentValue > this.maxValue) {
-      this.reset();
-    }
-
-    // TODO: Maybe replace this with math.clamp()?
+    this.currentValue = Phaser.Math.Clamp(this.currentValue, 0, this.maxValue);
 
     // This ValueBar should follow the parent ship while displaying the value
     this.barBack.x = this.parentShip.x;
@@ -89,6 +80,6 @@ export default class ValueBar extends BaseEntity {
 
     this.barFront.y = this.barBack.y;
     this.barFront.displayWidth =
-      (this.currentValue / this.maxValue) * this.parentShip.displayWidth;
+      (this.currentValue / this.maxValue) * this.parentShip.displayWidth - 6;
   }
 }

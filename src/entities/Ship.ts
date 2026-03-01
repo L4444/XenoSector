@@ -56,17 +56,38 @@ export default class Ship extends PhysicsEntity {
       100,
     );
     XenoLog.ship.debug("Ship \'" + shipName + "\' Created", shipData);
-
-    this.shipData = shipData;
-
     Ship.count++;
     this.shipID = Ship.count;
     this.setCollisionGroup(-this.shipID);
+    this.shipData = shipData;
+    this.controller = controller;
+    this.isPlayerTeam = isPlayerTeam;
+
+    this.alertManager = alertManager;
 
     /// Put shield in it's own object class
     this.shield = new Shield(xenoCreator, this);
-    this.hp = new ValueBar(xenoCreator, this, 0, 0x993333, 100, 100);
-    this.energy = new ValueBar(xenoCreator, this, 15, 0x9999ff, 70, 100);
+
+    let barBorderColour: string = isPlayerTeam ? "#66CCFF" : "#FF9999";
+
+    this.hp = new ValueBar(
+      xenoCreator,
+      this,
+      0, // offset
+      0x6666ff,
+      barBorderColour,
+      100,
+      100,
+    );
+    this.energy = new ValueBar(
+      xenoCreator,
+      this,
+      10, // offset
+      0xcccc00,
+      barBorderColour,
+      70,
+      100,
+    );
 
     this.explodeParticleEmitter = xenoCreator.createParticleEmitter(
       0,
@@ -184,11 +205,6 @@ export default class Ship extends PhysicsEntity {
     );
 
     this.systems.push(crapBlaster);
-
-    this.controller = controller;
-    this.isPlayerTeam = isPlayerTeam;
-
-    this.alertManager = alertManager;
   }
 
   // GETTERS
