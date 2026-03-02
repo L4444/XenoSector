@@ -15,6 +15,8 @@ import { RenderDepth } from "../types/RenderDepth";
 
 import SlicedValueBar from "../hud/SlicedValueBar";
 import SmoothValueBar from "../hud/SmoothValueBar";
+import FooEffect from "../SystemEffects/FooEffect";
+import ShootProjectileEffect from "../SystemEffects/ShootProjectileEffect";
 
 export default class Ship extends PhysicsEntity {
   private static count: number = 0;
@@ -130,17 +132,24 @@ export default class Ship extends PhysicsEntity {
         cooldownDuration: 60,
         castDuration: 60,
         energyCost: 0,
-        projectileData: {
-          range: 15,
-          speed: 10,
-          textureName: "pew-blue",
-          damage: 20,
-          mass: 0,
-        },
         uiTextureName: "target-icon",
         playerKeyBind: "M1",
         maxCharges: 1,
         chargeDuration: 60,
+        effects: [
+          new FooEffect(),
+          new ShootProjectileEffect(
+            projectileManager,
+            {
+              range: 15,
+              speed: 10,
+              textureName: "pew-blue",
+              damage: 20,
+              mass: 0,
+            },
+            1,
+          ),
+        ],
       },
     );
 
@@ -155,17 +164,25 @@ export default class Ship extends PhysicsEntity {
         cooldownDuration: 10,
         castDuration: 10,
         energyCost: 0,
-        projectileData: {
-          range: 10,
-          speed: 20,
-          textureName: "pew-yellow",
-          damage: 1,
-          mass: 0,
-        },
+
         uiTextureName: "machinegun-icon",
         playerKeyBind: "M2",
         maxCharges: 4,
         chargeDuration: 20,
+        effects: [
+          new FooEffect(),
+          new ShootProjectileEffect(
+            projectileManager,
+            {
+              range: 10,
+              speed: 20,
+              textureName: "pew-yellow",
+              damage: 1,
+              mass: 0,
+            },
+            3,
+          ),
+        ],
       },
     );
 
@@ -180,17 +197,25 @@ export default class Ship extends PhysicsEntity {
         cooldownDuration: 60 * 4,
         castDuration: 60,
         energyCost: 50,
-        projectileData: {
-          range: 15,
-          speed: 20,
-          textureName: "pew-big-green",
-          damage: 30,
-          mass: 6400,
-        },
+
         uiTextureName: "rad-icon",
         playerKeyBind: "F",
         maxCharges: 1,
         chargeDuration: 60 * 4,
+        effects: [
+          new FooEffect(),
+          new ShootProjectileEffect(
+            projectileManager,
+            {
+              range: 15,
+              speed: 20,
+              textureName: "pew-big-green",
+              damage: 30,
+              mass: 6400,
+            },
+            1,
+          ),
+        ],
       },
     );
 
@@ -205,17 +230,25 @@ export default class Ship extends PhysicsEntity {
         cooldownDuration: 60 * 4,
         castDuration: 60 * 4,
         energyCost: 0,
-        projectileData: {
-          range: 15,
-          speed: 10,
-          textureName: "beam",
-          damage: 0.5,
-          mass: 0,
-        },
+
         uiTextureName: "RadBlasterPlaceholder",
         playerKeyBind: "X",
         maxCharges: 1,
         chargeDuration: 60 * 4,
+        effects: [
+          new FooEffect(),
+          new ShootProjectileEffect(
+            projectileManager,
+            {
+              range: 15,
+              speed: 10,
+              textureName: "beam",
+              damage: 0.5,
+              mass: 0,
+            },
+            1,
+          ),
+        ],
       },
     );
 
