@@ -37,6 +37,7 @@ export default class Ship extends PhysicsEntity {
 
   private ticksSinceEnergyMessage: number = 0;
   private ticksSinceCooldownMessage: number = 0;
+  private ticksSinceChargesMessage: number = 0;
 
   private shipData: ShipData;
   private turret!: Phaser.GameObjects.Image;
@@ -429,16 +430,18 @@ export default class Ship extends PhysicsEntity {
     if (this.castTimeRemaining > 0) {
       let debugText: string =
         "\'" + sys.getSystemName() + "\' can't be used because we are \'busy\'";
-      XenoLog.ship.debug(debugText);
+      XenoLog.ship.trace(debugText);
 
       return;
     }
 
     // Then check if it's off cooldown
     if (!sys.isOffCooldown()) {
-      let debugText: string = "\'" + sys.getSystemName() + "\' is on cooldown";
-      XenoLog.ship.debug(debugText);
-      if (this.ticksSinceCooldownMessage > 50) {
+      // Warn the user (max once a second) if they try and use a system while it's on cooldown
+      if (this.ticksSinceCooldownMessage > 60) {
+        let debugText: string =
+          "\'" + sys.getSystemName() + "\' is on cooldown";
+        XenoLog.ship.debug(debugText);
         this.alertManager.textPop(this.x, this.y, debugText);
         this.ticksSinceCooldownMessage = 0;
       }
@@ -446,23 +449,24 @@ export default class Ship extends PhysicsEntity {
     }
 
     if (sys.getCharges() == 0) {
-      let debugText: string = "\'" + sys.getSystemName() + "\' has no charges";
-      XenoLog.ship.debug(debugText);
-      if (this.ticksSinceCooldownMessage > 50) {
+      // Warn this user (max once a second) if they try and use a system when it has no charges
+      if (this.ticksSinceChargesMessage > 60) {
+        let debugText: string =
+          "\'" + sys.getSystemName() + "\' has no charges";
+        XenoLog.ship.debug(debugText);
         this.alertManager.textPop(this.x, this.y, debugText);
-        this.ticksSinceCooldownMessage = 0;
+        this.ticksSinceChargesMessage = 0;
       }
       return;
     }
 
     // If we don't have enough energy to use the system, don't use it.
     if (this.energy < sys.getEnergyCost()) {
-      let debugText: string =
-        "Not enough energy to use: \'" + sys.getSystemName() + "\'";
-      XenoLog.ship.debug(debugText);
       if (this.ticksSinceEnergyMessage > 50) {
+        let debugText: string =
+          "Not enough energy to use: \'" + sys.getSystemName() + "\'";
+        XenoLog.ship.debug(debugText);
         this.alertManager.textPop(this.x, this.y, debugText);
-
         this.ticksSinceEnergyMessage = 0;
       }
       return;
