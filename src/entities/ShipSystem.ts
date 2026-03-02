@@ -79,12 +79,8 @@ export default class ShipSystem extends BaseEntity {
     }
   }
 
-  isReady() {
-    return this.reuseRemaining == 0;
-  }
-
   isOffCooldown() {
-    return this.currentCharges > 0 && this.cooldownRemaining == 0;
+    return this.cooldownRemaining == 0;
   }
 
   getEnergyCost(): number {

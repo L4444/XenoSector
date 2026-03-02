@@ -22,9 +22,12 @@ export default class Ship extends PhysicsEntity {
   private shield!: Shield;
   private hpBar!: SmoothValueBar;
   private energyBar!: SlicedValueBar;
+  private executionBar!: SmoothValueBar;
 
   private hp!: number;
   private energy!: number;
+  private remainingExecutionDuration: number = 0;
+  private lastSetExecutionDuration: number = 0;
 
   private systems!: Array<ShipSystem>;
 
@@ -86,6 +89,13 @@ export default class Ship extends PhysicsEntity {
       0, // offsetX
       -this.displayHeight / 2, // offsetY
       ValueBarType.ENERGY,
+    );
+
+    this.executionBar = new SmoothValueBar(
+      xenoCreator,
+      0, // offsetX
+      -this.displayHeight / 2 + 10, // offsetY
+      ValueBarType.HP,
     );
 
     this.explodeParticleEmitter = xenoCreator.createParticleEmitter(
@@ -359,10 +369,16 @@ export default class Ship extends PhysicsEntity {
 
     // Regen energn
     this.energy += 0.1;
+    this.remainingExecutionDuration -= 1;
 
     // Cap currentValue, it should never be negative
     this.energy = Phaser.Math.Clamp(this.energy, 0, this.shipData.maxEnergy);
     this.hp = Phaser.Math.Clamp(this.hp, 0, this.shipData.maxHP);
+    this.remainingExecutionDuration = Phaser.Math.Clamp(
+      this.remainingExecutionDuration,
+      0,
+      this.lastSetExecutionDuration,
+    );
 
     this.hpBar.updateValue(
       this.x,
@@ -374,6 +390,12 @@ export default class Ship extends PhysicsEntity {
       this.x,
       this.y,
       this.energy / this.shipData.maxEnergy,
+      this.displayWidth,
+    );
+    this.executionBar.updateValue(
+      this.x,
+      this.y,
+      this.remainingExecutionDuration / this.lastSetExecutionDuration,
       this.displayWidth,
     );
   }
@@ -403,10 +425,33 @@ export default class Ship extends PhysicsEntity {
 
     XenoLog.ship.trace("Trying to use \'" + sys.getSystemName() + "\'");
 
-    if (!sys.isReady()) {
-      XenoLog.ship.trace(
-        "System \'" + sys.getSystemName() + "\' not used due to refire delay",
-      );
+    // First check if we aren't already "casting" something else
+    if (this.remainingExecutionDuration > 0) {
+      let debugText: string =
+        "\'" + sys.getSystemName() + "\' can't be used because we are \'busy\'";
+      XenoLog.ship.debug(debugText);
+
+      return;
+    }
+
+    // Then check if it's off cooldown
+    if (!sys.isOffCooldown()) {
+      let debugText: string = "\'" + sys.getSystemName() + "\' is on cooldown";
+      XenoLog.ship.debug(debugText);
+      if (this.ticksSinceCooldownMessage > 50) {
+        this.alertManager.textPop(this.x, this.y, debugText);
+        this.ticksSinceCooldownMessage = 0;
+      }
+      return;
+    }
+
+    if (sys.getCharges() == 0) {
+      let debugText: string = "\'" + sys.getSystemName() + "\' has no charges";
+      XenoLog.ship.debug(debugText);
+      if (this.ticksSinceCooldownMessage > 50) {
+        this.alertManager.textPop(this.x, this.y, debugText);
+        this.ticksSinceCooldownMessage = 0;
+      }
       return;
     }
 
@@ -423,18 +468,6 @@ export default class Ship extends PhysicsEntity {
       return;
     }
 
-    // If the system isn't ready to usem don't use it
-    if (!sys.isOffCooldown()) {
-      let debugText: string =
-        "\'" + sys.getSystemName() + "\' has no charges/cooldown";
-      XenoLog.ship.debug(debugText);
-      if (this.ticksSinceCooldownMessage > 50) {
-        this.alertManager.textPop(this.x, this.y, debugText);
-        this.ticksSinceCooldownMessage = 0;
-      }
-      return;
-    }
-
     sys.use({
       rotation: this.turret.rotation,
       x: this.x,
@@ -445,6 +478,9 @@ export default class Ship extends PhysicsEntity {
       shipID: this.shipID,
     });
     this.energy -= sys.getEnergyCost();
+    this.lastSetExecutionDuration = 100;
+    this.remainingExecutionDuration = this.lastSetExecutionDuration;
+
     XenoLog.ship.trace(
       "\'" + " boop " + "\' Used \'" + sys.getSystemName() + "\'",
     );
