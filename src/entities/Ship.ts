@@ -367,8 +367,7 @@ export default class Ship extends PhysicsEntity {
     this.hpBar.updateValue(
       this.x,
       this.y,
-      0.5,
-      //this.hp / this.shipData.maxHP,
+      this.hp / this.shipData.maxHP,
       this.displayWidth,
     );
     this.energyBar.updateValue(
