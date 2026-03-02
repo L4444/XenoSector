@@ -33,9 +33,17 @@ export default class SmoothValueBar extends BaseValueBar {
     colour: number,
   ) {
     this.barFront.fillColor = colour;
-    this.barFront.x = x + (progress * desiredWidth) / 2 - desiredWidth / 2;
+
+    // The width is perfect and works fine
     this.barFront.displayWidth =
       progress * (desiredWidth - this.BORDER_THICKNESS * 2);
+
+    // Base the X position off the width
+    this.barFront.x =
+      x +
+      this.barFront.displayWidth / 2 -
+      desiredWidth / 2 +
+      this.BORDER_THICKNESS;
 
     this.barFront.y = y;
   }
