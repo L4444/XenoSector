@@ -1,5 +1,3 @@
-import type Ship from "./Ship";
-
 import type XenoCreator from "../helpers/XenoCreator";
 import { RenderDepth } from "../types/RenderDepth";
 import { ValueBarType } from "../types/ValueBarType";
@@ -10,20 +8,12 @@ export default class SmoothValueBar extends BaseValueBar {
 
   constructor(
     xenoCreator: XenoCreator,
-    parentShip: Ship,
-    offset: number,
+
+    offsetX: number,
+    offsetY: number,
     valueBarType: ValueBarType,
-    startingValue: number,
-    maxValue: number,
   ) {
-    super(
-      xenoCreator,
-      parentShip,
-      offset,
-      valueBarType,
-      startingValue,
-      maxValue,
-    );
+    super(xenoCreator, offsetX, offsetY, valueBarType);
     this.barFront = xenoCreator.createRectangle(
       0, // x - Set on update!
       0, // y- Set on update!
@@ -35,16 +25,17 @@ export default class SmoothValueBar extends BaseValueBar {
     );
   }
 
-  updateFront(
+  protected updateFront(
     x: number,
     y: number,
-    width: number,
+    desiredWidth: number,
     progress: number,
     colour: number,
   ) {
     this.barFront.fillColor = colour;
-    this.barFront.x = x + (progress * width) / 2 - width / 2;
-    this.barFront.displayWidth = progress * (width - this.BORDER_THICKNESS * 2);
+    this.barFront.x = x + (progress * desiredWidth) / 2 - desiredWidth / 2;
+    this.barFront.displayWidth =
+      progress * (desiredWidth - this.BORDER_THICKNESS * 2);
 
     this.barFront.y = y;
   }

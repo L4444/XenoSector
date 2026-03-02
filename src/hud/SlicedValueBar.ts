@@ -1,5 +1,3 @@
-import type Ship from "./Ship";
-
 import type XenoCreator from "../helpers/XenoCreator";
 import { RenderDepth } from "../types/RenderDepth";
 import { ValueBarType } from "../types/ValueBarType";
@@ -10,20 +8,12 @@ export default class SlicedValueBar extends BaseValueBar {
 
   constructor(
     xenoCreator: XenoCreator,
-    parentShip: Ship,
-    offset: number,
+
+    offsetX: number,
+    offsetY: number,
     valueBarType: ValueBarType,
-    startingValue: number,
-    maxValue: number,
   ) {
-    super(
-      xenoCreator,
-      parentShip,
-      offset,
-      valueBarType,
-      startingValue,
-      maxValue,
-    );
+    super(xenoCreator, offsetX, offsetY, valueBarType);
     this.barSlices = [];
 
     let sliceColour: number = 0xffffff;
@@ -43,10 +33,10 @@ export default class SlicedValueBar extends BaseValueBar {
     }
   }
 
-  updateFront(
+  protected updateFront(
     x: number,
     y: number,
-    width: number,
+    desiredWidth: number,
     progress: number,
     colour: number,
   ) {
@@ -60,7 +50,8 @@ export default class SlicedValueBar extends BaseValueBar {
     let barLength: number = progress * this.barSlices.length;
 
     for (let i = 0; i < barLength - 1; i++) {
-      this.barSlices[i].x = x + this.BORDER_THICKNESS - width / 2 + i * 3;
+      this.barSlices[i].x =
+        x + this.BORDER_THICKNESS - desiredWidth / 2 + i * 3;
       this.barSlices[i].y = y;
       this.barSlices[i].alpha = 1;
     }

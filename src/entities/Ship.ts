@@ -13,15 +13,19 @@ import type ProjectileManager from "../managers/ProjectileManager";
 import AlertManager from "../managers/AlertManager";
 import { RenderDepth } from "../types/RenderDepth";
 import { ValueBarType } from "../types/ValueBarType";
-import SlicedValueBar from "./SlicedValueBar";
-import SmoothValueBar from "./SmoothValueBar";
+import SlicedValueBar from "../hud/SlicedValueBar";
+import SmoothValueBar from "../hud/SmoothValueBar";
 
 export default class Ship extends PhysicsEntity {
   private static count: number = 0;
   private shipID!: number;
   private shield!: Shield;
-  private hp!: SmoothValueBar;
-  private energy!: SlicedValueBar;
+  private hpBar!: SmoothValueBar;
+  private energyBar!: SlicedValueBar;
+
+  private hp!: number;
+  private energy!: number;
+
   private systems!: Array<ShipSystem>;
 
   private controller!: BaseController;
@@ -71,21 +75,17 @@ export default class Ship extends PhysicsEntity {
     /// Put shield in it's own object class
     this.shield = new Shield(xenoCreator, this);
 
-    this.hp = new SmoothValueBar(
+    this.hpBar = new SmoothValueBar(
       xenoCreator,
-      this,
-      0, // offset
+      0, // offsetX
+      -this.displayHeight / 2 - 10, // offsetY
       ValueBarType.HP,
-      100,
-      100,
     );
-    this.energy = new SlicedValueBar(
+    this.energyBar = new SlicedValueBar(
       xenoCreator,
-      this,
-      10, // offset
+      0, // offsetX
+      -this.displayHeight / 2, // offsetY
       ValueBarType.ENERGY,
-      70,
-      100,
     );
 
     this.explodeParticleEmitter = xenoCreator.createParticleEmitter(
@@ -212,6 +212,8 @@ export default class Ship extends PhysicsEntity {
     );
 
     this.systems.push(crapBlaster);
+
+    this.respawn();
   }
 
   // GETTERS
@@ -220,7 +222,7 @@ export default class Ship extends PhysicsEntity {
   }
 
   getCurrentEnergy(): number {
-    return this.energy.getCurrentValue();
+    return this.energy;
   }
 
   getShipID(): number {
@@ -246,18 +248,12 @@ export default class Ship extends PhysicsEntity {
     this.setVelocity(0, 0);
 
     // Heal back to full
-    this.hp.reset();
+    this.hp = this.shipData.maxHP;
+    this.energy = 0;
   }
 
+  // Do physics before update
   preUpdate() {
-    // Ship Death code
-    if (this.hp.getCurrentValue() <= 0) {
-      this.respawn();
-    }
-
-    this.ticksSinceEnergyMessage++;
-    this.ticksSinceCooldownMessage++;
-
     let sci: ShipControlInput = this.controller.getShipInput(this);
 
     this.rotation = Phaser.Math.Angle.RotateTo(
@@ -347,19 +343,44 @@ export default class Ship extends PhysicsEntity {
       const scale = maxSpeed / currentSpeed;
       this.setVelocity(vel.x * scale, vel.y * scale);
     }
-
-    // Regen energy
-
-    this.energy.increaseBy(0.5);
   }
 
   postUpdate(): void {
+    // Ship Death code
+    if (this.hp <= 0) {
+      this.respawn();
+    }
+
+    this.ticksSinceEnergyMessage++;
+    this.ticksSinceCooldownMessage++;
+
     this.turret.x = this.x;
     this.turret.y = this.y;
+
+    // Regen energn
+    this.energy += 0.1;
+
+    // Cap currentValue, it should never be negative
+    this.energy = Phaser.Math.Clamp(this.energy, 0, this.shipData.maxEnergy);
+    this.hp = Phaser.Math.Clamp(this.hp, 0, this.shipData.maxHP);
+
+    this.hpBar.updateValue(
+      this.x,
+      this.y,
+      0.5,
+      //this.hp / this.shipData.maxHP,
+      this.displayWidth,
+    );
+    this.energyBar.updateValue(
+      this.x,
+      this.y,
+      this.energy / this.shipData.maxEnergy,
+      this.displayWidth,
+    );
   }
 
   takeDamage(damageAmount: number) {
-    this.hp.reduceBy(damageAmount);
+    this.hp -= damageAmount;
     this.shield.hit();
 
     XenoLog.ship.debug(
@@ -391,7 +412,7 @@ export default class Ship extends PhysicsEntity {
     }
 
     // If we don't have enough energy to use the system, don't use it.
-    if (this.energy.getCurrentValue() < sys.getEnergyCost()) {
+    if (this.energy < sys.getEnergyCost()) {
       let debugText: string =
         "Not enough energy to use: \'" + sys.getSystemName() + "\'";
       XenoLog.ship.debug(debugText);
@@ -424,7 +445,7 @@ export default class Ship extends PhysicsEntity {
       isPlayerTeam: this.isPlayerTeam,
       shipID: this.shipID,
     });
-    this.energy.reduceBy(sys.getEnergyCost());
+    this.energy -= sys.getEnergyCost();
     XenoLog.ship.trace(
       "\'" + " boop " + "\' Used \'" + sys.getSystemName() + "\'",
     );

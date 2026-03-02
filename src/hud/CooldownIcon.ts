@@ -1,9 +1,9 @@
 import XenoCreator from "../helpers/XenoCreator";
 import { RenderDepth } from "../types/RenderDepth";
 
-import BaseEntity from "./BaseEntity";
+import BaseEntity from "../entities/BaseEntity";
 
-import type ShipSystem from "./ShipSystem";
+import type ShipSystem from "../entities/ShipSystem";
 
 export default class CooldownIcon extends BaseEntity {
   private back!: Phaser.GameObjects.Image;
