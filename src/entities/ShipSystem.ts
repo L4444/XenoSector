@@ -1,8 +1,6 @@
 import type Ship from "../entities/Ship";
 import type XenoCreator from "../helpers/XenoCreator";
 import type ProjectileManager from "../managers/ProjectileManager";
-import FooEffect from "../SystemEffects/FooEffect";
-import SystemEffect from "../SystemEffects/SystemEffect";
 
 import type ShipSystemData from "../types/ShipSystemData";
 import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
@@ -17,6 +15,11 @@ export default class ShipSystem extends BaseEntity {
   private chargeTimeRemaining: number = 0;
   private projectileManager!: ProjectileManager;
   private currentCharges!: number;
+
+  private shipSystemUsageOptions!: ShipSystemUsageOptions;
+
+  private effectNumber: number = 0;
+  private isActive: boolean = false;
 
   constructor(
     projectileManager: ProjectileManager,
@@ -33,15 +36,16 @@ export default class ShipSystem extends BaseEntity {
   }
 
   // This function will be called outside the class
-  use(useShipSystemData: ShipSystemUsageOptions) {
+  use() {
     this.chargeTimeRemaining = this.data.chargeDuration;
     this.cooldownRemaining = this.data.cooldownDuration;
 
     for (let i = 0; i < this.data.effects.length; i++) {
-      this.data.effects[i].onApply(this.parentShip, useShipSystemData);
+      this.data.effects[i].onInit(this.parentShip);
     }
 
     this.currentCharges--;
+    this.isActive = true;
   }
 
   getSystemName(): string {
@@ -80,8 +84,17 @@ export default class ShipSystem extends BaseEntity {
       }
     }
 
-    for (let i = 0; i < this.data.effects.length; i++) {
-      this.data.effects[i].onTick();
+    if (this.isActive) {
+      let currentEffect = this.data.effects[this.effectNumber];
+
+      if (currentEffect.onTick(this.parentShip.getShipSystemUsageOptions())) {
+        this.effectNumber++;
+      }
+    }
+
+    if (this.effectNumber == this.data.effects.length) {
+      this.isActive = false;
+      this.effectNumber = 0;
     }
   }
 

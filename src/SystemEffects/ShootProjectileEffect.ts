@@ -10,7 +10,7 @@ export default class ShootProjectileEffect extends SystemEffect {
   private maxSpray!: number;
   private currentSpray!: number;
   private ticksPassed: number = -1;
-  private shipSystemUsageOptions!: ShipSystemUsageOptions;
+
   constructor(
     projectileManager: ProjectileManager,
     projectileData: ProjectileData,
@@ -22,33 +22,29 @@ export default class ShootProjectileEffect extends SystemEffect {
     this.maxSpray = maxSpray;
   }
 
-  public onApply(
-    self: Ship,
-    shipSystemUsageOptions: ShipSystemUsageOptions,
-  ): void {
-    this.shipSystemUsageOptions = shipSystemUsageOptions;
-    this.shootProjectile();
+  public onInit(self: Ship): void {
     this.currentSpray = this.maxSpray;
+    console.log("Shooting");
   }
 
-  public onTick() {
+  public onTick(shipSystemUsageOptions: ShipSystemUsageOptions) {
     if (this.currentSpray > 0) {
       this.ticksPassed++;
-      console.log("Ticks passed: ", this.ticksPassed);
-      if (this.ticksPassed > 2) {
+
+      if (this.ticksPassed > 1) {
         this.currentSpray--;
-        this.shootProjectile();
+        this.shootProjectile(shipSystemUsageOptions);
         this.ticksPassed = 0;
       }
+      return false;
     }
+    return true;
   }
 
-  private shootProjectile() {
+  private shootProjectile(shipSystemUsageOptions: ShipSystemUsageOptions) {
     console.log("Fire projectile!", this.projectileData);
+    console.log(shipSystemUsageOptions);
 
-    this.projectileManager.shoot(
-      this.shipSystemUsageOptions,
-      this.projectileData,
-    );
+    this.projectileManager.shoot(shipSystemUsageOptions, this.projectileData);
   }
 }

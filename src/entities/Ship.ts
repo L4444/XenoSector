@@ -17,6 +17,8 @@ import SlicedValueBar from "../hud/SlicedValueBar";
 import SmoothValueBar from "../hud/SmoothValueBar";
 import FooEffect from "../SystemEffects/FooEffect";
 import ShootProjectileEffect from "../SystemEffects/ShootProjectileEffect";
+import DelayEffect from "../SystemEffects/DelayEffect";
+import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
 
 export default class Ship extends PhysicsEntity {
   private static count: number = 0;
@@ -170,7 +172,7 @@ export default class Ship extends PhysicsEntity {
         maxCharges: 4,
         chargeDuration: 20,
         effects: [
-          new FooEffect(),
+          new DelayEffect(),
           new ShootProjectileEffect(
             projectileManager,
             {
@@ -510,15 +512,7 @@ export default class Ship extends PhysicsEntity {
       return;
     }
 
-    sys.use({
-      rotation: this.turret.rotation,
-      x: this.x,
-      y: this.y,
-      velocityX: this.getVelocity().x,
-      velocityY: this.getVelocity().y,
-      isPlayerTeam: this.isPlayerTeam,
-      shipID: this.shipID,
-    });
+    sys.use();
     this.energy -= sys.getEnergyCost();
     this.castTimeLastSet = sys.getCastDuration();
     this.castTimeRemaining = this.castTimeLastSet;
@@ -526,5 +520,17 @@ export default class Ship extends PhysicsEntity {
     XenoLog.ship.trace(
       "\'" + " boop " + "\' Used \'" + sys.getSystemName() + "\'",
     );
+  }
+
+  getShipSystemUsageOptions(): ShipSystemUsageOptions {
+    return {
+      rotation: this.turret.rotation,
+      x: this.x,
+      y: this.y,
+      velocityX: this.getVelocity().x,
+      velocityY: this.getVelocity().y,
+      isPlayerTeam: this.isPlayerTeam,
+      shipID: this.shipID,
+    };
   }
 }
