@@ -11,7 +11,7 @@ export default class ShipSystem extends BaseEntity {
   private data: ShipSystemData;
   private parentShip!: Ship;
   private cooldownRemaining: number = 0;
-  private reuseRemaining: number = 0;
+
   private chargeTimeRemaining: number = 0;
   private projectileManager!: ProjectileManager;
   private currentCharges!: number;
@@ -35,7 +35,6 @@ export default class ShipSystem extends BaseEntity {
   use(useShipSystemData: ShipSystemUsageOptions) {
     this.chargeTimeRemaining = this.data.chargeDuration;
     this.cooldownRemaining = this.data.cooldownDuration;
-    this.reuseRemaining = this.data.reuseDuration;
 
     this.projectileManager.shoot(useShipSystemData, this.data.projectileData);
 
@@ -58,6 +57,10 @@ export default class ShipSystem extends BaseEntity {
     return this.data.playerKeyBind;
   }
 
+  getCastDuration(): number {
+    return this.data.castDuration;
+  }
+
   postUpdate() {
     if (this.cooldownRemaining > 0) {
       this.cooldownRemaining--;
@@ -72,10 +75,6 @@ export default class ShipSystem extends BaseEntity {
         this.currentCharges++;
         this.chargeTimeRemaining = this.data.chargeDuration;
       }
-    }
-
-    if (this.reuseRemaining > 0) {
-      this.reuseRemaining--;
     }
   }
 
