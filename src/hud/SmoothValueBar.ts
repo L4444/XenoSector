@@ -1,6 +1,6 @@
 import type XenoCreator from "../helpers/XenoCreator";
 import { RenderDepth } from "../types/RenderDepth";
-import { ValueBarType } from "../types/ValueBarType";
+
 import BaseValueBar from "./BaseValueBar";
 
 export default class SmoothValueBar extends BaseValueBar {
@@ -11,9 +11,8 @@ export default class SmoothValueBar extends BaseValueBar {
 
     offsetX: number,
     offsetY: number,
-    valueBarType: ValueBarType,
   ) {
-    super(xenoCreator, offsetX, offsetY, valueBarType);
+    super(xenoCreator, offsetX, offsetY);
     this.barFront = xenoCreator.createRectangle(
       0, // x - Set on update!
       0, // y- Set on update!

@@ -15,7 +15,7 @@ export default class XenoCreator {
     obj.setDepth(renderDepth);
   }
 
-  private convertStringColourToTint(stringColour: string): number {
+  convertStringColourToTint(stringColour: string): number {
     let convertedToTint: string = stringColour.split("#")[1];
     return Number.parseInt(convertedToTint, 16);
   }
