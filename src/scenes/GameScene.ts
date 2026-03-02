@@ -74,7 +74,7 @@ export default class GameScene extends Phaser.Scene {
       e.preventDefault();
     });
 
-    this.versionText = this.add.text(5, 5, "Version 3.0");
+    this.versionText = this.add.text(5, 5, "Version 4.0 - John");
     this.versionText.setScrollFactor(0);
   }
 
