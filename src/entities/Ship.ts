@@ -12,7 +12,7 @@ import type XenoCreator from "../helpers/XenoCreator";
 import type ProjectileManager from "../managers/ProjectileManager";
 import AlertManager from "../managers/AlertManager";
 import { RenderDepth } from "../types/RenderDepth";
-import { ValueBarType } from "../types/ValueBarType";
+
 import SlicedValueBar from "../hud/SlicedValueBar";
 import SmoothValueBar from "../hud/SmoothValueBar";
 
@@ -83,20 +83,17 @@ export default class Ship extends PhysicsEntity {
       xenoCreator,
       0, // offsetX
       -this.displayHeight / 2 - 10, // offsetY
-      ValueBarType.HP,
     );
     this.energyBar = new SlicedValueBar(
       xenoCreator,
       0, // offsetX
       -this.displayHeight / 2, // offsetY
-      ValueBarType.ENERGY,
     );
 
     this.executionBar = new SmoothValueBar(
       xenoCreator,
       0, // offsetX
       -this.displayHeight / 2 + 10, // offsetY
-      ValueBarType.HP,
     );
 
     this.explodeParticleEmitter = xenoCreator.createParticleEmitter(
@@ -381,24 +378,32 @@ export default class Ship extends PhysicsEntity {
       this.castTimeLastSet,
     );
 
+    let borderColour: string = this.isPlayerTeam ? "#009999" : "#660000";
     this.hpBar.updateValue(
       this.x,
       this.y,
       this.hp / this.shipData.maxHP,
       this.displayWidth,
+      borderColour,
+      "#CC0000",
     );
     this.energyBar.updateValue(
       this.x,
       this.y,
       this.energy / this.shipData.maxEnergy,
       this.displayWidth,
+      borderColour,
+      "#00CCCC",
     );
     this.executionBar.updateValue(
       this.x,
       this.y,
       this.castTimeRemaining / this.castTimeLastSet,
       this.displayWidth,
+      "#333333",
+      "#FFFF00",
     );
+    this.executionBar.setVisible(this.castTimeRemaining > 0);
   }
 
   takeDamage(damageAmount: number) {

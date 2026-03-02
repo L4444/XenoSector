@@ -1,6 +1,5 @@
-import type XenoCreator from "../helpers/XenoCreator";
+import XenoCreator from "../helpers/XenoCreator";
 import { RenderDepth } from "../types/RenderDepth";
-import { ValueBarType } from "../types/ValueBarType";
 
 export default abstract class BaseValueBar {
   private barBack!: Phaser.GameObjects.Image;
@@ -8,55 +7,47 @@ export default abstract class BaseValueBar {
   private offsetX!: number;
   private offsetY!: number;
 
-  private barFrontColour!: number;
-
+  protected xenoCreator: XenoCreator;
   protected BORDER_THICKNESS: number = 3;
 
-  private readonly PLAYER_BORDER_COLOUR: string = "#66CCFF";
-
-  private readonly HP_FRONT_COLOUR: number = 0xffffff;
-  private readonly ENERGY_FRONT_COLOUR: number = 0x00ff00;
-
-  constructor(
-    xenoCreator: XenoCreator,
-
-    offsetX: number,
-    offsetY: number,
-    valueBarType: ValueBarType,
-  ) {
+  constructor(xenoCreator: XenoCreator, offsetX: number, offsetY: number) {
     this.offsetX = offsetX;
     this.offsetY = offsetY;
-
-    if (valueBarType == ValueBarType.HP) {
-      this.barFrontColour = this.HP_FRONT_COLOUR;
-    }
-    if (valueBarType == ValueBarType.ENERGY) {
-      this.barFrontColour = this.ENERGY_FRONT_COLOUR;
-    }
-
-    let barBackColour: string = this.PLAYER_BORDER_COLOUR;
+    this.xenoCreator = xenoCreator;
 
     this.barBack = xenoCreator.createBasicImage(
       0, // x - Set on update!
       0, // y- Set on update!
       "ValueBar2pxGradient",
       RenderDepth.UI,
-      barBackColour,
     );
   }
 
+  setVisible(isVisible: boolean) {
+    this.barBack.visible = isVisible;
+  }
+
   // value is between 0 and 1
-  updateValue(x: number, y: number, value: number, desiredWidth: number) {
+  updateValue(
+    x: number,
+    y: number,
+    value: number,
+    desiredWidth: number,
+    borderColour: string,
+    barColour: string,
+  ) {
     // This ValueBar should follow the parent ship while displaying the value
     this.barBack.x = x + this.offsetX;
     this.barBack.y = y + this.offsetY;
+    this.barBack.tint =
+      this.xenoCreator.convertStringColourToTint(borderColour);
 
     this.updateFront(
       this.barBack.x,
       this.barBack.y,
       desiredWidth,
       value,
-      this.barFrontColour,
+      this.xenoCreator.convertStringColourToTint(barColour),
     );
   }
 
