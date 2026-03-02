@@ -26,8 +26,8 @@ export default class Ship extends PhysicsEntity {
 
   private hp!: number;
   private energy!: number;
-  private remainingExecutionDuration: number = 0;
-  private lastSetExecutionDuration: number = 0;
+  private castTimeRemaining: number = 0;
+  private castTimeLastSet: number = 0;
 
   private systems!: Array<ShipSystem>;
 
@@ -129,8 +129,8 @@ export default class Ship extends PhysicsEntity {
       this,
       {
         systemName: "Plasma Cannon",
-        cooldownDuration: 40,
-        reuseDuration: 40,
+        cooldownDuration: 60,
+        castDuration: 60,
         energyCost: 0,
         projectileData: {
           range: 15,
@@ -141,7 +141,7 @@ export default class Ship extends PhysicsEntity {
         },
         uiTextureName: "target-icon",
         playerKeyBind: "M1",
-        maxCharges: 4,
+        maxCharges: 1,
         chargeDuration: 60,
       },
     );
@@ -154,8 +154,8 @@ export default class Ship extends PhysicsEntity {
       this,
       {
         systemName: "Machine Gun",
-        cooldownDuration: 3,
-        reuseDuration: 3,
+        cooldownDuration: 10,
+        castDuration: 10,
         energyCost: 0,
         projectileData: {
           range: 10,
@@ -166,7 +166,7 @@ export default class Ship extends PhysicsEntity {
         },
         uiTextureName: "machinegun-icon",
         playerKeyBind: "M2",
-        maxCharges: 100,
+        maxCharges: 4,
         chargeDuration: 20,
       },
     );
@@ -179,8 +179,8 @@ export default class Ship extends PhysicsEntity {
       this,
       {
         systemName: "Rad Blaster",
-        cooldownDuration: 60,
-        reuseDuration: 20,
+        cooldownDuration: 60 * 4,
+        castDuration: 60,
         energyCost: 10,
         projectileData: {
           range: 15,
@@ -192,7 +192,7 @@ export default class Ship extends PhysicsEntity {
         uiTextureName: "rad-icon",
         playerKeyBind: "F",
         maxCharges: 1,
-        chargeDuration: 60,
+        chargeDuration: 60 * 4,
       },
     );
 
@@ -204,8 +204,8 @@ export default class Ship extends PhysicsEntity {
       this,
       {
         systemName: "Crap Blaster",
-        cooldownDuration: 40,
-        reuseDuration: 40,
+        cooldownDuration: 60 * 4,
+        castDuration: 60 * 4,
         energyCost: 0,
         projectileData: {
           range: 15,
@@ -217,7 +217,7 @@ export default class Ship extends PhysicsEntity {
         uiTextureName: "RadBlasterPlaceholder",
         playerKeyBind: "X",
         maxCharges: 1,
-        chargeDuration: 40,
+        chargeDuration: 60 * 4,
       },
     );
 
@@ -369,15 +369,15 @@ export default class Ship extends PhysicsEntity {
 
     // Regen energn
     this.energy += 0.1;
-    this.remainingExecutionDuration -= 1;
+    this.castTimeRemaining -= 1;
 
     // Cap currentValue, it should never be negative
     this.energy = Phaser.Math.Clamp(this.energy, 0, this.shipData.maxEnergy);
     this.hp = Phaser.Math.Clamp(this.hp, 0, this.shipData.maxHP);
-    this.remainingExecutionDuration = Phaser.Math.Clamp(
-      this.remainingExecutionDuration,
+    this.castTimeRemaining = Phaser.Math.Clamp(
+      this.castTimeRemaining,
       0,
-      this.lastSetExecutionDuration,
+      this.castTimeLastSet,
     );
 
     this.hpBar.updateValue(
@@ -395,7 +395,7 @@ export default class Ship extends PhysicsEntity {
     this.executionBar.updateValue(
       this.x,
       this.y,
-      this.remainingExecutionDuration / this.lastSetExecutionDuration,
+      this.castTimeRemaining / this.castTimeLastSet,
       this.displayWidth,
     );
   }
@@ -426,7 +426,7 @@ export default class Ship extends PhysicsEntity {
     XenoLog.ship.trace("Trying to use \'" + sys.getSystemName() + "\'");
 
     // First check if we aren't already "casting" something else
-    if (this.remainingExecutionDuration > 0) {
+    if (this.castTimeRemaining > 0) {
       let debugText: string =
         "\'" + sys.getSystemName() + "\' can't be used because we are \'busy\'";
       XenoLog.ship.debug(debugText);
@@ -478,8 +478,8 @@ export default class Ship extends PhysicsEntity {
       shipID: this.shipID,
     });
     this.energy -= sys.getEnergyCost();
-    this.lastSetExecutionDuration = 100;
-    this.remainingExecutionDuration = this.lastSetExecutionDuration;
+    this.castTimeLastSet = sys.getCastDuration();
+    this.castTimeRemaining = this.castTimeLastSet;
 
     XenoLog.ship.trace(
       "\'" + " boop " + "\' Used \'" + sys.getSystemName() + "\'",
