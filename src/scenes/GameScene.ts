@@ -14,7 +14,7 @@ import ProjectileManager from "../managers/ProjectileManager";
 import CollisionManager from "../managers/CollisionManager";
 import AlertManager from "../managers/AlertManager";
 
-import CooldownIcon from "../entities/CooldownIcon";
+import CooldownIcon from "../hud/CooldownIcon";
 
 import XenoInput from "../helpers/XenoInput";
 
@@ -74,7 +74,7 @@ export default class GameScene extends Phaser.Scene {
       e.preventDefault();
     });
 
-    this.versionText = this.add.text(5, 5, "Version 4.5 - Test issue");
+    this.versionText = this.add.text(5, 5, "Version 4.?? - Wait bar");
     this.versionText.setScrollFactor(0);
   }
 
@@ -124,6 +124,8 @@ export default class GameScene extends Phaser.Scene {
         mass: 100,
         rotationSpeed: 0.05,
         maxSpeed: 6,
+        maxHP: 100,
+        maxEnergy: 100,
       },
     );
 
@@ -147,6 +149,8 @@ export default class GameScene extends Phaser.Scene {
             mass: 100,
             rotationSpeed: 0.05,
             maxSpeed: 3,
+            maxHP: 100,
+            maxEnergy: 100,
           },
         ),
       );

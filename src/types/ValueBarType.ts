@@ -1,7 +1,7 @@
 export const ValueBarType = {
   HP: "HP",
   ENERGY: "ENERGY",
-  COOLDOWN: "COOLDOWN",
+  WAIT: "WAIT",
 };
 
 export type ValueBarType = (typeof ValueBarType)[keyof typeof ValueBarType];

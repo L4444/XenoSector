@@ -3,4 +3,6 @@ export default interface ShipData {
   rotationSpeed: number;
   mass: number;
   maxSpeed: number;
+  maxHP: number;
+  maxEnergy: number;
 }
