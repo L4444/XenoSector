@@ -7,12 +7,11 @@ export default class FooEffect extends SystemEffect {
     super();
   }
 
-  public onApply(
-    self: Ship,
-    shipSystemUsageOptions: ShipSystemUsageOptions,
-  ): void {
+  public onInit(self: Ship): void {
     console.log("Foo");
   }
 
-  public onTick(): void {}
+  public onTick(shipSystemUsageOptions: ShipSystemUsageOptions): boolean {
+    return true;
+  }
 }

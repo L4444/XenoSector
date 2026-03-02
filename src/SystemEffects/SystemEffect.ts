@@ -1,14 +1,13 @@
-import BaseEntity from "../entities/BaseEntity";
 import type Ship from "../entities/Ship";
 import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
 
 export default abstract class SystemEffect {
   constructor() {}
 
-  public abstract onApply(
-    self: Ship,
-    shipSystemUsageOptions: ShipSystemUsageOptions,
-  ): void;
+  public abstract onInit(self: Ship): void;
 
-  public abstract onTick(): void;
+  // Return true if done, and false if not done.
+  public abstract onTick(
+    shipSystemUsageOptions: ShipSystemUsageOptions,
+  ): boolean;
 }
