@@ -1,6 +1,8 @@
 import type Ship from "../entities/Ship";
 import type XenoCreator from "../helpers/XenoCreator";
 import type ProjectileManager from "../managers/ProjectileManager";
+import FooEffect from "../SystemEffects/FooEffect";
+import SystemEffect from "../SystemEffects/SystemEffect";
 
 import type ShipSystemData from "../types/ShipSystemData";
 import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
@@ -20,7 +22,6 @@ export default class ShipSystem extends BaseEntity {
     projectileManager: ProjectileManager,
     xenoCreator: XenoCreator,
     parentShip: Ship,
-
     shipSystemData: ShipSystemData,
   ) {
     super(xenoCreator);
@@ -36,7 +37,9 @@ export default class ShipSystem extends BaseEntity {
     this.chargeTimeRemaining = this.data.chargeDuration;
     this.cooldownRemaining = this.data.cooldownDuration;
 
-    this.projectileManager.shoot(useShipSystemData, this.data.projectileData);
+    for (let i = 0; i < this.data.effects.length; i++) {
+      this.data.effects[i].onApply(this.parentShip, useShipSystemData);
+    }
 
     this.currentCharges--;
   }
@@ -75,6 +78,10 @@ export default class ShipSystem extends BaseEntity {
         this.currentCharges++;
         this.chargeTimeRemaining = this.data.chargeDuration;
       }
+    }
+
+    for (let i = 0; i < this.data.effects.length; i++) {
+      this.data.effects[i].onTick();
     }
   }
 

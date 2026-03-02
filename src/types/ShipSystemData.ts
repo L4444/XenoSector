@@ -1,4 +1,4 @@
-import type ProjectileData from "./ProjectileData";
+import type SystemEffect from "../SystemEffects/SystemEffect";
 
 export default interface ShipSystemData {
   systemName: string;
@@ -6,8 +6,8 @@ export default interface ShipSystemData {
   castDuration: number;
   chargeDuration: number;
   energyCost: number;
-  projectileData: ProjectileData;
   uiTextureName: string;
   playerKeyBind: string;
   maxCharges: number;
+  effects: Array<SystemEffect>;
 }
