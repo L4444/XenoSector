@@ -1,5 +1,6 @@
 import type Ship from "../entities/Ship";
 import type XenoCreator from "../helpers/XenoCreator";
+import { XenoLog } from "../helpers/XenoLogger";
 import type ProjectileManager from "../managers/ProjectileManager";
 
 import type ShipSystemData from "../types/ShipSystemData";
@@ -16,10 +17,11 @@ export default class ShipSystem extends BaseEntity {
   private projectileManager!: ProjectileManager;
   private currentCharges!: number;
 
-  private shipSystemUsageOptions!: ShipSystemUsageOptions;
-
   private effectNumber: number = 0;
+  private effectTick: number = 0;
   private isActive: boolean = false;
+
+  private totalDelay: number = 1;
 
   constructor(
     projectileManager: ProjectileManager,
@@ -36,13 +38,26 @@ export default class ShipSystem extends BaseEntity {
   }
 
   // This function will be called outside the class
-  use() {
+  use(shipSystemUsageOptions: ShipSystemUsageOptions) {
+    XenoLog.syst.debug(
+      "\'" +
+        this.data.systemName +
+        "\' has been used    -------------------------------",
+      "The effects are: ",
+      this.data.effects,
+    );
     this.chargeTimeRemaining = this.data.chargeDuration;
     this.cooldownRemaining = this.data.cooldownDuration;
+    this.totalDelay = 0;
 
+    XenoLog.syst.trace("Counting up total \'cast time\' (totalDelay)");
     for (let i = 0; i < this.data.effects.length; i++) {
-      this.data.effects[i].onInit(this.parentShip);
+      this.totalDelay += this.data.effects[i].getWindDown();
+      XenoLog.syst.trace(
+        " i = " + i + " and totalDelay so far is " + this.totalDelay,
+      );
     }
+    XenoLog.syst.debug("The totalDelay total is " + this.totalDelay);
 
     this.currentCharges--;
     this.isActive = true;
@@ -65,7 +80,7 @@ export default class ShipSystem extends BaseEntity {
   }
 
   getCastDuration(): number {
-    return this.data.castDuration;
+    return this.totalDelay;
   }
 
   postUpdate() {
@@ -77,6 +92,7 @@ export default class ShipSystem extends BaseEntity {
       this.chargeTimeRemaining--;
     }
 
+    // Thankfully I clameped this??
     if (this.chargeTimeRemaining == 0) {
       if (this.currentCharges < this.data.maxCharges) {
         this.currentCharges++;
@@ -87,14 +103,37 @@ export default class ShipSystem extends BaseEntity {
     if (this.isActive) {
       let currentEffect = this.data.effects[this.effectNumber];
 
-      if (currentEffect.onTick(this.parentShip.getShipSystemUsageOptions())) {
-        this.effectNumber++;
+      if (this.effectTick == 0) {
+        XenoLog.syst.trace(
+          "\'" + currentEffect.getName() + "\' is about to be activated",
+        );
+        currentEffect.onActivate(
+          this.parentShip,
+          this.parentShip.getShipSystemUsageOptions(),
+          this.projectileManager,
+        );
       }
-    }
 
-    if (this.effectNumber == this.data.effects.length) {
-      this.isActive = false;
-      this.effectNumber = 0;
+      this.effectTick++;
+
+      if (this.effectTick >= currentEffect.getWindDown()) {
+        this.effectNumber++;
+        this.effectTick = 0;
+      }
+
+      if (this.effectNumber == this.data.effects.length) {
+        this.isActive = false;
+        this.effectNumber = 0;
+      }
+
+      XenoLog.syst.trace(
+        "\'" +
+          currentEffect.getName() +
+          "\' is waiting.... " +
+          this.effectTick +
+          "\/" +
+          currentEffect.getWindDown(),
+      );
     }
   }
 
