@@ -13,6 +13,7 @@ export default class CooldownIcon extends BaseEntity {
   private nameText!: Phaser.GameObjects.Text;
   private keybindText!: Phaser.GameObjects.Text;
   private chargesText!: Phaser.GameObjects.Text;
+  private energyText!: Phaser.GameObjects.Text;
 
   private xenoCreator!: XenoCreator;
 
@@ -90,7 +91,7 @@ export default class CooldownIcon extends BaseEntity {
       "#FFFFFF",
       true,
     );
-    this.keybindText.setFontSize(10);
+    this.keybindText.setFontSize(15);
 
     this.chargesText = this.xenoCreator.createText(
       x - 30,
@@ -101,6 +102,26 @@ export default class CooldownIcon extends BaseEntity {
       true,
     );
     this.chargesText.setFontSize(20);
+
+    // Hide if the shipsystem doesn't "use charges" (e.g it's max chargers are at 1)
+    if (this.shipSystem.getMaxCharges() == 1) {
+      this.chargesText.setVisible(false);
+    }
+
+    this.energyText = this.xenoCreator.createText(
+      x + 15,
+      y - 30,
+      this.shipSystem.getEnergyCost().toString(),
+      RenderDepth.UI,
+      "#00Cccc",
+      true,
+    );
+    this.energyText.setFontSize(15);
+
+    // Hide if the shipsystem has no cost, so the UI looks cleaner
+    if (this.shipSystem.getEnergyCost() == 0) {
+      this.energyText.setVisible(false);
+    }
   }
 
   preUpdate() {
