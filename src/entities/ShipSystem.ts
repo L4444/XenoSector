@@ -5,7 +5,6 @@ import type ProjectileManager from "../managers/ProjectileManager";
 import SystemEffect from "../SystemEffects/SystemEffect";
 
 import type ShipSystemData from "../types/ShipSystemData";
-import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
 
 import BaseEntity from "./BaseEntity";
 
@@ -20,6 +19,7 @@ export default class ShipSystem extends BaseEntity {
 
   private effectTick: number = 0;
 
+  // I want to avoid divide by 0 errors if the total delay ends up being 0.
   private totalDelay: number = 1;
 
   private effectsToActivate: Array<SystemEffect> = new Array<SystemEffect>();
@@ -39,7 +39,7 @@ export default class ShipSystem extends BaseEntity {
   }
 
   // This function will be called outside the class
-  use(_shipSystemUsageOptions: ShipSystemUsageOptions) {
+  use() {
     this.effectsToActivate.push(...this.data.effects);
     XenoLog.syst.debug(
       "\'" +
@@ -82,6 +82,10 @@ export default class ShipSystem extends BaseEntity {
 
   getCastDuration(): number {
     return this.totalDelay;
+  }
+
+  getMaxCharges(): number {
+    return this.data.maxCharges;
   }
 
   postUpdate() {

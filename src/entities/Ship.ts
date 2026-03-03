@@ -522,7 +522,7 @@ export default class Ship extends PhysicsEntity {
       return;
     }
 
-    sys.use(this.getShipSystemUsageOptions());
+    sys.use();
     this.energy -= sys.getEnergyCost();
     this.castTimeLastSet = sys.getCastDuration();
     this.castTimeRemaining = this.castTimeLastSet;

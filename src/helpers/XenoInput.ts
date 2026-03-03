@@ -5,7 +5,7 @@ export default class XenoInput {
   private scene!: Phaser.Scene;
   private enemyAutoFire: boolean = false;
   private keyboardControlStyle: KeyboardControlStyle =
-    KeyboardControlStyle.RELATIVE;
+    KeyboardControlStyle.ABSOLUTE;
   private mouseLook: boolean = true;
 
   private testButton: boolean = false;
