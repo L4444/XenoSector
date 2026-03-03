@@ -16,7 +16,7 @@ export const XenoLog = {
   }),
   ship: baseLogger.getSubLogger({
     name: "Ship",
-    minLevel: 2,
+    minLevel: 3,
   }),
   load: baseLogger.getSubLogger({
     name: "loadImage",
@@ -28,6 +28,6 @@ export const XenoLog = {
   }),
   syst: baseLogger.getSubLogger({
     name: "Ship Systems",
-    minLevel: 1,
+    minLevel: 3,
   }),
 };

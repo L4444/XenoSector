@@ -136,7 +136,7 @@ export default class Ship extends PhysicsEntity {
         uiTextureName: "target-icon",
         playerKeyBind: "M1",
         maxCharges: 1,
-        chargeDuration: 60,
+        chargeDuration: 0,
         effects: [
           new ShootProjectileEffect({
             range: 15,
@@ -167,10 +167,10 @@ export default class Ship extends PhysicsEntity {
         effects: [
           new DelayEffect(10),
           new ShootProjectileEffect({
-            range: 10,
+            range: 15,
             speed: 20,
             textureName: "pew-yellow",
-            damage: 1,
+            damage: 10,
             mass: 0,
           }),
           new DelayEffect(3),
@@ -178,7 +178,7 @@ export default class Ship extends PhysicsEntity {
             range: 10,
             speed: 20,
             textureName: "pew-yellow",
-            damage: 1,
+            damage: 10,
             mass: 0,
           }),
           new DelayEffect(3),
@@ -186,7 +186,7 @@ export default class Ship extends PhysicsEntity {
             range: 10,
             speed: 20,
             textureName: "pew-yellow",
-            damage: 1,
+            damage: 10,
             mass: 0,
           }),
           new DelayEffect(10),
@@ -216,7 +216,7 @@ export default class Ship extends PhysicsEntity {
             range: 15,
             speed: 20,
             textureName: "pew-big-green",
-            damage: 30,
+            damage: 70,
             mass: 6400,
           }),
         ],
@@ -231,14 +231,14 @@ export default class Ship extends PhysicsEntity {
       this,
       {
         systemName: "Crap Blaster",
-        cooldownDuration: 60 * 4,
+        cooldownDuration: 0,
 
         energyCost: 0,
 
         uiTextureName: "RadBlasterPlaceholder",
         playerKeyBind: "X",
         maxCharges: 1,
-        chargeDuration: 60 * 4,
+        chargeDuration: 0,
         effects: [
           new FooEffect(),
           new ShootProjectileEffect({
@@ -248,6 +248,7 @@ export default class Ship extends PhysicsEntity {
             damage: 0.5,
             mass: 0,
           }),
+          new DelayEffect(60),
         ],
       },
     );
@@ -473,6 +474,17 @@ export default class Ship extends PhysicsEntity {
       return;
     }
 
+    // Then check if the system is already in use
+    if (sys.isBusy()) {
+      let debugText: string =
+        "\'" +
+        sys.getSystemName() +
+        "\' can't be used because the ShipSystem itself is \'busy\'";
+      XenoLog.ship.trace(debugText);
+
+      return;
+    }
+
     // Then check if it's off cooldown
     if (!sys.isOffCooldown()) {
       // Warn the user (max once a second) if they try and use a system while it's on cooldown
@@ -488,7 +500,7 @@ export default class Ship extends PhysicsEntity {
 
     if (sys.getCharges() == 0) {
       // Warn this user (max once a second) if they try and use a system when it has no charges
-      if (this.ticksSinceChargesMessage > 60) {
+      if (this.ticksSinceChargesMessage > 0) {
         let debugText: string =
           "\'" + sys.getSystemName() + "\' has no charges";
         XenoLog.ship.debug(debugText);
