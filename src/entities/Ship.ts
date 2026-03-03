@@ -132,25 +132,19 @@ export default class Ship extends PhysicsEntity {
       {
         systemName: "Plasma Cannon",
         cooldownDuration: 60,
-        castDuration: 60,
         energyCost: 0,
         uiTextureName: "target-icon",
         playerKeyBind: "M1",
         maxCharges: 1,
         chargeDuration: 60,
         effects: [
-          new FooEffect(),
-          new ShootProjectileEffect(
-            projectileManager,
-            {
-              range: 15,
-              speed: 10,
-              textureName: "pew-blue",
-              damage: 20,
-              mass: 0,
-            },
-            1,
-          ),
+          new ShootProjectileEffect({
+            range: 15,
+            speed: 10,
+            textureName: "pew-blue",
+            damage: 20,
+            mass: 0,
+          }),
         ],
       },
     );
@@ -164,26 +158,37 @@ export default class Ship extends PhysicsEntity {
       {
         systemName: "Machine Gun",
         cooldownDuration: 10,
-        castDuration: 10,
         energyCost: 0,
-
         uiTextureName: "machinegun-icon",
         playerKeyBind: "M2",
         maxCharges: 4,
         chargeDuration: 20,
         effects: [
-          new DelayEffect(),
-          new ShootProjectileEffect(
-            projectileManager,
-            {
-              range: 10,
-              speed: 20,
-              textureName: "pew-yellow",
-              damage: 1,
-              mass: 0,
-            },
-            3,
-          ),
+          new DelayEffect(30),
+          new ShootProjectileEffect({
+            range: 10,
+            speed: 20,
+            textureName: "pew-yellow",
+            damage: 1,
+            mass: 0,
+          }),
+          new DelayEffect(3),
+          new ShootProjectileEffect({
+            range: 10,
+            speed: 20,
+            textureName: "pew-yellow",
+            damage: 1,
+            mass: 0,
+          }),
+          new DelayEffect(3),
+          new ShootProjectileEffect({
+            range: 10,
+            speed: 20,
+            textureName: "pew-yellow",
+            damage: 1,
+            mass: 0,
+          }),
+          new DelayEffect(20),
         ],
       },
     );
@@ -197,7 +202,7 @@ export default class Ship extends PhysicsEntity {
       {
         systemName: "Rad Blaster",
         cooldownDuration: 60 * 4,
-        castDuration: 60,
+
         energyCost: 50,
 
         uiTextureName: "rad-icon",
@@ -205,18 +210,13 @@ export default class Ship extends PhysicsEntity {
         maxCharges: 1,
         chargeDuration: 60 * 4,
         effects: [
-          new FooEffect(),
-          new ShootProjectileEffect(
-            projectileManager,
-            {
-              range: 15,
-              speed: 20,
-              textureName: "pew-big-green",
-              damage: 30,
-              mass: 6400,
-            },
-            1,
-          ),
+          new ShootProjectileEffect({
+            range: 15,
+            speed: 20,
+            textureName: "pew-big-green",
+            damage: 30,
+            mass: 6400,
+          }),
         ],
       },
     );
@@ -230,7 +230,7 @@ export default class Ship extends PhysicsEntity {
       {
         systemName: "Crap Blaster",
         cooldownDuration: 60 * 4,
-        castDuration: 60 * 4,
+
         energyCost: 0,
 
         uiTextureName: "RadBlasterPlaceholder",
@@ -239,17 +239,13 @@ export default class Ship extends PhysicsEntity {
         chargeDuration: 60 * 4,
         effects: [
           new FooEffect(),
-          new ShootProjectileEffect(
-            projectileManager,
-            {
-              range: 15,
-              speed: 10,
-              textureName: "beam",
-              damage: 0.5,
-              mass: 0,
-            },
-            1,
-          ),
+          new ShootProjectileEffect({
+            range: 15,
+            speed: 10,
+            textureName: "beam",
+            damage: 0.5,
+            mass: 0,
+          }),
         ],
       },
     );
@@ -512,7 +508,7 @@ export default class Ship extends PhysicsEntity {
       return;
     }
 
-    sys.use();
+    sys.use(this.getShipSystemUsageOptions());
     this.energy -= sys.getEnergyCost();
     this.castTimeLastSet = sys.getCastDuration();
     this.castTimeRemaining = this.castTimeLastSet;

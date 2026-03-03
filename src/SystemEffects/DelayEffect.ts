@@ -1,21 +1,24 @@
 import type Ship from "../entities/Ship";
 import SystemEffect from "./SystemEffect";
 import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
+import type ProjectileManager from "../managers/ProjectileManager";
+import { XenoLog } from "../helpers/XenoLogger";
 
 export default class DelayEffect extends SystemEffect {
-  private tickCount: number = 0;
-  constructor() {
-    super();
+  constructor(ticksDelay: number) {
+    super("Delay effect", ticksDelay);
   }
 
-  public onInit(self: Ship): void {
-    console.log("Delaying for " + self.physicsEntityName);
-    this.tickCount = 0;
-  }
-
-  public onTick(_shipSystemUsageOptions: ShipSystemUsageOptions): boolean {
-    this.tickCount++;
-
-    return this.tickCount > 60;
+  public onActivate(
+    self: Ship,
+    _shipSystemUsageOptions: ShipSystemUsageOptions,
+    _projectileManager: ProjectileManager,
+  ): void {
+    XenoLog.syst.debug(
+      "Delaying for " +
+        self.physicsEntityName +
+        " ticks delay: " +
+        this.getWindDown(),
+    );
   }
 }

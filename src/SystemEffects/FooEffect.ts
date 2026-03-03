@@ -1,17 +1,18 @@
 import type Ship from "../entities/Ship";
 import SystemEffect from "./SystemEffect";
 import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
+import type ProjectileManager from "../managers/ProjectileManager";
 
 export default class FooEffect extends SystemEffect {
   constructor() {
-    super();
+    super("Foo effect", 0);
   }
 
-  public onInit(self: Ship): void {
+  public onActivate(
+    _self: Ship,
+    _shipSystemUsageOptions: ShipSystemUsageOptions,
+    _projectileManager: ProjectileManager,
+  ): void {
     console.log("Foo");
-  }
-
-  public onTick(shipSystemUsageOptions: ShipSystemUsageOptions): boolean {
-    return true;
   }
 }

@@ -16,14 +16,18 @@ export const XenoLog = {
   }),
   ship: baseLogger.getSubLogger({
     name: "Ship",
-    minLevel: 2,
+    minLevel: 3,
   }),
   load: baseLogger.getSubLogger({
     name: "loadImage",
-    minLevel: 1,
+    minLevel: 3,
   }),
   gene: baseLogger.getSubLogger({
     name: "General",
+    minLevel: 3,
+  }),
+  syst: baseLogger.getSubLogger({
+    name: "Ship Systems",
     minLevel: 1,
   }),
 };
