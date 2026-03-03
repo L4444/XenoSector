@@ -74,7 +74,11 @@ export default class GameScene extends Phaser.Scene {
       e.preventDefault();
     });
 
-    this.versionText = this.add.text(5, 5, "Version 4.?? - Wait bar");
+    this.versionText = this.add.text(
+      5,
+      5,
+      "Version 4.0 - Merge commit rebase thing works",
+    );
     this.versionText.setScrollFactor(0);
   }
 
