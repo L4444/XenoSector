@@ -18,9 +18,7 @@ export default class ShipSystem extends BaseEntity {
   private projectileManager!: ProjectileManager;
   private currentCharges!: number;
 
-  private effectNumber: number = 0;
   private effectTick: number = 0;
-  private isActive: boolean = false;
 
   private totalDelay: number = 1;
 
@@ -41,7 +39,7 @@ export default class ShipSystem extends BaseEntity {
   }
 
   // This function will be called outside the class
-  use(shipSystemUsageOptions: ShipSystemUsageOptions) {
+  use(_shipSystemUsageOptions: ShipSystemUsageOptions) {
     this.effectsToActivate.push(...this.data.effects);
     XenoLog.syst.debug(
       "\'" +
@@ -149,5 +147,9 @@ export default class ShipSystem extends BaseEntity {
 
   getCharges(): number {
     return this.currentCharges;
+  }
+
+  isBusy(): boolean {
+    return this.effectsToActivate.length > 0;
   }
 }
