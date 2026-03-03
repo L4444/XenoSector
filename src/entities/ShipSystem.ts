@@ -2,6 +2,7 @@ import type Ship from "../entities/Ship";
 import type XenoCreator from "../helpers/XenoCreator";
 import { XenoLog } from "../helpers/XenoLogger";
 import type ProjectileManager from "../managers/ProjectileManager";
+import SystemEffect from "../SystemEffects/SystemEffect";
 
 import type ShipSystemData from "../types/ShipSystemData";
 import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
@@ -23,6 +24,8 @@ export default class ShipSystem extends BaseEntity {
 
   private totalDelay: number = 1;
 
+  private effectsToActivate: Array<SystemEffect> = new Array<SystemEffect>();
+
   constructor(
     projectileManager: ProjectileManager,
     xenoCreator: XenoCreator,
@@ -39,20 +42,21 @@ export default class ShipSystem extends BaseEntity {
 
   // This function will be called outside the class
   use(shipSystemUsageOptions: ShipSystemUsageOptions) {
+    this.effectsToActivate.push(...this.data.effects);
     XenoLog.syst.debug(
       "\'" +
         this.data.systemName +
         "\' has been used    -------------------------------",
       "The effects are: ",
-      this.data.effects,
+      this.effectsToActivate,
     );
     this.chargeTimeRemaining = this.data.chargeDuration;
     this.cooldownRemaining = this.data.cooldownDuration;
     this.totalDelay = 0;
 
     XenoLog.syst.trace("Counting up total \'cast time\' (totalDelay)");
-    for (let i = 0; i < this.data.effects.length; i++) {
-      this.totalDelay += this.data.effects[i].getWindDown();
+    for (let i = 0; i < this.effectsToActivate.length; i++) {
+      this.totalDelay += this.effectsToActivate[i].getWindDown();
       XenoLog.syst.trace(
         " i = " + i + " and totalDelay so far is " + this.totalDelay,
       );
@@ -60,7 +64,6 @@ export default class ShipSystem extends BaseEntity {
     XenoLog.syst.debug("The totalDelay total is " + this.totalDelay);
 
     this.currentCharges--;
-    this.isActive = true;
   }
 
   getSystemName(): string {
@@ -100,8 +103,8 @@ export default class ShipSystem extends BaseEntity {
       }
     }
 
-    if (this.isActive) {
-      let currentEffect = this.data.effects[this.effectNumber];
+    if (this.effectsToActivate.length > 0) {
+      let currentEffect = this.effectsToActivate[0];
 
       if (this.effectTick == 0) {
         XenoLog.syst.trace(
@@ -117,19 +120,14 @@ export default class ShipSystem extends BaseEntity {
       this.effectTick++;
 
       if (this.effectTick >= currentEffect.getWindDown()) {
-        this.effectNumber++;
+        this.effectsToActivate.shift();
         this.effectTick = 0;
-      }
-
-      if (this.effectNumber == this.data.effects.length) {
-        this.isActive = false;
-        this.effectNumber = 0;
       }
 
       XenoLog.syst.trace(
         "\'" +
           currentEffect.getName() +
-          "\' is waiting.... " +
+          "\' is winding down.... " +
           this.effectTick +
           "\/" +
           currentEffect.getWindDown(),
