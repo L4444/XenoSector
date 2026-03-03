@@ -120,10 +120,10 @@ export default class GameScene extends Phaser.Scene {
       new KeyboardAndMouseController(this.xenoInput),
       true,
       {
-        thrustPower: 0.02,
+        thrustPower: 0.05,
         mass: 100,
         rotationSpeed: 0.05,
-        maxSpeed: 6,
+        maxSpeed: 3,
         maxHP: 100,
         maxEnergy: 100,
       },
@@ -145,7 +145,7 @@ export default class GameScene extends Phaser.Scene {
           new AIController(this.xenoInput, this.player),
           false,
           {
-            thrustPower: 0.02,
+            thrustPower: 0.05,
             mass: 100,
             rotationSpeed: 0.05,
             maxSpeed: 3,
