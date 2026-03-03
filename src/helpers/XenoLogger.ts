@@ -16,7 +16,7 @@ export const XenoLog = {
   }),
   ship: baseLogger.getSubLogger({
     name: "Ship",
-    minLevel: 3,
+    minLevel: 2,
   }),
   load: baseLogger.getSubLogger({
     name: "loadImage",

@@ -131,7 +131,7 @@ export default class Ship extends PhysicsEntity {
       this,
       {
         systemName: "Plasma Cannon",
-        cooldownDuration: 60,
+        cooldownDuration: 0,
         energyCost: 0,
         uiTextureName: "target-icon",
         playerKeyBind: "M1",
@@ -145,6 +145,7 @@ export default class Ship extends PhysicsEntity {
             damage: 20,
             mass: 0,
           }),
+          new DelayEffect(60),
         ],
       },
     );
@@ -157,14 +158,14 @@ export default class Ship extends PhysicsEntity {
       this,
       {
         systemName: "Machine Gun",
-        cooldownDuration: 10,
+        cooldownDuration: 0,
         energyCost: 0,
         uiTextureName: "machinegun-icon",
         playerKeyBind: "M2",
         maxCharges: 4,
-        chargeDuration: 20,
+        chargeDuration: 120,
         effects: [
-          new DelayEffect(30),
+          new DelayEffect(10),
           new ShootProjectileEffect({
             range: 10,
             speed: 20,
@@ -188,7 +189,7 @@ export default class Ship extends PhysicsEntity {
             damage: 1,
             mass: 0,
           }),
-          new DelayEffect(20),
+          new DelayEffect(10),
         ],
       },
     );
@@ -210,6 +211,7 @@ export default class Ship extends PhysicsEntity {
         maxCharges: 1,
         chargeDuration: 60 * 4,
         effects: [
+          new DelayEffect(30),
           new ShootProjectileEffect({
             range: 15,
             speed: 20,
