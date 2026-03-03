@@ -19,6 +19,7 @@ export default class ShipSystem extends BaseEntity {
 
   private effectTick: number = 0;
 
+  // I want to avoid divide by 0 errors if the total delay ends up being 0.
   private totalDelay: number = 1;
 
   private effectsToActivate: Array<SystemEffect> = new Array<SystemEffect>();
@@ -81,6 +82,10 @@ export default class ShipSystem extends BaseEntity {
 
   getCastDuration(): number {
     return this.totalDelay;
+  }
+
+  getMaxCharges(): number {
+    return this.data.maxCharges;
   }
 
   postUpdate() {
