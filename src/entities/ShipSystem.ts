@@ -5,7 +5,6 @@ import type ProjectileManager from "../managers/ProjectileManager";
 import SystemEffect from "../SystemEffects/SystemEffect";
 
 import type ShipSystemData from "../types/ShipSystemData";
-import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
 
 import BaseEntity from "./BaseEntity";
 
@@ -39,7 +38,7 @@ export default class ShipSystem extends BaseEntity {
   }
 
   // This function will be called outside the class
-  use(_shipSystemUsageOptions: ShipSystemUsageOptions) {
+  use() {
     this.effectsToActivate.push(...this.data.effects);
     XenoLog.syst.debug(
       "\'" +
