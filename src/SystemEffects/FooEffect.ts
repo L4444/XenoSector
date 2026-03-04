@@ -1,4 +1,3 @@
-import type Ship from "../entities/Ship";
 import SystemEffect from "./SystemEffect";
 import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
 import type ProjectileManager from "../managers/ProjectileManager";
@@ -9,7 +8,6 @@ export default class FooEffect extends SystemEffect {
   }
 
   public onActivate(
-    _self: Ship,
     _shipSystemUsageOptions: ShipSystemUsageOptions,
     _projectileManager: ProjectileManager,
   ): void {

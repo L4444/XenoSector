@@ -1,4 +1,3 @@
-import type Ship from "../entities/Ship";
 import SystemEffect from "./SystemEffect";
 import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
 import type ProjectileManager from "../managers/ProjectileManager";
@@ -10,14 +9,13 @@ export default class DelayEffect extends SystemEffect {
   }
 
   public onActivate(
-    self: Ship,
-    _shipSystemUsageOptions: ShipSystemUsageOptions,
+    shipSystemUsageOptions: ShipSystemUsageOptions,
     _projectileManager: ProjectileManager,
   ): void {
-    XenoLog.syst.debug(
-      "Delaying for " +
-        self.physicsEntityName +
-        " ticks delay: " +
+    XenoLog.effe.debug(
+      "Delaying ship ID \'" +
+        shipSystemUsageOptions.shipID +
+        "\' ticks delay: " +
         this.getWindDown(),
     );
   }

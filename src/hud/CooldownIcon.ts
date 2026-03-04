@@ -125,7 +125,7 @@ export default class CooldownIcon extends BaseEntity {
   }
 
   preUpdate() {
-    let progress: number = this.shipSystem.getProgress();
+    let progress: number = this.shipSystem.getCooldownRemainingRatio();
 
     this.swish.clear();
     this.swish.fillStyle(this.SWISH_FILL_COLOUR, this.SWISH_FILL_ALPHA);
@@ -142,7 +142,12 @@ export default class CooldownIcon extends BaseEntity {
     this.swish.closePath();
     this.swish.fillPath();
 
-    this.chargesText.text = this.shipSystem.getCharges().toString();
+    this.chargesText.text =
+      this.shipSystem.getCurrentCharges().toString() +
+      "\/" +
+      this.shipSystem.getMaxCharges().toString();
+
+    this.back.tint = this.shipSystem.hasEnergy() ? 0xffffff : 0xff0000;
   }
 
   get x(): number {

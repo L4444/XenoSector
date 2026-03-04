@@ -30,4 +30,12 @@ export const XenoLog = {
     name: "Ship Systems",
     minLevel: 3,
   }),
+  effe: baseLogger.getSubLogger({
+    name: "Effects",
+    minLevel: 3,
+  }),
+  unit: baseLogger.getSubLogger({
+    name: "Unit tests",
+    minLevel: 3,
+  }),
 };
