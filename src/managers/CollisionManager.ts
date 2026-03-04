@@ -121,7 +121,7 @@ export default abstract class CollisionManager {
       value1: PhysicsEntity,
       value2: PhysicsEntity,
     ) {
-      XenoLog.coll.info(
+      XenoLog.coll.debug(
         " Collision Detected\t" +
           type1 +
           ": \'" +

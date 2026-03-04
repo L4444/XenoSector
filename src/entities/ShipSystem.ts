@@ -1,46 +1,87 @@
-import type Ship from "../entities/Ship";
-import type XenoCreator from "../helpers/XenoCreator";
 import { XenoLog } from "../helpers/XenoLogger";
 import type ProjectileManager from "../managers/ProjectileManager";
 import SystemEffect from "../SystemEffects/SystemEffect";
 
 import type ShipSystemData from "../types/ShipSystemData";
 
+import { ShipSystemUseResult } from "../types/ShipSystemUseResult";
+import type ICanUseShipSystem from "../interfaces/ICanUseShipSystem";
 import BaseEntity from "./BaseEntity";
+import type XenoCreator from "../helpers/XenoCreator";
+import Timer from "../helpers/Timer";
+import ChargeTimer from "../helpers/ChargeTimer";
 
 export default class ShipSystem extends BaseEntity {
   private data: ShipSystemData;
-  private parentShip!: Ship;
-  private cooldownRemaining: number = 0;
+  private parentShip!: ICanUseShipSystem;
+  private cooldownTimer!: Timer;
+  private chargeTimer!: ChargeTimer;
 
-  private chargeTimeRemaining: number = 0;
   private projectileManager!: ProjectileManager;
-  private currentCharges!: number;
 
   private effectTick: number = 0;
 
-  // I want to avoid divide by 0 errors if the total delay ends up being 0.
-  private totalDelay: number = 1;
+  private readonly totalDelay: number = 1;
 
   private effectsToActivate: Array<SystemEffect> = new Array<SystemEffect>();
 
   constructor(
-    projectileManager: ProjectileManager,
     xenoCreator: XenoCreator,
-    parentShip: Ship,
+    projectileManager: ProjectileManager,
+    parentShip: ICanUseShipSystem,
     shipSystemData: ShipSystemData,
   ) {
     super(xenoCreator);
-
     this.data = shipSystemData;
     this.projectileManager = projectileManager;
-    this.currentCharges = this.data.maxCharges;
+
     this.parentShip = parentShip;
+    this.cooldownTimer = new Timer(this.data.cooldownDuration);
+    this.chargeTimer = new ChargeTimer(
+      this.data.chargeDuration,
+      this.data.maxCharges,
+    );
+
+    XenoLog.syst.trace("Counting up total \'cast time\' (totalDelay)");
+    for (let i = 0; i < this.data.effects.length; i++) {
+      this.totalDelay += this.data.effects[i].getWindDown();
+      XenoLog.syst.trace(
+        " i = " + i + " and totalDelay so far is " + this.totalDelay,
+      );
+    }
+    XenoLog.syst.debug(
+      "The totalDelay total is " +
+        this.totalDelay +
+        " for " +
+        this.getSystemName(),
+    );
+  }
+
+  canUse(): ShipSystemUseResult {
+    if (this.isOnCooldown()) {
+      return ShipSystemUseResult.ON_COOLDOWN;
+    }
+
+    if (!this.hasEnergy()) {
+      return ShipSystemUseResult.LOW_ENERGY;
+    }
+
+    if (this.getCurrentCharges() < 1) {
+      return ShipSystemUseResult.NO_CHARGES;
+    }
+
+    return ShipSystemUseResult.SUCCESS;
   }
 
   // This function will be called outside the class
-  use() {
-    this.effectsToActivate.push(...this.data.effects);
+  use(): ShipSystemUseResult {
+    let result: ShipSystemUseResult = this.canUse();
+    if (result != ShipSystemUseResult.SUCCESS) {
+      return result;
+    }
+
+    this.effectsToActivate = [...this.data.effects];
+
     XenoLog.syst.debug(
       "\'" +
         this.data.systemName +
@@ -48,28 +89,18 @@ export default class ShipSystem extends BaseEntity {
       "The effects are: ",
       this.effectsToActivate,
     );
-    this.chargeTimeRemaining = this.data.chargeDuration;
-    this.cooldownRemaining = this.data.cooldownDuration;
-    this.totalDelay = 0;
+    this.chargeTimer.useCharge();
+    this.cooldownTimer.start();
 
-    XenoLog.syst.trace("Counting up total \'cast time\' (totalDelay)");
-    for (let i = 0; i < this.effectsToActivate.length; i++) {
-      this.totalDelay += this.effectsToActivate[i].getWindDown();
-      XenoLog.syst.trace(
-        " i = " + i + " and totalDelay so far is " + this.totalDelay,
-      );
-    }
-    XenoLog.syst.debug("The totalDelay total is " + this.totalDelay);
+    return ShipSystemUseResult.SUCCESS;
+  }
 
-    this.currentCharges--;
+  hasEnergy(): boolean {
+    return this.parentShip.getEnergy() >= this.getEnergyCost();
   }
 
   getSystemName(): string {
     return this.data.systemName;
-  }
-
-  getParentShip(): Ship {
-    return this.parentShip;
   }
 
   getUITextureName(): string {
@@ -89,31 +120,17 @@ export default class ShipSystem extends BaseEntity {
   }
 
   postUpdate() {
-    if (this.cooldownRemaining > 0) {
-      this.cooldownRemaining--;
-    }
-
-    if (this.chargeTimeRemaining > 0) {
-      this.chargeTimeRemaining--;
-    }
-
-    // Thankfully I clameped this??
-    if (this.chargeTimeRemaining == 0) {
-      if (this.currentCharges < this.data.maxCharges) {
-        this.currentCharges++;
-        this.chargeTimeRemaining = this.data.chargeDuration;
-      }
-    }
+    this.cooldownTimer.update();
+    this.chargeTimer.update();
 
     if (this.effectsToActivate.length > 0) {
       let currentEffect = this.effectsToActivate[0];
 
       if (this.effectTick == 0) {
-        XenoLog.syst.trace(
+        XenoLog.syst.debug(
           "\'" + currentEffect.getName() + "\' is about to be activated",
         );
         currentEffect.onActivate(
-          this.parentShip,
           this.parentShip.getShipSystemUsageOptions(),
           this.projectileManager,
         );
@@ -137,20 +154,20 @@ export default class ShipSystem extends BaseEntity {
     }
   }
 
-  isOffCooldown() {
-    return this.cooldownRemaining == 0;
+  isOnCooldown() {
+    return this.cooldownTimer.isActive();
   }
 
   getEnergyCost(): number {
     return this.data.energyCost;
   }
 
-  getProgress(): number {
-    return this.cooldownRemaining / this.data.cooldownDuration;
+  getCooldownRemainingRatio(): number {
+    return this.cooldownTimer.getRemainingRatio();
   }
 
-  getCharges(): number {
-    return this.currentCharges;
+  getCurrentCharges(): number {
+    return this.chargeTimer.getCharges();
   }
 
   isBusy(): boolean {

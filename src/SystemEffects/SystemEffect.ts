@@ -1,4 +1,3 @@
-import type Ship from "../entities/Ship";
 import type ProjectileManager from "../managers/ProjectileManager";
 import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
 
@@ -11,7 +10,6 @@ export default abstract class SystemEffect {
   }
 
   public abstract onActivate(
-    self: Ship,
     shipSystemUsageOptions: ShipSystemUsageOptions,
     projectileManager: ProjectileManager,
   ): void;

@@ -1,4 +1,3 @@
-import type Ship from "../entities/Ship";
 import { XenoLog } from "../helpers/XenoLogger";
 import type ProjectileManager from "../managers/ProjectileManager";
 import type ProjectileData from "../types/ProjectileData";
@@ -9,17 +8,17 @@ export default class ShootProjectileEffect extends SystemEffect {
   private projectileData!: ProjectileData;
 
   constructor(projectileData: ProjectileData) {
+    // Firing any projectile has a minimum of a 30 tick (0.5 second) wind down.
     super("Shoot projectile effect", 0);
 
     this.projectileData = projectileData;
   }
 
   public onActivate(
-    _self: Ship,
     shipSystemUsageOptions: ShipSystemUsageOptions,
     projectileManager: ProjectileManager,
   ): void {
-    XenoLog.syst.debug(
+    XenoLog.effe.debug(
       "Shooting projectile!",
       this.projectileData,
       "\n With ShipSystemUsageOptions ",

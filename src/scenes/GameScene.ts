@@ -18,6 +18,8 @@ import CooldownIcon from "../hud/CooldownIcon";
 
 import XenoInput from "../helpers/XenoInput";
 
+import RunShipSystemTests from "../tests/RunShipSystemTests";
+
 export default class GameScene extends Phaser.Scene {
   private player!: Ship;
   private enemies!: Array<Ship>;
@@ -77,9 +79,11 @@ export default class GameScene extends Phaser.Scene {
     this.versionText = this.add.text(
       5,
       5,
-      "Version 4.0 - Testing force push with lease",
+      "Version 5.0 - Clean up the ShipSystem-ship validation code.",
     );
     this.versionText.setScrollFactor(0);
+
+    new RunShipSystemTests(this.xenoCreator, this.projectileManager);
   }
 
   update() {

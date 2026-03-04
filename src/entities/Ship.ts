@@ -8,7 +8,7 @@ import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 
 import type ShipControlInput from "../types/ShipControlInput";
-import type XenoCreator from "../helpers/XenoCreator";
+import XenoCreator from "../helpers/XenoCreator";
 import type ProjectileManager from "../managers/ProjectileManager";
 import AlertManager from "../managers/AlertManager";
 import { RenderDepth } from "../types/RenderDepth";
@@ -19,8 +19,11 @@ import FooEffect from "../SystemEffects/FooEffect";
 import ShootProjectileEffect from "../SystemEffects/ShootProjectileEffect";
 import DelayEffect from "../SystemEffects/DelayEffect";
 import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
+import type ICanUseShipSystem from "../interfaces/ICanUseShipSystem";
+import { ShipSystemUseResult } from "../types/ShipSystemUseResult";
+import Timer from "../helpers/Timer";
 
-export default class Ship extends PhysicsEntity {
+export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
   private static count: number = 0;
   private shipID!: number;
   private shield!: Shield;
@@ -30,8 +33,7 @@ export default class Ship extends PhysicsEntity {
 
   private hp!: number;
   private energy!: number;
-  private castTimeRemaining: number = 0;
-  private castTimeLastSet: number = 0;
+  private castTimer: Timer = new Timer(1);
 
   private systems!: Array<ShipSystem>;
 
@@ -39,9 +41,9 @@ export default class Ship extends PhysicsEntity {
   private explodeParticleEmitter!: Phaser.GameObjects.Particles.ParticleEmitter;
   private isPlayerTeam!: boolean;
 
-  private ticksSinceEnergyMessage: number = 0;
-  private ticksSinceCooldownMessage: number = 0;
-  private ticksSinceChargesMessage: number = 0;
+  private cooldownMessageTimer: Timer = new Timer(60);
+  private energyMessageTimer: Timer = new Timer(60);
+  private chargesMessageTimer: Timer = new Timer(60);
 
   private shipData: ShipData;
   private turret!: Phaser.GameObjects.Image;
@@ -126,12 +128,12 @@ export default class Ship extends PhysicsEntity {
     this.systems = new Array<ShipSystem>();
 
     let basicWeapon: ShipSystem = new ShipSystem(
-      projectileManager,
       xenoCreator,
+      projectileManager,
       this,
       {
         systemName: "Plasma Cannon",
-        cooldownDuration: 0,
+        cooldownDuration: 30,
         energyCost: 0,
         uiTextureName: "target-icon",
         playerKeyBind: "M1",
@@ -145,7 +147,7 @@ export default class Ship extends PhysicsEntity {
             damage: 20,
             mass: 0,
           }),
-          new DelayEffect(60),
+          new DelayEffect(30),
         ],
       },
     );
@@ -153,8 +155,8 @@ export default class Ship extends PhysicsEntity {
     this.systems.push(basicWeapon);
 
     let rapidFireWeapon: ShipSystem = new ShipSystem(
-      projectileManager,
       xenoCreator,
+      projectileManager,
       this,
       {
         systemName: "Machine Gun",
@@ -197,15 +199,13 @@ export default class Ship extends PhysicsEntity {
     this.systems.push(rapidFireWeapon);
 
     let heavyLongCooldownWeapon: ShipSystem = new ShipSystem(
-      projectileManager,
       xenoCreator,
+      projectileManager,
       this,
       {
         systemName: "Rad Blaster",
         cooldownDuration: 60 * 4,
-
         energyCost: 50,
-
         uiTextureName: "rad-icon",
         playerKeyBind: "F",
         maxCharges: 1,
@@ -226,15 +226,13 @@ export default class Ship extends PhysicsEntity {
     this.systems.push(heavyLongCooldownWeapon);
 
     let crapBlaster: ShipSystem = new ShipSystem(
-      projectileManager,
       xenoCreator,
+      projectileManager,
       this,
       {
         systemName: "Crap Blaster",
         cooldownDuration: 0,
-
         energyCost: 0,
-
         uiTextureName: "RadBlasterPlaceholder",
         playerKeyBind: "X",
         maxCharges: 1,
@@ -263,8 +261,12 @@ export default class Ship extends PhysicsEntity {
     return this.isPlayerTeam;
   }
 
-  getCurrentEnergy(): number {
+  getEnergy(): number {
     return this.energy;
+  }
+
+  isCasting(): boolean {
+    return this.castTimer.isActive();
   }
 
   getShipID(): number {
@@ -349,18 +351,10 @@ export default class Ship extends PhysicsEntity {
     }
 
     // Activate systems
-    if (sci.systems[0]) {
-      this.useSystem(0);
-    }
-
-    if (sci.systems[1]) {
-      this.useSystem(1);
-    }
-    if (sci.systems[2]) {
-      this.useSystem(2);
-    }
-    if (sci.systems[3]) {
-      this.useSystem(3);
+    for (let i = 0; i < sci.systems.length; i++) {
+      if (sci.systems[i]) {
+        this.useSystem(i);
+      }
     }
 
     let vel = this.getVelocity();
@@ -393,24 +387,20 @@ export default class Ship extends PhysicsEntity {
       this.respawn();
     }
 
-    this.ticksSinceEnergyMessage++;
-    this.ticksSinceCooldownMessage++;
+    this.energyMessageTimer.update();
+    this.cooldownMessageTimer.update();
+    this.chargesMessageTimer.update();
 
     this.turret.x = this.x;
     this.turret.y = this.y;
 
     // Regen energn
     this.energy += 0.1;
-    this.castTimeRemaining -= 1;
+    this.castTimer.update();
 
     // Cap currentValue, it should never be negative
     this.energy = Phaser.Math.Clamp(this.energy, 0, this.shipData.maxEnergy);
     this.hp = Phaser.Math.Clamp(this.hp, 0, this.shipData.maxHP);
-    this.castTimeRemaining = Phaser.Math.Clamp(
-      this.castTimeRemaining,
-      0,
-      this.castTimeLastSet,
-    );
 
     let borderColour: string = this.isPlayerTeam ? "#009999" : "#660000";
     this.hpBar.updateValue(
@@ -432,12 +422,12 @@ export default class Ship extends PhysicsEntity {
     this.executionBar.updateValue(
       this.x,
       this.y,
-      this.castTimeRemaining / this.castTimeLastSet,
+      this.castTimer.getRemainingRatio(),
       this.displayWidth,
       "#333333",
       "#FFFF00",
     );
-    this.executionBar.setVisible(this.castTimeRemaining > 0);
+    //this.executionBar.setVisible(this.castTimeRemaining > 0);
   }
 
   takeDamage(damageAmount: number) {
@@ -460,72 +450,71 @@ export default class Ship extends PhysicsEntity {
   }
 
   useSystem(num: number) {
-    // For easy shorthand
-    let sys: ShipSystem = this.systems[num];
-
+    let sys: ShipSystem = this.getSystem(num);
     XenoLog.ship.trace("Trying to use \'" + sys.getSystemName() + "\'");
 
-    // First check if we aren't already "casting" something else
-    if (this.castTimeRemaining > 0) {
-      let debugText: string =
-        "\'" + sys.getSystemName() + "\' can't be used because we are \'busy\'";
-      XenoLog.ship.trace(debugText);
-
+    if (this.isCasting()) {
+      XenoLog.ship.trace(
+        "Ship \'" + this.physicsEntityName + "\' is already casting.",
+      );
       return;
     }
 
-    // Then check if the system is already in use
     if (sys.isBusy()) {
-      let debugText: string =
-        "\'" +
-        sys.getSystemName() +
-        "\' can't be used because the ShipSystem itself is \'busy\'";
-      XenoLog.ship.trace(debugText);
-
+      XenoLog.ship.error(
+        "The \'" +
+          sys.getSystemName() +
+          "\' is busy doing its effects, but the ship \'" +
+          this.physicsEntityName +
+          "\' is trying to use it",
+      );
       return;
     }
 
-    // Then check if it's off cooldown
-    if (!sys.isOffCooldown()) {
-      // Warn the user (max once a second) if they try and use a system while it's on cooldown
-      if (this.ticksSinceCooldownMessage > 60) {
-        let debugText: string =
-          "\'" + sys.getSystemName() + "\' is on cooldown";
-        XenoLog.ship.debug(debugText);
-        this.alertManager.textPop(this.x, this.y, debugText);
-        this.ticksSinceCooldownMessage = 0;
+    let result: ShipSystemUseResult = sys.use();
+
+    if (result == ShipSystemUseResult.SUCCESS) {
+      this.energy -= sys.getEnergyCost();
+      this.castTimer.setMaxTicks(sys.getCastDuration());
+      this.castTimer.start();
+      return;
+    }
+
+    if (result == ShipSystemUseResult.LOW_ENERGY) {
+      if (!this.energyMessageTimer.isActive()) {
+        this.alertManager.textPop(
+          this.x,
+          this.y,
+          "Not enough energy for " + sys.getSystemName(),
+        );
+        this.energyMessageTimer.start();
       }
       return;
     }
 
-    if (sys.getCharges() == 0) {
-      // Warn this user (max once a second) if they try and use a system when it has no charges
-      if (this.ticksSinceChargesMessage > 0) {
-        let debugText: string =
-          "\'" + sys.getSystemName() + "\' has no charges";
-        XenoLog.ship.debug(debugText);
-        this.alertManager.textPop(this.x, this.y, debugText);
-        this.ticksSinceChargesMessage = 0;
+    if (result == ShipSystemUseResult.ON_COOLDOWN) {
+      if (!this.cooldownMessageTimer.isActive()) {
+        this.alertManager.textPop(
+          this.x,
+          this.y,
+          sys.getSystemName() + " is on cooldown",
+        );
+        this.cooldownMessageTimer.start();
       }
       return;
     }
 
-    // If we don't have enough energy to use the system, don't use it.
-    if (this.energy < sys.getEnergyCost()) {
-      if (this.ticksSinceEnergyMessage > 50) {
-        let debugText: string =
-          "Not enough energy to use: \'" + sys.getSystemName() + "\'";
-        XenoLog.ship.debug(debugText);
-        this.alertManager.textPop(this.x, this.y, debugText);
-        this.ticksSinceEnergyMessage = 0;
+    if (result == ShipSystemUseResult.NO_CHARGES) {
+      if (!this.chargesMessageTimer.isActive()) {
+        this.alertManager.textPop(
+          this.x,
+          this.y,
+          sys.getSystemName() + " not enough charges",
+        );
+        this.chargesMessageTimer.start();
       }
       return;
     }
-
-    sys.use();
-    this.energy -= sys.getEnergyCost();
-    this.castTimeLastSet = sys.getCastDuration();
-    this.castTimeRemaining = this.castTimeLastSet;
 
     XenoLog.ship.trace(
       "\'" + " boop " + "\' Used \'" + sys.getSystemName() + "\'",
