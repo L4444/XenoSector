@@ -2,10 +2,9 @@ export default class Timer {
   private ticksRemaining: number = 0;
   private maxTicks!: number;
 
-  constructor(maxTicks: number) {
+  constructor() {}
+  start(maxTicks: number) {
     this.maxTicks = maxTicks;
-  }
-  start() {
     this.ticksRemaining = this.maxTicks;
   }
 
@@ -17,11 +16,19 @@ export default class Timer {
     if (this.ticksRemaining > 0) this.ticksRemaining--;
   }
 
+  getTicksRemaining(): number {
+    return this.ticksRemaining;
+  }
+
   setMaxTicks(value: number) {
     this.maxTicks = value;
   }
 
   getRemainingRatio(): number {
     return this.ticksRemaining / this.maxTicks;
+  }
+
+  getMaxTicks(): number {
+    return this.maxTicks;
   }
 }

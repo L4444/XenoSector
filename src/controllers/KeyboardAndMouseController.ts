@@ -78,15 +78,15 @@ export default class KeyboardAndMouseController extends BaseController {
     let activePointer = this.xenoInput.getMouse();
 
     if (activePointer.leftButtonDown()) {
-      sci.systems[0] = true;
+      sci.modules[0] = true;
     }
 
     if (activePointer.rightButtonDown()) {
-      sci.systems[1] = true;
+      sci.modules[1] = true;
     }
 
     if (ko.F.isDown) {
-      sci.systems[2] = true;
+      sci.modules[2] = true;
     }
 
     activePointer.updateWorldPoint(this.xenoInput.getMainCamera());

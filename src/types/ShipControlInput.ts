@@ -11,6 +11,6 @@ export default interface ShipControlInput {
     left: boolean;
     right: boolean;
   };
-  systems: boolean[];
+  modules: boolean[];
   brake: boolean;
 }

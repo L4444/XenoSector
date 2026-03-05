@@ -1,7 +1,9 @@
-import type ICanUseShipSystem from "../interfaces/ICanUseShipSystem";
-import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
+import ModuleAction from "../actions/ModuleAction";
+import { XenoLog } from "../helpers/XenoLogger";
+import type ICanUseShipModule from "../interfaces/ICanUseShipModule";
+import type ShipModuleUsageOptions from "../types/ShipModuleUsageOptions";
 
-export default class TestShip implements ICanUseShipSystem {
+export default class TestShip implements ICanUseShipModule {
   private testEnergy: number = 0;
   private testIsCasting: boolean = false;
 
@@ -18,11 +20,9 @@ export default class TestShip implements ICanUseShipSystem {
     return this.testIsCasting;
   }
 
-  useSystem(_num: number): void {
-    console.log("DO NOTHING");
-  }
+  useModule(_num: number): void {}
 
-  getShipSystemUsageOptions(): ShipSystemUsageOptions {
+  getShipModuleUsageOptions(): ShipModuleUsageOptions {
     return {
       x: 0,
       y: 0,
@@ -32,5 +32,9 @@ export default class TestShip implements ICanUseShipSystem {
       rotation: 0,
       shipID: 0,
     };
+  }
+
+  doActions(moduleAction: ModuleAction[]): void {
+    XenoLog.unit.debug("Doing actions", moduleAction);
   }
 }

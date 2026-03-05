@@ -15,8 +15,8 @@ export default class AIController extends BaseController {
     // AI uses absolute
 
     if (this.xenoInput.getEnemyAutoFire()) {
-      if (ship.getEnergy() >= ship.getSystem(3).getEnergyCost()) {
-        ship.useSystem(3);
+      if (ship.getEnergy() >= ship.getModule(3).getEnergyCost()) {
+        ship.useModule(3);
       }
 
       if (this.targetShip.x < ship.x) {

@@ -1,4 +1,4 @@
-import ShipSystem from "../entities/ShipSystem";
+import ShipModule from "./ShipModule";
 import Shield from "./Shield";
 
 import { XenoLog } from "../helpers/XenoLogger";
@@ -15,15 +15,18 @@ import { RenderDepth } from "../types/RenderDepth";
 
 import SlicedValueBar from "../hud/SlicedValueBar";
 import SmoothValueBar from "../hud/SmoothValueBar";
-import FooEffect from "../SystemEffects/FooEffect";
-import ShootProjectileEffect from "../SystemEffects/ShootProjectileEffect";
-import DelayEffect from "../SystemEffects/DelayEffect";
-import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
-import type ICanUseShipSystem from "../interfaces/ICanUseShipSystem";
-import { ShipSystemUseResult } from "../types/ShipSystemUseResult";
-import Timer from "../helpers/Timer";
 
-export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
+import type ShipModuleUsageOptions from "../types/ShipModuleUsageOptions";
+import type ICanUseShipModule from "../interfaces/ICanUseShipModule";
+import { ShipModuleUseResult } from "../types/ShipModuleUseResult";
+import Timer from "../helpers/Timer";
+import FooAction from "../actions/FooAction";
+import ShootProjectileAction from "../actions/ShootProjectileAction";
+import WaitAction from "../actions/WaitAction";
+import type ModuleAction from "../actions/ModuleAction";
+import ModuleActionExecutor from "../ModuleActionExecutor";
+
+export default class Ship extends PhysicsEntity implements ICanUseShipModule {
   private static count: number = 0;
   private shipID!: number;
   private shield!: Shield;
@@ -33,22 +36,22 @@ export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
 
   private hp!: number;
   private energy!: number;
-  private castTimer: Timer = new Timer(1);
 
-  private systems!: Array<ShipSystem>;
+  private modules!: Array<ShipModule>;
 
   private controller!: BaseController;
   private explodeParticleEmitter!: Phaser.GameObjects.Particles.ParticleEmitter;
   private isPlayerTeam!: boolean;
 
-  private cooldownMessageTimer: Timer = new Timer(60);
-  private energyMessageTimer: Timer = new Timer(60);
-  private chargesMessageTimer: Timer = new Timer(60);
+  private cooldownMessageTimer: Timer = new Timer();
+  private energyMessageTimer: Timer = new Timer();
+  private chargesMessageTimer: Timer = new Timer();
 
   private shipData: ShipData;
   private turret!: Phaser.GameObjects.Image;
 
   private alertManager!: AlertManager;
+  private moduleActionExecutor!: ModuleActionExecutor;
 
   constructor(
     xenoCreator: XenoCreator,
@@ -81,6 +84,10 @@ export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
     this.isPlayerTeam = isPlayerTeam;
 
     this.alertManager = alertManager;
+    this.moduleActionExecutor = new ModuleActionExecutor(
+      this,
+      projectileManager,
+    );
 
     /// Put shield in it's own object class
     this.shield = new Shield(xenoCreator, this);
@@ -125,94 +132,94 @@ export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
       RenderDepth.TURRETS,
     );
 
-    this.systems = new Array<ShipSystem>();
+    this.modules = new Array<ShipModule>();
 
-    let basicWeapon: ShipSystem = new ShipSystem(
+    let basicWeapon: ShipModule = new ShipModule(
       xenoCreator,
       projectileManager,
       this,
       {
-        systemName: "Plasma Cannon",
+        moduleName: "Plasma Cannon",
         cooldownDuration: 30,
         energyCost: 0,
         uiTextureName: "target-icon",
         playerKeyBind: "M1",
         maxCharges: 1,
         chargeDuration: 0,
-        effects: [
-          new ShootProjectileEffect({
+        actions: [
+          new ShootProjectileAction({
             range: 15,
             speed: 10,
             textureName: "pew-blue",
             damage: 20,
             mass: 0,
           }),
-          new DelayEffect(30),
+          new WaitAction(30),
         ],
       },
     );
 
-    this.systems.push(basicWeapon);
+    this.modules.push(basicWeapon);
 
-    let rapidFireWeapon: ShipSystem = new ShipSystem(
+    let rapidFireWeapon: ShipModule = new ShipModule(
       xenoCreator,
       projectileManager,
       this,
       {
-        systemName: "Machine Gun",
+        moduleName: "Machine Gun",
         cooldownDuration: 0,
         energyCost: 0,
         uiTextureName: "machinegun-icon",
         playerKeyBind: "M2",
         maxCharges: 4,
         chargeDuration: 120,
-        effects: [
-          new DelayEffect(10),
-          new ShootProjectileEffect({
+        actions: [
+          new WaitAction(10),
+          new ShootProjectileAction({
             range: 15,
             speed: 20,
             textureName: "pew-yellow",
             damage: 10,
             mass: 0,
           }),
-          new DelayEffect(3),
-          new ShootProjectileEffect({
+          new WaitAction(3),
+          new ShootProjectileAction({
             range: 10,
             speed: 20,
             textureName: "pew-yellow",
             damage: 10,
             mass: 0,
           }),
-          new DelayEffect(3),
-          new ShootProjectileEffect({
+          new WaitAction(3),
+          new ShootProjectileAction({
             range: 10,
             speed: 20,
             textureName: "pew-yellow",
             damage: 10,
             mass: 0,
           }),
-          new DelayEffect(10),
+          new WaitAction(10),
         ],
       },
     );
 
-    this.systems.push(rapidFireWeapon);
+    this.modules.push(rapidFireWeapon);
 
-    let heavyLongCooldownWeapon: ShipSystem = new ShipSystem(
+    let heavyLongCooldownWeapon: ShipModule = new ShipModule(
       xenoCreator,
       projectileManager,
       this,
       {
-        systemName: "Rad Blaster",
+        moduleName: "Rad Blaster",
         cooldownDuration: 60 * 4,
-        energyCost: 50,
+        energyCost: 10,
         uiTextureName: "rad-icon",
         playerKeyBind: "F",
         maxCharges: 1,
         chargeDuration: 60 * 4,
-        effects: [
-          new DelayEffect(30),
-          new ShootProjectileEffect({
+        actions: [
+          new WaitAction(30),
+          new ShootProjectileAction({
             range: 15,
             speed: 20,
             textureName: "pew-big-green",
@@ -223,35 +230,35 @@ export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
       },
     );
 
-    this.systems.push(heavyLongCooldownWeapon);
+    this.modules.push(heavyLongCooldownWeapon);
 
-    let crapBlaster: ShipSystem = new ShipSystem(
+    let crapBlaster: ShipModule = new ShipModule(
       xenoCreator,
       projectileManager,
       this,
       {
-        systemName: "Crap Blaster",
+        moduleName: "Crap Blaster",
         cooldownDuration: 0,
         energyCost: 0,
         uiTextureName: "RadBlasterPlaceholder",
         playerKeyBind: "X",
         maxCharges: 1,
         chargeDuration: 0,
-        effects: [
-          new FooEffect(),
-          new ShootProjectileEffect({
+        actions: [
+          new FooAction(),
+          new ShootProjectileAction({
             range: 15,
             speed: 10,
             textureName: "beam",
             damage: 0.5,
             mass: 0,
           }),
-          new DelayEffect(60),
+          new WaitAction(60),
         ],
       },
     );
 
-    this.systems.push(crapBlaster);
+    this.modules.push(crapBlaster);
 
     this.respawn();
   }
@@ -266,15 +273,15 @@ export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
   }
 
   isCasting(): boolean {
-    return this.castTimer.isActive();
+    return this.moduleActionExecutor.isActive();
   }
 
   getShipID(): number {
     return this.shipID;
   }
 
-  getSystem(num: number): ShipSystem {
-    return this.systems[num];
+  getModule(num: number): ShipModule {
+    return this.modules[num];
   }
 
   respawn() {
@@ -350,10 +357,10 @@ export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
       isThrust = true;
     }
 
-    // Activate systems
-    for (let i = 0; i < sci.systems.length; i++) {
-      if (sci.systems[i]) {
-        this.useSystem(i);
+    // Activate modules
+    for (let i = 0; i < sci.modules.length; i++) {
+      if (sci.modules[i]) {
+        this.useModule(i);
       }
     }
 
@@ -396,7 +403,6 @@ export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
 
     // Regen energn
     this.energy += 0.1;
-    this.castTimer.update();
 
     // Cap currentValue, it should never be negative
     this.energy = Phaser.Math.Clamp(this.energy, 0, this.shipData.maxEnergy);
@@ -422,12 +428,14 @@ export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
     this.executionBar.updateValue(
       this.x,
       this.y,
-      this.castTimer.getRemainingRatio(),
+      this.moduleActionExecutor.getRemainingRatio(),
       this.displayWidth,
       "#333333",
       "#FFFF00",
     );
     //this.executionBar.setVisible(this.castTimeRemaining > 0);
+
+    this.moduleActionExecutor.update();
   }
 
   takeDamage(damageAmount: number) {
@@ -449,9 +457,9 @@ export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
     this.explodeParticleEmitter.explode(32);
   }
 
-  useSystem(num: number) {
-    let sys: ShipSystem = this.getSystem(num);
-    XenoLog.ship.trace("Trying to use \'" + sys.getSystemName() + "\'");
+  useModule(num: number) {
+    let mod: ShipModule = this.getModule(num);
+    XenoLog.ship.trace("Trying to use \'" + mod.getModuleName() + "\'");
 
     if (this.isCasting()) {
       XenoLog.ship.trace(
@@ -460,68 +468,55 @@ export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
       return;
     }
 
-    if (sys.isBusy()) {
-      XenoLog.ship.error(
-        "The \'" +
-          sys.getSystemName() +
-          "\' is busy doing its effects, but the ship \'" +
-          this.physicsEntityName +
-          "\' is trying to use it",
-      );
+    let result: ShipModuleUseResult = mod.use();
+
+    if (result == ShipModuleUseResult.SUCCESS) {
+      this.energy -= mod.getEnergyCost();
       return;
     }
 
-    let result: ShipSystemUseResult = sys.use();
-
-    if (result == ShipSystemUseResult.SUCCESS) {
-      this.energy -= sys.getEnergyCost();
-      this.castTimer.setMaxTicks(sys.getCastDuration());
-      this.castTimer.start();
-      return;
-    }
-
-    if (result == ShipSystemUseResult.LOW_ENERGY) {
+    if (result == ShipModuleUseResult.LOW_ENERGY) {
       if (!this.energyMessageTimer.isActive()) {
         this.alertManager.textPop(
           this.x,
           this.y,
-          "Not enough energy for " + sys.getSystemName(),
+          "Not enough energy for " + mod.getModuleName(),
         );
-        this.energyMessageTimer.start();
+        this.energyMessageTimer.start(60);
       }
       return;
     }
 
-    if (result == ShipSystemUseResult.ON_COOLDOWN) {
+    if (result == ShipModuleUseResult.ON_COOLDOWN) {
       if (!this.cooldownMessageTimer.isActive()) {
         this.alertManager.textPop(
           this.x,
           this.y,
-          sys.getSystemName() + " is on cooldown",
+          mod.getModuleName() + " is on cooldown",
         );
-        this.cooldownMessageTimer.start();
+        this.cooldownMessageTimer.start(60);
       }
       return;
     }
 
-    if (result == ShipSystemUseResult.NO_CHARGES) {
+    if (result == ShipModuleUseResult.NO_CHARGES) {
       if (!this.chargesMessageTimer.isActive()) {
         this.alertManager.textPop(
           this.x,
           this.y,
-          sys.getSystemName() + " not enough charges",
+          mod.getModuleName() + " not enough charges",
         );
-        this.chargesMessageTimer.start();
+        this.chargesMessageTimer.start(60);
       }
       return;
     }
 
     XenoLog.ship.trace(
-      "\'" + " boop " + "\' Used \'" + sys.getSystemName() + "\'",
+      "\'" + " boop " + "\' Used \'" + mod.getModuleName() + "\'",
     );
   }
 
-  getShipSystemUsageOptions(): ShipSystemUsageOptions {
+  getShipModuleUsageOptions(): ShipModuleUsageOptions {
     return {
       rotation: this.turret.rotation,
       x: this.x,
@@ -531,5 +526,9 @@ export default class Ship extends PhysicsEntity implements ICanUseShipSystem {
       isPlayerTeam: this.isPlayerTeam,
       shipID: this.shipID,
     };
+  }
+
+  doActions(moduleAction: ModuleAction[]): void {
+    this.moduleActionExecutor.executeActions(moduleAction);
   }
 }
