@@ -26,13 +26,9 @@ export const XenoLog = {
     name: "General",
     minLevel: 3,
   }),
-  syst: baseLogger.getSubLogger({
-    name: "Ship Systems",
-    minLevel: 3,
-  }),
-  effe: baseLogger.getSubLogger({
-    name: "Effects",
-    minLevel: 3,
+  mode: baseLogger.getSubLogger({
+    name: "Ship Modules",
+    minLevel: 2,
   }),
   unit: baseLogger.getSubLogger({
     name: "Unit tests",

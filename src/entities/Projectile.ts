@@ -4,7 +4,7 @@ import { XenoLog } from "../helpers/XenoLogger";
 import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 
-import type ShipSystemUsageOptions from "../types/ShipSystemUsageOptions";
+import type ShipModuleUsageOptions from "../types/ShipModuleUsageOptions";
 import type XenoCreator from "../helpers/XenoCreator";
 
 export default class Projectile extends PhysicsEntity {
@@ -67,19 +67,19 @@ export default class Projectile extends PhysicsEntity {
   }
 
   fire(
-    useShipSystemData: ShipSystemUsageOptions,
+    useShipModuleData: ShipModuleUsageOptions,
     projectileData: ProjectileData,
   ) {
-    this.setPosition(useShipSystemData.x, useShipSystemData.y);
+    this.setPosition(useShipModuleData.x, useShipModuleData.y);
 
     this.activate();
-    this.isPlayerTeam = useShipSystemData.isPlayerTeam;
+    this.isPlayerTeam = useShipModuleData.isPlayerTeam;
 
     this.setTexture(projectileData.textureName);
 
     // To prevent projectiles from colliding with the ship that is firing them
     // Set this after adjusting the physics body via setCircle() because that function resets the collision group
-    this.setCollisionGroup(-useShipSystemData.shipID);
+    this.setCollisionGroup(-useShipModuleData.shipID);
 
     // The lifetime should be determined by the "range", faster projectiles have less lifetime
     // Multiply by 50 to get the rough distance
@@ -99,14 +99,14 @@ export default class Projectile extends PhysicsEntity {
     // Use vectors to set the path of the projectile, use the X axis to align with the player ship.
     let v = new Phaser.Math.Vector2(projectileData.speed, 0);
 
-    v.rotate(useShipSystemData.rotation);
+    v.rotate(useShipModuleData.rotation);
 
     this.setVelocity(
-      v.x + useShipSystemData.velocityX,
-      v.y + useShipSystemData.velocityY,
+      v.x + useShipModuleData.velocityX,
+      v.y + useShipModuleData.velocityY,
     );
 
-    this.rotation = useShipSystemData.rotation;
+    this.rotation = useShipModuleData.rotation;
 
     XenoLog.proj.debug(
       "\'" + projectileData.textureName + "\' fired",

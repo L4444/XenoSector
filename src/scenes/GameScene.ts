@@ -18,7 +18,7 @@ import CooldownIcon from "../hud/CooldownIcon";
 
 import XenoInput from "../helpers/XenoInput";
 
-import RunShipSystemTests from "../tests/RunShipSystemTests";
+import RunShipModuleTests from "../tests/RunShipModuleTests";
 
 export default class GameScene extends Phaser.Scene {
   private player!: Ship;
@@ -79,11 +79,11 @@ export default class GameScene extends Phaser.Scene {
     this.versionText = this.add.text(
       5,
       5,
-      "Version 5.0 - Clean up the ShipSystem-ship validation code.",
+      "Version 5.1 - implement a ShipModule action system.",
     );
     this.versionText.setScrollFactor(0);
 
-    new RunShipSystemTests(this.xenoCreator, this.projectileManager);
+    new RunShipModuleTests(this.xenoCreator, this.projectileManager);
   }
 
   update() {
@@ -173,7 +173,7 @@ export default class GameScene extends Phaser.Scene {
           this.xenoCreator,
           400 + i * (64 + 32),
           750,
-          this.player.getSystem(i),
+          this.player.getModule(i),
         ),
       );
     }

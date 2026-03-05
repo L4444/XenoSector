@@ -3,10 +3,13 @@ import Timer from "./Timer";
 export default class ChargeTimer extends Timer {
   private readonly maxCharges!: number;
   private currentCharges!: number;
-  constructor(maxticks: number, maxCharges: number) {
-    super(maxticks);
+  private chargeRegenTime!: number;
+
+  constructor(chargeRegenTime: number, maxCharges: number) {
+    super();
     this.maxCharges = maxCharges;
     this.currentCharges = maxCharges;
+    this.chargeRegenTime = chargeRegenTime;
   }
 
   getCharges(): number {
@@ -19,7 +22,7 @@ export default class ChargeTimer extends Timer {
 
   useCharge() {
     this.currentCharges--;
-    super.start();
+    super.start(this.chargeRegenTime);
   }
 
   update(): void {
@@ -28,7 +31,7 @@ export default class ChargeTimer extends Timer {
     if (!this.isActive()) {
       if (this.currentCharges < this.maxCharges) {
         this.currentCharges++;
-        super.start();
+        super.start(this.chargeRegenTime);
       }
     }
   }

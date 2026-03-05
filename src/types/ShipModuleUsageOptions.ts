@@ -1,4 +1,4 @@
-export default interface ShipSystemUsageOptions {
+export default interface ShipModuleUsageOptions {
   x: number;
   y: number;
   velocityX: number;
