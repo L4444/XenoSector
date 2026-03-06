@@ -25,6 +25,7 @@ import ShootProjectileAction from "../actions/ShootProjectileAction";
 import WaitAction from "../actions/WaitAction";
 import type ModuleAction from "../actions/ModuleAction";
 import ModuleActionExecutor from "../ModuleActionExecutor";
+import BoostAction from "../actions/BoostAction";
 
 export default class Ship extends PhysicsEntity implements ICanUseShipModule {
   private static count: number = 0;
@@ -260,6 +261,24 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
 
     this.modules.push(crapBlaster);
 
+    let booster: ShipModule = new ShipModule(
+      xenoCreator,
+      projectileManager,
+      this,
+      {
+        moduleName: "Booster Drive",
+        cooldownDuration: 0,
+        energyCost: 0,
+        uiTextureName: "boost-icon",
+        playerKeyBind: "Space",
+        maxCharges: 3,
+        chargeDuration: 60 * 2,
+        actions: [new BoostAction(), new WaitAction(30)],
+      },
+    );
+
+    this.modules.push(booster);
+
     this.respawn();
   }
 
@@ -282,6 +301,10 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
 
   getModule(num: number): ShipModule {
     return this.modules[num];
+  }
+
+  getModuleCount(): number {
+    return this.modules.length;
   }
 
   respawn() {
@@ -383,8 +406,17 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
 
     // Limit according to max speed
     if (currentSpeed > maxSpeed) {
-      const scale = maxSpeed / currentSpeed;
-      this.setVelocity(vel.x * scale, vel.y * scale);
+      //let scale = currentSpeed / maxSpeed;
+      // Limit your max speed by firing reverse thrusters, so boosting works
+      //this.applyForce(-vel.x / currentSpeed, -vel.y / scale);
+      const maxSpeedCap: Phaser.Math.Vector2 = new Phaser.Math.Vector2(
+        -vel.x,
+        -vel.y,
+      );
+
+      maxSpeedCap.scale(0.01);
+
+      this.applyForce(maxSpeedCap.x, maxSpeedCap.y);
     }
   }
 

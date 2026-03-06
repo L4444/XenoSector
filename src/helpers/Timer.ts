@@ -20,10 +20,6 @@ export default class Timer {
     return this.ticksRemaining;
   }
 
-  setMaxTicks(value: number) {
-    this.maxTicks = value;
-  }
-
   getRemainingRatio(): number {
     return this.ticksRemaining / this.maxTicks;
   }

@@ -1,8 +1,9 @@
+import type GameScene from "../scenes/GameScene";
 import { KeyboardControlStyle } from "../types/GameSettings";
 import { XenoLog } from "./XenoLogger";
 
 export default class XenoInput {
-  private scene!: Phaser.Scene;
+  private scene!: GameScene;
   private enemyAutoFire: boolean = false;
   private keyboardControlStyle: KeyboardControlStyle =
     KeyboardControlStyle.ABSOLUTE;
@@ -10,7 +11,7 @@ export default class XenoInput {
 
   private testButton: boolean = false;
 
-  constructor(scene: Phaser.Scene) {
+  constructor(scene: GameScene) {
     this.scene = scene;
 
     // For testing things out
@@ -42,9 +43,9 @@ export default class XenoInput {
         XenoLog.ship.info("mouseLook set to " + this.mouseLook);
       }
 
-      if (event.key == "r") {
-        this.testButton = true;
-        XenoLog.ship.info("Test button pressed");
+      if (event.key == "e") {
+        this.scene.player.thrustForward(10);
+        XenoLog.ship.info("boost - small");
       }
 
       if (event.key == "q") {

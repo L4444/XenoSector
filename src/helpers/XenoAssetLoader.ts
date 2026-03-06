@@ -47,6 +47,7 @@ export default abstract class XenoAssetLoader {
     XenoAssetLoader.loadImage(scene, "/assets/icons/machinegun-icon.png");
     XenoAssetLoader.loadImage(scene, "/assets/icons/target-icon.png");
     XenoAssetLoader.loadImage(scene, "/assets/icons/rad-icon.png");
+    XenoAssetLoader.loadImage(scene, "/assets/icons/boost-icon.png");
 
     // Professional looking UI
     XenoAssetLoader.loadImage(scene, "/assets/ui/Button02.png");

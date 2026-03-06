@@ -21,7 +21,7 @@ import XenoInput from "../helpers/XenoInput";
 import RunShipModuleTests from "../tests/RunShipModuleTests";
 
 export default class GameScene extends Phaser.Scene {
-  private player!: Ship;
+  public player!: Ship;
   private enemies!: Array<Ship>;
   private camera!: Phaser.Math.Vector2;
 
@@ -76,11 +76,7 @@ export default class GameScene extends Phaser.Scene {
       e.preventDefault();
     });
 
-    this.versionText = this.add.text(
-      5,
-      5,
-      "Converst isUI flag to RenderSpace enum",
-    );
+    this.versionText = this.add.text(5, 5, "Pull Request 2.0");
     this.versionText.setScrollFactor(0);
 
     new RunShipModuleTests(this.xenoCreator, this.projectileManager);
@@ -167,11 +163,11 @@ export default class GameScene extends Phaser.Scene {
 
   private createHUD() {
     this.cooldownIcons = new Array<CooldownIcon>();
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < this.player.getModuleCount(); i++) {
       this.cooldownIcons.push(
         new CooldownIcon(
           this.xenoCreator,
-          400 + i * (64 + 32),
+          200 + i * (64 + 32),
           750,
           this.player.getModule(i),
         ),
