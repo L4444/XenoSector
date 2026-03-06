@@ -59,8 +59,9 @@ export default class ModuleActionExecutor {
 
         // EXECUTE the action
         currentAction.onExecute(
-          this.parentShip.getShipModuleUsageOptions(),
           this.projectileManager,
+          this.parentShip,
+          this.parentShip,
         );
 
         // Set the timer to wind down

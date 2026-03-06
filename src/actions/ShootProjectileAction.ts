@@ -1,7 +1,8 @@
+import type Ship from "../entities/Ship";
 import { XenoLog } from "../helpers/XenoLogger";
 import type ProjectileManager from "../managers/ProjectileManager";
 import type ProjectileData from "../types/ProjectileData";
-import type ShipModuleUsageOptions from "../types/ShipModuleUsageOptions";
+
 import ModuleAction from "./ModuleAction";
 
 export default class ShootProjectileAction extends ModuleAction {
@@ -15,16 +16,19 @@ export default class ShootProjectileAction extends ModuleAction {
   }
 
   public onExecute(
-    ShipModuleUsageOptions: ShipModuleUsageOptions,
     projectileManager: ProjectileManager,
+    sourceShip: Ship,
+    _targetShip: Ship,
   ): void {
     XenoLog.mode.debug(
       "Shooting projectile!",
       this.projectileData,
-      "\n With ShipModuleUsageOptions ",
-      ShipModuleUsageOptions,
+      "\n from ship " + sourceShip.physicsEntityName,
     );
 
-    projectileManager.shoot(ShipModuleUsageOptions, this.projectileData);
+    projectileManager.shoot(
+      sourceShip.getShipModuleUsageOptions(),
+      this.projectileData,
+    );
   }
 }

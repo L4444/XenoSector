@@ -1,5 +1,5 @@
+import type Ship from "../entities/Ship";
 import type ProjectileManager from "../managers/ProjectileManager";
-import type ShipModuleUsageOptions from "../types/ShipModuleUsageOptions";
 
 export default abstract class ModuleAction {
   private actionName!: string;
@@ -10,8 +10,9 @@ export default abstract class ModuleAction {
   }
 
   public abstract onExecute(
-    ShipModuleUsageOptions: ShipModuleUsageOptions,
     projectileManager: ProjectileManager,
+    sourceShip: Ship,
+    targetShip: Ship,
   ): void;
 
   // Return the number of ticks it will take to trigger this action

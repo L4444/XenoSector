@@ -18,7 +18,7 @@ export default class KeyboardAndMouseController extends BaseController {
   onControl(sci: ShipControlInput, ship: Ship): ShipControlInput {
     let keyboardInput = this.xenoInput.getKeyboard();
 
-    let ko = keyboardInput?.addKeys("W,S,A,D,F,G,SPACE") as Keys;
+    let ko = keyboardInput?.addKeys("W,S,A,D,F,G,SPACE,E") as Keys;
 
     let controlStyle: KeyboardControlStyle =
       this.xenoInput.getKeyboardControlStyle();
@@ -89,6 +89,10 @@ export default class KeyboardAndMouseController extends BaseController {
       sci.modules[2] = true;
     }
 
+    if (ko.SPACE.isDown) {
+      sci.modules[4] = true;
+    }
+
     activePointer.updateWorldPoint(this.xenoInput.getMainCamera());
 
     sci.turretTargetRotation = Phaser.Math.Angle.Between(
@@ -118,4 +122,5 @@ interface Keys {
   F: Phaser.Input.Keyboard.Key;
   G: Phaser.Input.Keyboard.Key;
   SPACE: Phaser.Input.Keyboard.Key;
+  E: Phaser.Input.Keyboard.Key;
 }

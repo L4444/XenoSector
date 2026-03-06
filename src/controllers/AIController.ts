@@ -27,7 +27,7 @@ export default class AIController extends BaseController {
         sci.thrust.east = true;
       }
 
-      if (this.targetShip.y < ship.x) {
+      if (this.targetShip.y < ship.y) {
         sci.thrust.north = true;
       }
 
