@@ -4,6 +4,7 @@ import { RenderDepth } from "../types/RenderDepth";
 import BaseEntity from "../entities/BaseEntity";
 
 import type ShipModule from "../entities/ShipModule";
+import { RenderSpace } from "../types/RenderSpace";
 
 export default class CooldownIcon extends BaseEntity {
   private back!: Phaser.GameObjects.Image;
@@ -39,7 +40,7 @@ export default class CooldownIcon extends BaseEntity {
       "Button02",
       RenderDepth.UI,
       "#FFFFFF",
-      true,
+      RenderSpace.SCREEN,
     );
 
     this.back.setScale(1.25);
@@ -50,16 +51,26 @@ export default class CooldownIcon extends BaseEntity {
       ShipModule.getUITextureName(),
       RenderDepth.UI,
       "#669999",
-      true,
+      RenderSpace.SCREEN,
     );
 
     // The way this works is the "swish" covers the icon with a greyish filter
     // All it is a circular graphic "cut" into a square with the "swishMask"
-    this.swish = this.xenoCreator.createGraphic(x, y, RenderDepth.UI, true);
+    this.swish = this.xenoCreator.createGraphic(
+      x,
+      y,
+      RenderDepth.UI,
+      RenderSpace.SCREEN,
+    );
 
     // Note: We set the swish's colour in the preupdate() function
 
-    this.swishMask = this.xenoCreator.createGraphic(x, y, RenderDepth.UI, true);
+    this.swishMask = this.xenoCreator.createGraphic(
+      x,
+      y,
+      RenderDepth.UI,
+      RenderSpace.SCREEN,
+    );
 
     this.swishMask.fillStyle(0x000000, 0);
     this.swishMask.fillRect(-32, -32, 64, 64);
@@ -78,7 +89,7 @@ export default class CooldownIcon extends BaseEntity {
       splitModuleName,
       RenderDepth.UI,
       "#FFFFFF",
-      true,
+      RenderSpace.SCREEN,
     );
 
     this.nameText.setFontSize(8);
@@ -89,7 +100,7 @@ export default class CooldownIcon extends BaseEntity {
       ShipModule.getKeybind(),
       RenderDepth.UI,
       "#FFFFFF",
-      true,
+      RenderSpace.SCREEN,
     );
     this.keybindText.setFontSize(15);
 
@@ -99,7 +110,7 @@ export default class CooldownIcon extends BaseEntity {
       "ERR",
       RenderDepth.UI,
       "#FFFFFF",
-      true,
+      RenderSpace.SCREEN,
     );
     this.chargesText.setFontSize(20);
 
@@ -114,7 +125,7 @@ export default class CooldownIcon extends BaseEntity {
       this.ShipModule.getEnergyCost().toString(),
       RenderDepth.UI,
       "#00Cccc",
-      true,
+      RenderSpace.SCREEN,
     );
     this.energyText.setFontSize(15);
 
