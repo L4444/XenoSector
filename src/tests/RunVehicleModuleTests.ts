@@ -149,8 +149,8 @@ export default class RunVehicleModuleTests {
     }
   }
 
-  private setCurrentModule(VehicleModule: VehicleModule) {
-    XenoLog.unit.debug("---- Tests for " + VehicleModule.getModuleName());
-    this.currentVehicleModule = VehicleModule;
+  private setCurrentModule(vehicleModule: VehicleModule) {
+    XenoLog.unit.debug("---- Tests for " + vehicleModule.getModuleName());
+    this.currentVehicleModule = vehicleModule;
   }
 }

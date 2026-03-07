@@ -30,7 +30,7 @@ export default class TestVehicle implements ICanUseVehicleModule {
       velocityY: 0,
       isPlayerTeam: true,
       rotation: 0,
-      VehicleID: 0,
+      vehicleID: 0,
     };
   }
 

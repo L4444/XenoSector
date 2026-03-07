@@ -98,7 +98,7 @@ export default class GameScene extends Phaser.Scene {
     this.camera.x -= (this.camera.x - cameraTarget.x) / 20;
     this.camera.y -= (this.camera.y - cameraTarget.y) / 20;
 
-    // Set the camera on the Vehicle
+    // Set the camera on the vehicle
     this.cameras.main.centerOn(this.camera.x, this.camera.y);
   }
 

@@ -1,5 +1,5 @@
 export default interface VehicleControlInput {
-  VehicleTargetRotation: number;
+  vehicleTargetRotation: number;
   turretTargetRotation: number;
   thrust: {
     north: boolean;

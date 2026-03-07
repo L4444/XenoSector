@@ -22,10 +22,10 @@ export default class VehicleModule extends BaseEntity {
     xenoCreator: XenoCreator,
     _projectileManager: ProjectileManager,
     parentVehicle: ICanUseVehicleModule,
-    VehicleModuleData: VehicleModuleData,
+    vehicleModuleData: VehicleModuleData,
   ) {
     super(xenoCreator);
-    this.data = VehicleModuleData;
+    this.data = vehicleModuleData;
 
     this.parentVehicle = parentVehicle;
     this.cooldownTimer = new Timer();
@@ -60,7 +60,7 @@ export default class VehicleModule extends BaseEntity {
 
     XenoLog.mode.debug("------ \'" + this.data.moduleName + "\' has been used");
 
-    // Send it to the Vehicle to execute
+    // Send it to the vehicle to execute
     this.parentVehicle.doActions(this.data.actions);
 
     this.chargeTimer.useCharge();

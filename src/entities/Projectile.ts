@@ -77,9 +77,9 @@ export default class Projectile extends PhysicsEntity {
 
     this.setTexture(projectileData.textureName);
 
-    // To prevent projectiles from colliding with the Vehicle that is firing them
+    // To prevent projectiles from colliding with the vehicle that is firing them
     // Set this after adjusting the physics body via setCircle() because that function resets the collision group
-    this.setCollisionGroup(-useVehicleModuleData.VehicleID);
+    this.setCollisionGroup(-useVehicleModuleData.vehicleID);
 
     // The lifetime should be determined by the "range", faster projectiles have less lifetime
     // Multiply by 50 to get the rough distance
@@ -88,7 +88,7 @@ export default class Projectile extends PhysicsEntity {
     this.damage = projectileData.damage;
 
     // If a projectile has no mass then use it only for collision detection
-    // and not for "physics" e.g. knocking Vehicles around
+    // and not for "physics" e.g. knocking vehicles around
     if (projectileData.mass == 0) {
       this.setSensor(true);
     } else {
@@ -96,7 +96,7 @@ export default class Projectile extends PhysicsEntity {
       this.setMass(projectileData.mass);
     }
 
-    // Use vectors to set the path of the projectile, use the X axis to align with the player Vehicle.
+    // Use vectors to set the path of the projectile, use the X axis to align with the player vehicle.
     let v = new Phaser.Math.Vector2(projectileData.speed, 0);
 
     v.rotate(useVehicleModuleData.rotation);

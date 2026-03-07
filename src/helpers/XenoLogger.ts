@@ -14,7 +14,7 @@ export const XenoLog = {
     name: "Projectile Manager",
     minLevel: 3,
   }),
-  Vehicle: baseLogger.getSubLogger({
+  vehi: baseLogger.getSubLogger({
     name: "Vehicle",
     minLevel: 3,
   }),

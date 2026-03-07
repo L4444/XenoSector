@@ -32,7 +32,7 @@ export default class Vehicle
   implements ICanUseVehicleModule
 {
   private static count: number = 0;
-  private VehicleID!: number;
+  private vehicleID!: number;
   private shield!: Shield;
   private hpBar!: SmoothValueBar;
   private energyBar!: SlicedValueBar;
@@ -51,7 +51,7 @@ export default class Vehicle
   private energyMessageTimer: Timer = new Timer();
   private chargesMessageTimer: Timer = new Timer();
 
-  private VehicleData: VehicleData;
+  private vehicleData: VehicleData;
   private turret!: Phaser.GameObjects.Image;
 
   private alertManager!: AlertManager;
@@ -61,32 +61,29 @@ export default class Vehicle
     xenoCreator: XenoCreator,
     projectileManager: ProjectileManager,
     alertManager: AlertManager,
-    VehicleName: string,
+    vehicleName: string,
     x: number,
     y: number,
     textureKey: string,
     controller: BaseController,
     isPlayerTeam: boolean,
-    VehicleData: VehicleData,
+    vehicleData: VehicleData,
   ) {
     super(
       xenoCreator,
       x,
       y,
       textureKey,
-      VehicleName,
-      PhysicsEntityType.Vehicle,
+      vehicleName,
+      PhysicsEntityType.VEHICLE,
       true,
       100,
     );
-    XenoLog.Vehicle.debug(
-      "Vehicle \'" + VehicleName + "\' Created",
-      VehicleData,
-    );
+    XenoLog.vehi.debug("Vehicle \'" + vehicleName + "\' Created", vehicleData);
     Vehicle.count++;
-    this.VehicleID = Vehicle.count;
-    this.setCollisionGroup(-this.VehicleID);
-    this.VehicleData = VehicleData;
+    this.vehicleID = Vehicle.count;
+    this.setCollisionGroup(-this.vehicleID);
+    this.vehicleData = vehicleData;
     this.controller = controller;
     this.isPlayerTeam = isPlayerTeam;
 
@@ -129,7 +126,7 @@ export default class Vehicle
         scale: 0.25,
         alpha: { start: 0.5, end: 0, ease: "expo.out" },
       },
-      RenderDepth.VehicleS,
+      RenderDepth.VEHICLES,
     );
 
     this.turret = xenoCreator.createBasicImage(
@@ -302,7 +299,7 @@ export default class Vehicle
   }
 
   getVehicleID(): number {
-    return this.VehicleID;
+    return this.vehicleID;
   }
 
   getModule(num: number): VehicleModule {
@@ -324,75 +321,75 @@ export default class Vehicle
       this.setPosition(0, 1000);
     }
 
-    // Reset velocity so the Vehicle doesn't respawn at speed
+    // Reset velocity so the vehicle doesn't respawn at speed
     this.setVelocity(0, 0);
 
     // Heal back to full
-    this.hp = this.VehicleData.maxHP;
+    this.hp = this.vehicleData.maxHP;
     this.energy = 0;
   }
 
   // Do physics before update
   preUpdate() {
-    let sci: VehicleControlInput = this.controller.getVehicleInput(this);
+    let vci: VehicleControlInput = this.controller.getVehicleInput(this);
 
     this.rotation = Phaser.Math.Angle.RotateTo(
       this.rotation,
-      sci.VehicleTargetRotation,
-      this.VehicleData.rotationSpeed,
+      vci.vehicleTargetRotation,
+      this.vehicleData.rotationSpeed,
     );
 
     this.turret.rotation = Phaser.Math.Angle.RotateTo(
       this.turret.rotation,
-      sci.turretTargetRotation,
-      this.VehicleData.rotationSpeed,
+      vci.turretTargetRotation,
+      this.vehicleData.rotationSpeed,
     );
 
     let moveVector: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
 
     // The four cardinal directions
     // Take the intent and turn it into a movement vector.
-    if (sci.thrust.north) {
+    if (vci.thrust.north) {
       moveVector.y = -1;
     }
-    if (sci.thrust.east) {
+    if (vci.thrust.east) {
       moveVector.x = 1;
     }
-    if (sci.thrust.south) {
+    if (vci.thrust.south) {
       moveVector.y = 1;
     }
-    if (sci.thrust.west) {
+    if (vci.thrust.west) {
       moveVector.x = -1;
     }
 
     // Normalise and scale to prevent diagonal movement from being faster.
     moveVector.normalize();
-    moveVector.scale(this.VehicleData.thrustPower);
+    moveVector.scale(this.vehicleData.thrustPower);
 
     // Finally, apply the force.
     this.applyForce(moveVector.x, moveVector.y);
 
     // Relative position
-    if (sci.thrust.forward) {
-      XenoLog.Vehicle.warn("Relative movement mode not supported");
-      this.thrustForward(this.VehicleData.thrustPower);
+    if (vci.thrust.forward) {
+      XenoLog.vehi.warn("Relative movement mode not supported");
+      this.thrustForward(this.vehicleData.thrustPower);
     }
-    if (sci.thrust.back) {
-      XenoLog.Vehicle.warn("Relative movement mode not supported");
-      this.thrustBack(this.VehicleData.thrustPower);
+    if (vci.thrust.back) {
+      XenoLog.vehi.warn("Relative movement mode not supported");
+      this.thrustBack(this.vehicleData.thrustPower);
     }
-    if (sci.thrust.left) {
-      XenoLog.Vehicle.warn("Relative movement mode not supported");
-      this.thrustLeft(this.VehicleData.thrustPower);
+    if (vci.thrust.left) {
+      XenoLog.vehi.warn("Relative movement mode not supported");
+      this.thrustLeft(this.vehicleData.thrustPower);
     }
-    if (sci.thrust.right) {
-      XenoLog.Vehicle.warn("Relative movement mode not supported");
-      this.thrustRight(this.VehicleData.thrustPower);
+    if (vci.thrust.right) {
+      XenoLog.vehi.warn("Relative movement mode not supported");
+      this.thrustRight(this.vehicleData.thrustPower);
     }
 
     // Activate modules
-    for (let i = 0; i < sci.modules.length; i++) {
-      if (sci.modules[i]) {
+    for (let i = 0; i < vci.modules.length; i++) {
+      if (vci.modules[i]) {
         this.useModule(i);
       }
     }
@@ -404,21 +401,21 @@ export default class Vehicle
     // Limit according to max speed
     // If our vehicle is going faster than it should
     // Apply a force equal to the thrustPower against it to negate it.
-    if (currentSpeed > this.VehicleData.maxSpeed) {
+    if (currentSpeed > this.vehicleData.maxSpeed) {
       const maxSpeedCap: Phaser.Math.Vector2 = new Phaser.Math.Vector2(
         -vel.x,
         -vel.y,
       );
 
       maxSpeedCap.normalize();
-      maxSpeedCap.scale(this.VehicleData.thrustPower);
+      maxSpeedCap.scale(this.vehicleData.thrustPower);
 
       this.applyForce(maxSpeedCap.x, maxSpeedCap.y);
     }
   }
 
   postUpdate(): void {
-    // Vehicle Death code
+    // vehicle Death code
     if (this.hp <= 0) {
       this.respawn();
     }
@@ -434,14 +431,14 @@ export default class Vehicle
     this.energy += 0.1;
 
     // Cap currentValue, it should never be negative
-    this.energy = Phaser.Math.Clamp(this.energy, 0, this.VehicleData.maxEnergy);
-    this.hp = Phaser.Math.Clamp(this.hp, 0, this.VehicleData.maxHP);
+    this.energy = Phaser.Math.Clamp(this.energy, 0, this.vehicleData.maxEnergy);
+    this.hp = Phaser.Math.Clamp(this.hp, 0, this.vehicleData.maxHP);
 
     let borderColour: string = this.isPlayerTeam ? "#009999" : "#660000";
     this.hpBar.updateValue(
       this.x,
       this.y,
-      this.hp / this.VehicleData.maxHP,
+      this.hp / this.vehicleData.maxHP,
       128,
       borderColour,
       "#CC0000",
@@ -449,7 +446,7 @@ export default class Vehicle
     this.energyBar.updateValue(
       this.x,
       this.y,
-      this.energy / this.VehicleData.maxEnergy,
+      this.energy / this.vehicleData.maxEnergy,
       128,
       borderColour,
       "#00CCCC",
@@ -472,7 +469,7 @@ export default class Vehicle
     this.hp -= damageAmount;
     this.shield.hit();
 
-    XenoLog.Vehicle.debug(
+    XenoLog.vehi.debug(
       "\'" +
         this.physicsEntityName +
         "\' has taken " +
@@ -489,10 +486,10 @@ export default class Vehicle
 
   useModule(num: number) {
     let mod: VehicleModule = this.getModule(num);
-    XenoLog.Vehicle.trace("Trying to use \'" + mod.getModuleName() + "\'");
+    XenoLog.vehi.trace("Trying to use \'" + mod.getModuleName() + "\'");
 
     if (this.isCasting()) {
-      XenoLog.Vehicle.trace(
+      XenoLog.vehi.trace(
         "Vehicle \'" + this.physicsEntityName + "\' is already casting.",
       );
       return;
@@ -541,7 +538,7 @@ export default class Vehicle
       return;
     }
 
-    XenoLog.Vehicle.trace(
+    XenoLog.vehi.trace(
       "\'" + " boop " + "\' Used \'" + mod.getModuleName() + "\'",
     );
   }
@@ -554,7 +551,7 @@ export default class Vehicle
       velocityX: this.getVelocity().x,
       velocityY: this.getVelocity().y,
       isPlayerTeam: this.isPlayerTeam,
-      VehicleID: this.VehicleID,
+      vehicleID: this.vehicleID,
     };
   }
 
