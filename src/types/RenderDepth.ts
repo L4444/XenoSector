@@ -1,6 +1,6 @@
 export const RenderDepth = {
   BACKGROUND: -2,
-  SHIPS: 0,
+  VehicleS: 0,
   PROJECTILES: 1,
   TURRETS: 2,
   SHIELDS: 3,

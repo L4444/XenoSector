@@ -1,6 +1,6 @@
 import type ModuleAction from "../actions/ModuleAction";
 
-export default interface ShipModuleData {
+export default interface VehicleModuleData {
   moduleName: string;
   cooldownDuration: number;
   chargeDuration: number;

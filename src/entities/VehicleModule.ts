@@ -1,18 +1,18 @@
 import { XenoLog } from "../helpers/XenoLogger";
 import type ProjectileManager from "../managers/ProjectileManager";
 
-import type ShipModuleData from "../types/ShipModuleData";
+import type VehicleModuleData from "../types/VehicleModuleData";
 
-import { ShipModuleUseResult } from "../types/ShipModuleUseResult";
-import type ICanUseShipModule from "../interfaces/ICanUseShipModule";
+import { VehicleModuleUseResult } from "../types/VehicleModuleUseResult";
+import type ICanUseVehicleModule from "../interfaces/ICanUseVehicleModule";
 import BaseEntity from "./BaseEntity";
 import type XenoCreator from "../helpers/XenoCreator";
 import Timer from "../helpers/Timer";
 import ChargeTimer from "../helpers/ChargeTimer";
 
-export default class ShipModule extends BaseEntity {
-  private data: ShipModuleData;
-  private parentShip!: ICanUseShipModule;
+export default class VehicleModule extends BaseEntity {
+  private data: VehicleModuleData;
+  private parentVehicle!: ICanUseVehicleModule;
   private cooldownTimer!: Timer;
   private chargeTimer!: ChargeTimer;
 
@@ -21,13 +21,13 @@ export default class ShipModule extends BaseEntity {
   constructor(
     xenoCreator: XenoCreator,
     _projectileManager: ProjectileManager,
-    parentShip: ICanUseShipModule,
-    ShipModuleData: ShipModuleData,
+    parentVehicle: ICanUseVehicleModule,
+    VehicleModuleData: VehicleModuleData,
   ) {
     super(xenoCreator);
-    this.data = ShipModuleData;
+    this.data = VehicleModuleData;
 
-    this.parentShip = parentShip;
+    this.parentVehicle = parentVehicle;
     this.cooldownTimer = new Timer();
     this.chargeTimer = new ChargeTimer(
       this.data.chargeDuration,
@@ -35,42 +35,42 @@ export default class ShipModule extends BaseEntity {
     );
   }
 
-  canUse(): ShipModuleUseResult {
+  canUse(): VehicleModuleUseResult {
     if (this.isOnCooldown()) {
-      return ShipModuleUseResult.ON_COOLDOWN;
+      return VehicleModuleUseResult.ON_COOLDOWN;
     }
 
     if (!this.hasEnergy()) {
-      return ShipModuleUseResult.LOW_ENERGY;
+      return VehicleModuleUseResult.LOW_ENERGY;
     }
 
     if (this.getCurrentCharges() < 1) {
-      return ShipModuleUseResult.NO_CHARGES;
+      return VehicleModuleUseResult.NO_CHARGES;
     }
 
-    return ShipModuleUseResult.SUCCESS;
+    return VehicleModuleUseResult.SUCCESS;
   }
 
   // This function will be called outside the class
-  use(): ShipModuleUseResult {
-    let result: ShipModuleUseResult = this.canUse();
-    if (result != ShipModuleUseResult.SUCCESS) {
+  use(): VehicleModuleUseResult {
+    let result: VehicleModuleUseResult = this.canUse();
+    if (result != VehicleModuleUseResult.SUCCESS) {
       return result;
     }
 
     XenoLog.mode.debug("------ \'" + this.data.moduleName + "\' has been used");
 
-    // Send it to the ship to execute
-    this.parentShip.doActions(this.data.actions);
+    // Send it to the Vehicle to execute
+    this.parentVehicle.doActions(this.data.actions);
 
     this.chargeTimer.useCharge();
     this.cooldownTimer.start(this.data.cooldownDuration);
 
-    return ShipModuleUseResult.SUCCESS;
+    return VehicleModuleUseResult.SUCCESS;
   }
 
   hasEnergy(): boolean {
-    return this.parentShip.getEnergy() >= this.getEnergyCost();
+    return this.parentVehicle.getEnergy() >= this.getEnergyCost();
   }
 
   getModuleName(): string {

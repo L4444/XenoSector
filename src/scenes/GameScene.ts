@@ -8,7 +8,7 @@ import createAsteroidGrid from "../factories/createAsteroidGrid";
 import XenoAssetLoader from "../helpers/XenoAssetLoader";
 import XenoCreator from "../helpers/XenoCreator";
 
-import Ship from "../entities/Ship";
+import Vehicle from "../entities/Vehicle";
 
 import ProjectileManager from "../managers/ProjectileManager";
 import CollisionManager from "../managers/CollisionManager";
@@ -18,11 +18,11 @@ import CooldownIcon from "../hud/CooldownIcon";
 
 import XenoInput from "../helpers/XenoInput";
 
-import RunShipModuleTests from "../tests/RunShipModuleTests";
+import RunVehicleModuleTests from "../tests/RunVehicleModuleTests";
 
 export default class GameScene extends Phaser.Scene {
-  public player!: Ship;
-  private enemies!: Array<Ship>;
+  public player!: Vehicle;
+  private enemies!: Array<Vehicle>;
   private camera!: Phaser.Math.Vector2;
 
   private projectileManager!: ProjectileManager;
@@ -50,14 +50,14 @@ export default class GameScene extends Phaser.Scene {
     // Create asteroids and walls
     this.createStatics();
 
-    // Create projectiles (before ships, so that they are hidden underneith them)
+    // Create projectiles (before Vehicles, so that they are hidden underneith them)
     this.projectileManager = new ProjectileManager(this.xenoCreator);
 
     // Create the alert manager (that creates text popups)
     this.alertManager = new AlertManager(this.xenoCreator);
 
     // Create the player and the enemies, requires the alert manager.
-    this.createShips();
+    this.createVehicles();
 
     // Turn off gravity (we are in space)
     this.matter.world.setGravity(0, 0);
@@ -76,10 +76,14 @@ export default class GameScene extends Phaser.Scene {
       e.preventDefault();
     });
 
-    this.versionText = this.add.text(5, 5, "Evil commit 2.0");
+    this.versionText = this.add.text(
+      5,
+      5,
+      "Replace all instances of Ship with Vehicle",
+    );
     this.versionText.setScrollFactor(0);
 
-    new RunShipModuleTests(this.xenoCreator, this.projectileManager);
+    new RunVehicleModuleTests(this.xenoCreator, this.projectileManager);
   }
 
   update() {
@@ -94,7 +98,7 @@ export default class GameScene extends Phaser.Scene {
     this.camera.x -= (this.camera.x - cameraTarget.x) / 20;
     this.camera.y -= (this.camera.y - cameraTarget.y) / 20;
 
-    // Set the camera on the ship
+    // Set the camera on the Vehicle
     this.cameras.main.centerOn(this.camera.x, this.camera.y);
   }
 
@@ -112,15 +116,15 @@ export default class GameScene extends Phaser.Scene {
     createAsteroidGrid(this.xenoCreator, -300, -1500, 14, 2, 800);
   }
 
-  private createShips() {
-    this.player = new Ship(
+  private createVehicles() {
+    this.player = new Vehicle(
       this.xenoCreator,
       this.projectileManager,
       this.alertManager,
-      "Player Ship",
+      "Player Vehicle",
       0,
       1800,
-      "Human-Fighter",
+      "Mech3",
       new KeyboardAndMouseController(this.xenoInput),
       true,
       {
@@ -133,15 +137,15 @@ export default class GameScene extends Phaser.Scene {
       },
     );
 
-    this.enemies = new Array<Ship>();
+    this.enemies = new Array<Vehicle>();
 
     for (let i = 0; i < 1; i++) {
       this.enemies.push(
-        new Ship(
+        new Vehicle(
           this.xenoCreator,
           this.projectileManager,
           this.alertManager,
-          "Enemy Ship " + i,
+          "Enemy Vehicle " + i,
           i * 300,
           1000,
           "Alien-Bomber",

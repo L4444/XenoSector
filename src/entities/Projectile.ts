@@ -4,7 +4,7 @@ import { XenoLog } from "../helpers/XenoLogger";
 import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 
-import type ShipModuleUsageOptions from "../types/ShipModuleUsageOptions";
+import type VehicleModuleUsageOptions from "../types/VehicleModuleUsageOptions";
 import type XenoCreator from "../helpers/XenoCreator";
 
 export default class Projectile extends PhysicsEntity {
@@ -67,19 +67,19 @@ export default class Projectile extends PhysicsEntity {
   }
 
   fire(
-    useShipModuleData: ShipModuleUsageOptions,
+    useVehicleModuleData: VehicleModuleUsageOptions,
     projectileData: ProjectileData,
   ) {
-    this.setPosition(useShipModuleData.x, useShipModuleData.y);
+    this.setPosition(useVehicleModuleData.x, useVehicleModuleData.y);
 
     this.activate();
-    this.isPlayerTeam = useShipModuleData.isPlayerTeam;
+    this.isPlayerTeam = useVehicleModuleData.isPlayerTeam;
 
     this.setTexture(projectileData.textureName);
 
-    // To prevent projectiles from colliding with the ship that is firing them
+    // To prevent projectiles from colliding with the Vehicle that is firing them
     // Set this after adjusting the physics body via setCircle() because that function resets the collision group
-    this.setCollisionGroup(-useShipModuleData.shipID);
+    this.setCollisionGroup(-useVehicleModuleData.VehicleID);
 
     // The lifetime should be determined by the "range", faster projectiles have less lifetime
     // Multiply by 50 to get the rough distance
@@ -88,7 +88,7 @@ export default class Projectile extends PhysicsEntity {
     this.damage = projectileData.damage;
 
     // If a projectile has no mass then use it only for collision detection
-    // and not for "physics" e.g. knocking ships around
+    // and not for "physics" e.g. knocking Vehicles around
     if (projectileData.mass == 0) {
       this.setSensor(true);
     } else {
@@ -96,17 +96,17 @@ export default class Projectile extends PhysicsEntity {
       this.setMass(projectileData.mass);
     }
 
-    // Use vectors to set the path of the projectile, use the X axis to align with the player ship.
+    // Use vectors to set the path of the projectile, use the X axis to align with the player Vehicle.
     let v = new Phaser.Math.Vector2(projectileData.speed, 0);
 
-    v.rotate(useShipModuleData.rotation);
+    v.rotate(useVehicleModuleData.rotation);
 
     this.setVelocity(
-      v.x + useShipModuleData.velocityX,
-      v.y + useShipModuleData.velocityY,
+      v.x + useVehicleModuleData.velocityX,
+      v.y + useVehicleModuleData.velocityY,
     );
 
-    this.rotation = useShipModuleData.rotation;
+    this.rotation = useVehicleModuleData.rotation;
 
     XenoLog.proj.debug(
       "\'" + projectileData.textureName + "\' fired",

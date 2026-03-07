@@ -1,7 +1,7 @@
 import type ProjectileManager from "../managers/ProjectileManager";
 import { XenoLog } from "../helpers/XenoLogger";
 import ModuleAction from "./ModuleAction";
-import type Ship from "../entities/Ship";
+import type Vehicle from "../entities/Vehicle";
 
 export default class WaitAction extends ModuleAction {
   constructor(ticksDelay: number) {
@@ -10,12 +10,12 @@ export default class WaitAction extends ModuleAction {
 
   public onExecute(
     _projectileManager: ProjectileManager,
-    sourceShip: Ship,
-    _targetShip: Ship,
+    sourceVehicle: Vehicle,
+    _targetVehicle: Vehicle,
   ): void {
     XenoLog.mode.debug(
-      "Delaying ship ID \'" +
-        sourceShip.physicsEntityName +
+      "Delaying Vehicle ID \'" +
+        sourceVehicle.physicsEntityName +
         "\' ticks delay: " +
         this.getWindDown(),
     );

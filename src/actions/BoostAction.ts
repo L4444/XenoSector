@@ -1,7 +1,7 @@
 import type ProjectileManager from "../managers/ProjectileManager";
 
 import ModuleAction from "./ModuleAction";
-import type Ship from "../entities/Ship";
+import type Vehicle from "../entities/Vehicle";
 
 export default class BoostAction extends ModuleAction {
   constructor() {
@@ -10,9 +10,9 @@ export default class BoostAction extends ModuleAction {
 
   public onExecute(
     _projectileManager: ProjectileManager,
-    sourceShip: Ship,
-    _targetShip: Ship,
+    sourceVehicle: Vehicle,
+    _targetVehicle: Vehicle,
   ): void {
-    sourceShip.thrustForward(10);
+    sourceVehicle.thrustForward(10);
   }
 }

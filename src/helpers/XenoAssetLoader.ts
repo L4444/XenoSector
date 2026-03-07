@@ -14,14 +14,21 @@ export default abstract class XenoAssetLoader {
       "/assets/backgrounds/Blue Nebula 2 - 1024x1024.png",
     );
 
-    /// Ships
-    XenoAssetLoader.loadImage(scene, "/assets/ships/Human-Fighter.png", true);
+    // Mechs
+    XenoAssetLoader.loadImage(scene, "/assets/vehicles/Mech3.png", true);
+
+    /// Vehicles
     XenoAssetLoader.loadImage(
       scene,
-      "/assets/ships/Alien-Battleship.png",
+      "/assets/vehicles/Human-Fighter.png",
       true,
     );
-    XenoAssetLoader.loadImage(scene, "/assets/ships/Alien-Bomber.png", true);
+    XenoAssetLoader.loadImage(
+      scene,
+      "/assets/vehicles/Alien-Battleship.png",
+      true,
+    );
+    XenoAssetLoader.loadImage(scene, "/assets/vehicles/Alien-Bomber.png", true);
 
     XenoAssetLoader.loadImage(scene, "/assets/border/red.png");
 
@@ -41,7 +48,7 @@ export default abstract class XenoAssetLoader {
 
     XenoAssetLoader.loadImage(scene, "/assets/asteroids/Asteroid.png");
 
-    XenoAssetLoader.loadImage(scene, "/assets/ships/Shield.png");
+    XenoAssetLoader.loadImage(scene, "/assets/vehicles/Shield.png");
 
     // Professional looking icons
     XenoAssetLoader.loadImage(scene, "/assets/icons/machinegun-icon.png");

@@ -2,7 +2,7 @@ import ModuleAction from "./ModuleAction";
 
 import type ProjectileManager from "../managers/ProjectileManager";
 import { XenoLog } from "../helpers/XenoLogger";
-import type Ship from "../entities/Ship";
+import type Vehicle from "../entities/Vehicle";
 
 export default class FooAction extends ModuleAction {
   constructor() {
@@ -11,8 +11,8 @@ export default class FooAction extends ModuleAction {
 
   public onExecute(
     _projectileManager: ProjectileManager,
-    _sourceShip: Ship,
-    _targetShip: Ship,
+    _sourceVehicle: Vehicle,
+    _targetVehicle: Vehicle,
   ): void {
     XenoLog.mode.debug("Foo action triggered");
   }

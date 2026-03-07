@@ -14,8 +14,8 @@ export const XenoLog = {
     name: "Projectile Manager",
     minLevel: 3,
   }),
-  ship: baseLogger.getSubLogger({
-    name: "Ship",
+  Vehicle: baseLogger.getSubLogger({
+    name: "Vehicle",
     minLevel: 3,
   }),
   load: baseLogger.getSubLogger({
@@ -27,7 +27,7 @@ export const XenoLog = {
     minLevel: 3,
   }),
   mode: baseLogger.getSubLogger({
-    name: "Ship Modules",
+    name: "Vehicle Modules",
     minLevel: 2,
   }),
   unit: baseLogger.getSubLogger({

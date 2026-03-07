@@ -1,7 +1,7 @@
 export const PhysicsEntityType = {
   STATIC: "STATIC",
   PROJECTILE: "PROJECTILE",
-  SHIP: "SHIP",
+  Vehicle: "Vehicle",
 };
 
 export type PhysicsEntityType =

@@ -3,7 +3,7 @@ import { RenderDepth } from "../types/RenderDepth";
 
 import BaseEntity from "../entities/BaseEntity";
 
-import type ShipModule from "../entities/ShipModule";
+import type VehicleModule from "../entities/VehicleModule";
 import { RenderSpace } from "../types/RenderSpace";
 
 export default class CooldownIcon extends BaseEntity {
@@ -18,7 +18,7 @@ export default class CooldownIcon extends BaseEntity {
 
   private xenoCreator!: XenoCreator;
 
-  private ShipModule!: ShipModule;
+  private VehicleModule!: VehicleModule;
 
   private SWISH_FILL_COLOUR: number = 0x666666;
   private SWISH_FILL_ALPHA: number = 0.8;
@@ -27,12 +27,12 @@ export default class CooldownIcon extends BaseEntity {
     xenoCreator: XenoCreator,
     x: number,
     y: number,
-    ShipModule: ShipModule,
+    VehicleModule: VehicleModule,
   ) {
     super(xenoCreator);
     this.xenoCreator = xenoCreator;
 
-    this.ShipModule = ShipModule;
+    this.VehicleModule = VehicleModule;
 
     this.back = this.xenoCreator.createBasicImage(
       x,
@@ -48,7 +48,7 @@ export default class CooldownIcon extends BaseEntity {
     this.icon = this.xenoCreator.createBasicImage(
       x,
       y,
-      ShipModule.getUITextureName(),
+      VehicleModule.getUITextureName(),
       RenderDepth.UI,
       "#669999",
       RenderSpace.SCREEN,
@@ -79,9 +79,9 @@ export default class CooldownIcon extends BaseEntity {
 
     // Now add the text to the element
     let splitModuleName: string =
-      ShipModule.getModuleName().split(" ")[0] +
+      VehicleModule.getModuleName().split(" ")[0] +
       "\n" +
-      ShipModule.getModuleName().split(" ")[1];
+      VehicleModule.getModuleName().split(" ")[1];
 
     this.nameText = this.xenoCreator.createText(
       x - 30,
@@ -97,7 +97,7 @@ export default class CooldownIcon extends BaseEntity {
     this.keybindText = this.xenoCreator.createText(
       x - 30,
       y - 30,
-      ShipModule.getKeybind(),
+      VehicleModule.getKeybind(),
       RenderDepth.UI,
       "#FFFFFF",
       RenderSpace.SCREEN,
@@ -114,29 +114,29 @@ export default class CooldownIcon extends BaseEntity {
     );
     this.chargesText.setFontSize(20);
 
-    // Hide if the ShipModule doesn't "use charges" (e.g it's max chargers are at 1)
-    if (this.ShipModule.getMaxCharges() == 1) {
+    // Hide if the VehicleModule doesn't "use charges" (e.g it's max chargers are at 1)
+    if (this.VehicleModule.getMaxCharges() == 1) {
       this.chargesText.setVisible(false);
     }
 
     this.energyText = this.xenoCreator.createText(
       x + 15,
       y - 30,
-      this.ShipModule.getEnergyCost().toString(),
+      this.VehicleModule.getEnergyCost().toString(),
       RenderDepth.UI,
       "#00Cccc",
       RenderSpace.SCREEN,
     );
     this.energyText.setFontSize(15);
 
-    // Hide if the ShipModule has no cost, so the UI looks cleaner
-    if (this.ShipModule.getEnergyCost() == 0) {
+    // Hide if the VehicleModule has no cost, so the UI looks cleaner
+    if (this.VehicleModule.getEnergyCost() == 0) {
       this.energyText.setVisible(false);
     }
   }
 
   preUpdate() {
-    let progress: number = this.ShipModule.getCooldownRemainingRatio();
+    let progress: number = this.VehicleModule.getCooldownRemainingRatio();
 
     this.swish.clear();
     this.swish.fillStyle(this.SWISH_FILL_COLOUR, this.SWISH_FILL_ALPHA);
@@ -154,11 +154,11 @@ export default class CooldownIcon extends BaseEntity {
     this.swish.fillPath();
 
     this.chargesText.text =
-      this.ShipModule.getCurrentCharges().toString() +
+      this.VehicleModule.getCurrentCharges().toString() +
       "\/" +
-      this.ShipModule.getMaxCharges().toString();
+      this.VehicleModule.getMaxCharges().toString();
 
-    this.back.tint = this.ShipModule.hasEnergy() ? 0xffffff : 0xff0000;
+    this.back.tint = this.VehicleModule.hasEnergy() ? 0xffffff : 0xff0000;
   }
 
   get x(): number {

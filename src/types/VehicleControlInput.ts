@@ -1,5 +1,5 @@
-export default interface ShipControlInput {
-  shipTargetRotation: number;
+export default interface VehicleControlInput {
+  VehicleTargetRotation: number;
   turretTargetRotation: number;
   thrust: {
     north: boolean;

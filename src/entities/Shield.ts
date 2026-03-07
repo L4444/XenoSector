@@ -1,4 +1,4 @@
-import type Ship from "./Ship";
+import type Vehicle from "./Vehicle";
 
 import BaseEntity from "./BaseEntity";
 import type XenoCreator from "../helpers/XenoCreator";
@@ -6,11 +6,11 @@ import { RenderDepth } from "../types/RenderDepth";
 
 export default class Shield extends BaseEntity {
   private shieldImage!: Phaser.GameObjects.Image;
-  private parentShip!: Ship;
+  private parentVehicle!: Vehicle;
 
-  constructor(xenoCreator: XenoCreator, parentShip: Ship) {
+  constructor(xenoCreator: XenoCreator, parentVehicle: Vehicle) {
     super(xenoCreator);
-    this.parentShip = parentShip;
+    this.parentVehicle = parentVehicle;
 
     this.shieldImage = xenoCreator.createBasicImage(
       0,
@@ -18,8 +18,8 @@ export default class Shield extends BaseEntity {
       "Shield",
       RenderDepth.SHIELDS,
     );
-    this.shieldImage.displayWidth = parentShip.displayWidth;
-    this.shieldImage.displayHeight = parentShip.displayHeight;
+    this.shieldImage.displayWidth = parentVehicle.displayWidth;
+    this.shieldImage.displayHeight = parentVehicle.displayHeight;
     this.shieldImage.alpha = 0.3;
   }
 
@@ -27,8 +27,8 @@ export default class Shield extends BaseEntity {
     if (this.shieldImage.alpha > 0.3) {
       this.shieldImage.alpha -= 0.01;
     }
-    this.shieldImage.x = this.parentShip.x;
-    this.shieldImage.y = this.parentShip.y;
+    this.shieldImage.x = this.parentVehicle.x;
+    this.shieldImage.y = this.parentVehicle.y;
   }
 
   hit() {
