@@ -79,7 +79,7 @@ export default class GameScene extends Phaser.Scene {
     this.versionText = this.add.text(
       5,
       5,
-      "Version 5.1 - implement a ShipModule action system.",
+      "Converst isUI flag to RenderSpace enum",
     );
     this.versionText.setScrollFactor(0);
 

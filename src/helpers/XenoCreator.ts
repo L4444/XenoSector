@@ -1,5 +1,6 @@
 import BaseEntity from "../entities/BaseEntity";
 import type { RenderDepth } from "../types/RenderDepth";
+import { RenderSpace } from "../types/RenderSpace";
 
 export default class XenoCreator {
   scene!: Phaser.Scene;
@@ -8,9 +9,21 @@ export default class XenoCreator {
     this.scene = scene;
   }
 
-  private setupGameObject(obj: any, isUI: boolean, renderDepth: RenderDepth) {
-    if (isUI) {
+  private setupGameObject(
+    obj: any,
+    renderSpace: RenderSpace,
+    renderDepth: RenderDepth,
+  ) {
+    if (renderSpace == RenderSpace.SCREEN) {
       obj.setScrollFactor(0);
+    }
+
+    if (renderSpace == RenderSpace.PARALLAX) {
+      obj.setScrollFactor(0.5);
+    }
+    // The default scroll factor of an object is 1, but I will set it to 1 again for completeness sake.
+    if (renderSpace == RenderSpace.WORLD) {
+      obj.setScrollFactor(1);
     }
     obj.setDepth(renderDepth);
   }
@@ -26,12 +39,12 @@ export default class XenoCreator {
     textureKey: string,
     renderDepth: RenderDepth,
     colour: string = "#FFFFFF",
-    isUI: boolean = false,
+    renderSpace: RenderSpace = RenderSpace.WORLD,
   ): Phaser.GameObjects.Image {
     let obj: Phaser.GameObjects.Image = this.scene.add.image(x, y, textureKey);
 
     obj.tint = this.convertStringColourToTint(colour);
-    this.setupGameObject(obj, isUI, renderDepth);
+    this.setupGameObject(obj, renderSpace, renderDepth);
     return obj;
   }
 
@@ -41,7 +54,7 @@ export default class XenoCreator {
     textureKey: string,
     renderDepth: RenderDepth,
     colour: string = "#FFFFFF",
-    isUI: boolean = false,
+    renderSpace: RenderSpace = RenderSpace.WORLD,
   ): Phaser.Physics.Matter.Image {
     let obj: Phaser.Physics.Matter.Image = this.scene.matter.add.image(
       x,
@@ -49,7 +62,7 @@ export default class XenoCreator {
       textureKey,
     );
     obj.tint = this.convertStringColourToTint(colour);
-    this.setupGameObject(obj, isUI, renderDepth);
+    this.setupGameObject(obj, renderSpace, renderDepth);
     return obj;
   }
 
@@ -61,7 +74,7 @@ export default class XenoCreator {
     fillColour: number,
     fillAlpha: number,
     renderDepth: RenderDepth,
-    isUI: boolean = false,
+    renderSpace: RenderSpace = RenderSpace.WORLD,
   ): Phaser.GameObjects.Rectangle {
     let obj: Phaser.GameObjects.Rectangle = this.scene.add.rectangle(
       x, // x
@@ -71,7 +84,7 @@ export default class XenoCreator {
       fillColour, // rgb colour
       fillAlpha,
     );
-    this.setupGameObject(obj, isUI, renderDepth);
+    this.setupGameObject(obj, renderSpace, renderDepth);
     return obj;
   }
 
@@ -81,13 +94,13 @@ export default class XenoCreator {
     text: string,
     renderDepth: RenderDepth,
     colour: string = "#FFFFFF",
-    isUI: boolean = false,
+    renderSpace: RenderSpace = RenderSpace.WORLD,
   ): Phaser.GameObjects.Text {
     let obj: Phaser.GameObjects.Text = this.scene.add.text(x, y, text, {
       color: colour,
     });
 
-    this.setupGameObject(obj, isUI, renderDepth);
+    this.setupGameObject(obj, renderSpace, renderDepth);
     return obj;
   }
 
@@ -95,15 +108,12 @@ export default class XenoCreator {
     x: number,
     y: number,
     renderDepth: RenderDepth,
-    isUI: boolean = false,
+    renderSpace: RenderSpace = RenderSpace.WORLD,
   ): Phaser.GameObjects.Graphics {
     let obj: Phaser.GameObjects.Graphics = this.scene.add.graphics();
-    if (isUI) {
-      obj.setScrollFactor(0);
-    }
+    this.setupGameObject(obj, renderSpace, renderDepth);
     obj.x = x;
     obj.y = y;
-    obj.setDepth(renderDepth);
     return obj;
   }
 
@@ -113,11 +123,11 @@ export default class XenoCreator {
     textureKey: string,
     config: Phaser.Types.GameObjects.Particles.ParticleEmitterConfig,
     renderDepth: RenderDepth,
-    isUI: boolean = false,
+    renderSpace: RenderSpace = RenderSpace.WORLD,
   ): Phaser.GameObjects.Particles.ParticleEmitter {
     let obj: Phaser.GameObjects.Particles.ParticleEmitter =
       this.scene.add.particles(x, y, textureKey, config);
-    this.setupGameObject(obj, isUI, renderDepth);
+    this.setupGameObject(obj, renderSpace, renderDepth);
     return obj;
   }
 
