@@ -79,7 +79,7 @@ export default class GameScene extends Phaser.Scene {
     this.versionText = this.add.text(
       5,
       5,
-      "Replace all instances of Ship with Vehicle",
+      "Change setting from space to ground",
     );
     this.versionText.setScrollFactor(0);
 
@@ -104,8 +104,8 @@ export default class GameScene extends Phaser.Scene {
 
   private createBackground() {
     // Create a parallax effect
-    new GameBackground(this, "Blue Nebula 4 - 1024x1024", 0.2, 1);
-    new GameBackground(this, "Blue Nebula 2 - 1024x1024", 1, 0.3);
+    new GameBackground(this, "clay512x512-01d", 1, 1);
+    //new GameBackground(this, "Blue Nebula 2 - 1024x1024", 1, 0.3);
   }
 
   private createStatics() {
@@ -128,7 +128,7 @@ export default class GameScene extends Phaser.Scene {
       new KeyboardAndMouseController(this.xenoInput),
       true,
       {
-        thrustPower: 0.05,
+        thrustPower: 0.3,
         mass: 100,
         rotationSpeed: 0.05,
         maxSpeed: 3,

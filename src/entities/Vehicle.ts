@@ -348,42 +348,46 @@ export default class Vehicle
       this.VehicleData.rotationSpeed,
     );
 
-    let isThrust: boolean = false;
+    let moveVector: Phaser.Math.Vector2 = new Phaser.Math.Vector2(0, 0);
 
     // The four cardinal directions
+    // Take the intent and turn it into a movement vector.
     if (sci.thrust.north) {
-      this.applyForce(0, -this.VehicleData.thrustPower);
-      isThrust = true;
+      moveVector.y = -1;
     }
     if (sci.thrust.east) {
-      this.applyForce(this.VehicleData.thrustPower, 0);
-      isThrust = true;
+      moveVector.x = 1;
     }
     if (sci.thrust.south) {
-      this.applyForce(0, this.VehicleData.thrustPower);
-      isThrust = true;
+      moveVector.y = 1;
     }
     if (sci.thrust.west) {
-      this.applyForce(-this.VehicleData.thrustPower, 0);
-      isThrust = true;
+      moveVector.x = -1;
     }
+
+    // Normalise and scale to prevent diagonal movement from being faster.
+    moveVector.normalize();
+    moveVector.scale(this.VehicleData.thrustPower);
+
+    // Finally, apply the force.
+    this.applyForce(moveVector.x, moveVector.y);
 
     // Relative position
     if (sci.thrust.forward) {
+      XenoLog.Vehicle.warn("Relative movement mode not supported");
       this.thrustForward(this.VehicleData.thrustPower);
-      isThrust = true;
     }
     if (sci.thrust.back) {
+      XenoLog.Vehicle.warn("Relative movement mode not supported");
       this.thrustBack(this.VehicleData.thrustPower);
-      isThrust = true;
     }
     if (sci.thrust.left) {
+      XenoLog.Vehicle.warn("Relative movement mode not supported");
       this.thrustLeft(this.VehicleData.thrustPower);
-      isThrust = true;
     }
     if (sci.thrust.right) {
+      XenoLog.Vehicle.warn("Relative movement mode not supported");
       this.thrustRight(this.VehicleData.thrustPower);
-      isThrust = true;
     }
 
     // Activate modules
@@ -394,33 +398,20 @@ export default class Vehicle
     }
 
     let vel = this.getVelocity();
-    let maxSpeed = this.VehicleData.maxSpeed;
 
     const currentSpeed = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
 
-    // If we are not thrusting, slow down gently
-    if (!isThrust) {
-      const brakeThruster: Phaser.Math.Vector2 = new Phaser.Math.Vector2(
-        -vel.x,
-        -vel.y,
-      );
-
-      brakeThruster.scale(0.005);
-
-      this.applyForce(brakeThruster.x, brakeThruster.y);
-    }
-
     // Limit according to max speed
-    if (currentSpeed > maxSpeed) {
-      //let scale = currentSpeed / maxSpeed;
-      // Limit your max speed by firing reverse thrusters, so boosting works
-      //this.applyForce(-vel.x / currentSpeed, -vel.y / scale);
+    // If our vehicle is going faster than it should
+    // Apply a force equal to the thrustPower against it to negate it.
+    if (currentSpeed > this.VehicleData.maxSpeed) {
       const maxSpeedCap: Phaser.Math.Vector2 = new Phaser.Math.Vector2(
         -vel.x,
         -vel.y,
       );
 
-      maxSpeedCap.scale(0.01);
+      maxSpeedCap.normalize();
+      maxSpeedCap.scale(this.VehicleData.thrustPower);
 
       this.applyForce(maxSpeedCap.x, maxSpeedCap.y);
     }
@@ -451,7 +442,7 @@ export default class Vehicle
       this.x,
       this.y,
       this.hp / this.VehicleData.maxHP,
-      this.displayWidth,
+      128,
       borderColour,
       "#CC0000",
     );
@@ -459,7 +450,7 @@ export default class Vehicle
       this.x,
       this.y,
       this.energy / this.VehicleData.maxEnergy,
-      this.displayWidth,
+      128,
       borderColour,
       "#00CCCC",
     );
@@ -467,10 +458,11 @@ export default class Vehicle
       this.x,
       this.y,
       this.moduleActionExecutor.getRemainingRatio(),
-      this.displayWidth,
+      128,
       "#333333",
       "#FFFF00",
     );
+    // Hide the bar when not using it.
     //this.executionBar.setVisible(this.castTimeRemaining > 0);
 
     this.moduleActionExecutor.update();

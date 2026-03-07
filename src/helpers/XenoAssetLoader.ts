@@ -4,7 +4,7 @@ export default abstract class XenoAssetLoader {
   constructor() {}
 
   static loadAssets(scene: Phaser.Scene) {
-    // Backgrounds
+    // Space Backgrounds
     XenoAssetLoader.loadImage(
       scene,
       "/assets/backgrounds/Blue Nebula 4 - 1024x1024.png",
@@ -13,6 +13,9 @@ export default abstract class XenoAssetLoader {
       scene,
       "/assets/backgrounds/Blue Nebula 2 - 1024x1024.png",
     );
+
+    // Ground Backgrounds
+    XenoAssetLoader.loadImage(scene, "/assets/backgrounds/clay512x512-01d.png");
 
     // Mechs
     XenoAssetLoader.loadImage(scene, "/assets/vehicles/Mech3.png", true);

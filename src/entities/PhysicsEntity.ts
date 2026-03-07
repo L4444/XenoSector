@@ -33,13 +33,9 @@ export default abstract class PhysicsEntity extends PositionalEntity {
     );
     this.image.setData("entity", this);
 
-    // Set circle first because setCircle() resets the setStatic() flag
+    // Set circle first because setCircle() resets the setStatic() flag AND the friction parameters
     if (isCircle) {
-      this.image.setCircle(this.image.width / 2, {
-        friction: 0,
-        frictionAir: 0,
-        frictionStatic: 0,
-      });
+      this.image.setCircle(this.image.width / 2);
     }
 
     // For static objects, we need to be static.
@@ -53,15 +49,22 @@ export default abstract class PhysicsEntity extends PositionalEntity {
     // Disable angular momentum (Fixes issue #77), a weird bug that causes angular "drift"
     this.image.setFixedRotation();
 
+    this.image.setFriction(0);
+    this.image.setFrictionStatic(0);
+
     // Keep projectiles in a seperate category so they do not collide with each other.
     if (physicsEntityType != PhysicsEntityType.PROJECTILE) {
       // If I am not a projectile, collide with everything
+      // Non-projectiles react to the air resistence
       this.image.setCollisionCategory(1);
       this.image.setCollidesWith(3);
+      this.image.setFrictionAir(0.05);
     } else {
       // If I am a projectile, do not collide with other projectiles
+      // Projectiles have no air resistence
       this.image.setCollisionCategory(2);
       this.image.setCollidesWith(1);
+      this.image.setFrictionAir(0);
     }
 
     // This should ensure no weird collision bugs
