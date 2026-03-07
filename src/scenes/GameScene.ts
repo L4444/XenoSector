@@ -76,7 +76,7 @@ export default class GameScene extends Phaser.Scene {
       e.preventDefault();
     });
 
-    this.versionText = this.add.text(5, 5, "Hahaha I'm a bastard");
+    this.versionText = this.add.text(5, 5, "Evil commit 2.0");
     this.versionText.setScrollFactor(0);
 
     new RunShipModuleTests(this.xenoCreator, this.projectileManager);
