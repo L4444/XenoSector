@@ -4,8 +4,6 @@ import { PhysicsEntityType } from "../types/PhysicsEntityType";
 import PhysicsEntity from "./PhysicsEntity";
 
 export default class Asteroid extends PhysicsEntity {
-  private spinSpeed!: number;
-
   /**
    * Makes an asteroid
    *
@@ -32,10 +30,8 @@ export default class Asteroid extends PhysicsEntity {
 
     this.setTint(tint);
 
-    this.spinSpeed = 0.01;
+    this.rotation = Math.random();
   }
 
-  preUpdate() {
-    this.rotation += this.spinSpeed;
-  }
+  preUpdate() {}
 }

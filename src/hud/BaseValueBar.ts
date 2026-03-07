@@ -42,6 +42,8 @@ export default abstract class BaseValueBar {
     this.barBack.tint =
       this.xenoCreator.convertStringColourToTint(borderColour);
 
+    this.barBack.displayWidth = desiredWidth;
+
     this.updateFront(
       this.barBack.x,
       this.barBack.y,

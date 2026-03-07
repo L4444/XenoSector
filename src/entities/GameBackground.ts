@@ -12,5 +12,7 @@ export default class GameBackground extends Phaser.GameObjects.TileSprite {
 
     this.setScrollFactor(scrollFactor);
     this.setAlpha(alphaFactor);
+
+    this.tint = 0x666666;
   }
 }
