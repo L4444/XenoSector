@@ -1,7 +1,7 @@
-import type Ship from "../entities/Ship";
+import type Vehicle from "../entities/Vehicle";
 import type XenoInput from "../helpers/XenoInput";
 
-import type ShipControlInput from "../types/ShipControlInput";
+import type VehicleControlInput from "../types/VehicleControlInput";
 
 export default abstract class BaseController {
   protected xenoInput!: XenoInput;
@@ -10,9 +10,9 @@ export default abstract class BaseController {
     this.xenoInput = xenoInput;
   }
 
-  getShipInput(ship: Ship): ShipControlInput {
-    let sci: ShipControlInput = {
-      shipTargetRotation: ship.rotation,
+  getVehicleInput(Vehicle: Vehicle): VehicleControlInput {
+    let sci: VehicleControlInput = {
+      VehicleTargetRotation: Vehicle.rotation,
       turretTargetRotation: 0,
       thrust: {
         north: false,
@@ -27,8 +27,11 @@ export default abstract class BaseController {
       modules: [false, false, false, false],
       brake: false,
     };
-    return this.onControl(sci, ship);
+    return this.onControl(sci, Vehicle);
   }
 
-  abstract onControl(sci: ShipControlInput, ship: Ship): ShipControlInput;
+  abstract onControl(
+    sci: VehicleControlInput,
+    Vehicle: Vehicle,
+  ): VehicleControlInput;
 }

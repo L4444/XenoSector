@@ -1,9 +1,9 @@
 import BaseController from "./BaseController";
 
 import { KeyboardControlStyle } from "../types/GameSettings";
-import type ShipControlInput from "../types/ShipControlInput";
+import type VehicleControlInput from "../types/VehicleControlInput";
 
-import type Ship from "../entities/Ship";
+import type Vehicle from "../entities/Vehicle";
 
 import type XenoInput from "../helpers/XenoInput";
 
@@ -15,7 +15,7 @@ export default class KeyboardAndMouseController extends BaseController {
       throw new Error("No keyboard detected!");
     }
   }
-  onControl(sci: ShipControlInput, ship: Ship): ShipControlInput {
+  onControl(sci: VehicleControlInput, Vehicle: Vehicle): VehicleControlInput {
     let keyboardInput = this.xenoInput.getKeyboard();
 
     let ko = keyboardInput?.addKeys("W,S,A,D,F,G,SPACE,E") as Keys;
@@ -64,10 +64,10 @@ export default class KeyboardAndMouseController extends BaseController {
       }
 
       if (ko.A.isDown) {
-        sci.shipTargetRotation = ship.rotation - 0.1;
+        sci.VehicleTargetRotation = Vehicle.rotation - 0.1;
       }
       if (ko.D.isDown) {
-        sci.shipTargetRotation = ship.rotation + 0.1;
+        sci.VehicleTargetRotation = Vehicle.rotation + 0.1;
       }
     }
 
@@ -96,16 +96,16 @@ export default class KeyboardAndMouseController extends BaseController {
     activePointer.updateWorldPoint(this.xenoInput.getMainCamera());
 
     sci.turretTargetRotation = Phaser.Math.Angle.Between(
-      ship.x,
-      ship.y,
+      Vehicle.x,
+      Vehicle.y,
       activePointer.worldX,
       activePointer.worldY,
     );
 
     if (controlStyle != KeyboardControlStyle.TANKCONTROLS) {
-      sci.shipTargetRotation = Phaser.Math.Angle.Between(
-        ship.x,
-        ship.y,
+      sci.VehicleTargetRotation = Phaser.Math.Angle.Between(
+        Vehicle.x,
+        Vehicle.y,
         activePointer.worldX,
         activePointer.worldY,
       );

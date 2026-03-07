@@ -1,4 +1,4 @@
-export default interface ShipData {
+export default interface VehicleData {
   thrustPower: number;
   rotationSpeed: number;
   mass: number;

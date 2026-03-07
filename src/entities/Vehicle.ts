@@ -1,13 +1,13 @@
-import ShipModule from "./ShipModule";
+import VehicleModule from "./VehicleModule";
 import Shield from "./Shield";
 
 import { XenoLog } from "../helpers/XenoLogger";
 import type BaseController from "../controllers/BaseController";
-import type ShipData from "../types/ShipData";
+import type VehicleData from "../types/VehicleData";
 import PhysicsEntity from "./PhysicsEntity";
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 
-import type ShipControlInput from "../types/ShipControlInput";
+import type VehicleControlInput from "../types/VehicleControlInput";
 import XenoCreator from "../helpers/XenoCreator";
 import type ProjectileManager from "../managers/ProjectileManager";
 import AlertManager from "../managers/AlertManager";
@@ -16,9 +16,9 @@ import { RenderDepth } from "../types/RenderDepth";
 import SlicedValueBar from "../hud/SlicedValueBar";
 import SmoothValueBar from "../hud/SmoothValueBar";
 
-import type ShipModuleUsageOptions from "../types/ShipModuleUsageOptions";
-import type ICanUseShipModule from "../interfaces/ICanUseShipModule";
-import { ShipModuleUseResult } from "../types/ShipModuleUseResult";
+import type VehicleModuleUsageOptions from "../types/VehicleModuleUsageOptions";
+import type ICanUseVehicleModule from "../interfaces/ICanUseVehicleModule";
+import { VehicleModuleUseResult } from "../types/VehicleModuleUseResult";
 import Timer from "../helpers/Timer";
 import FooAction from "../actions/FooAction";
 import ShootProjectileAction from "../actions/ShootProjectileAction";
@@ -27,9 +27,12 @@ import type ModuleAction from "../actions/ModuleAction";
 import ModuleActionExecutor from "../ModuleActionExecutor";
 import BoostAction from "../actions/BoostAction";
 
-export default class Ship extends PhysicsEntity implements ICanUseShipModule {
+export default class Vehicle
+  extends PhysicsEntity
+  implements ICanUseVehicleModule
+{
   private static count: number = 0;
-  private shipID!: number;
+  private VehicleID!: number;
   private shield!: Shield;
   private hpBar!: SmoothValueBar;
   private energyBar!: SlicedValueBar;
@@ -38,7 +41,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
   private hp!: number;
   private energy!: number;
 
-  private modules!: Array<ShipModule>;
+  private modules!: Array<VehicleModule>;
 
   private controller!: BaseController;
   private explodeParticleEmitter!: Phaser.GameObjects.Particles.ParticleEmitter;
@@ -48,7 +51,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
   private energyMessageTimer: Timer = new Timer();
   private chargesMessageTimer: Timer = new Timer();
 
-  private shipData: ShipData;
+  private VehicleData: VehicleData;
   private turret!: Phaser.GameObjects.Image;
 
   private alertManager!: AlertManager;
@@ -58,29 +61,32 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
     xenoCreator: XenoCreator,
     projectileManager: ProjectileManager,
     alertManager: AlertManager,
-    shipName: string,
+    VehicleName: string,
     x: number,
     y: number,
     textureKey: string,
     controller: BaseController,
     isPlayerTeam: boolean,
-    shipData: ShipData,
+    VehicleData: VehicleData,
   ) {
     super(
       xenoCreator,
       x,
       y,
       textureKey,
-      shipName,
-      PhysicsEntityType.SHIP,
+      VehicleName,
+      PhysicsEntityType.Vehicle,
       true,
       100,
     );
-    XenoLog.ship.debug("Ship \'" + shipName + "\' Created", shipData);
-    Ship.count++;
-    this.shipID = Ship.count;
-    this.setCollisionGroup(-this.shipID);
-    this.shipData = shipData;
+    XenoLog.Vehicle.debug(
+      "Vehicle \'" + VehicleName + "\' Created",
+      VehicleData,
+    );
+    Vehicle.count++;
+    this.VehicleID = Vehicle.count;
+    this.setCollisionGroup(-this.VehicleID);
+    this.VehicleData = VehicleData;
     this.controller = controller;
     this.isPlayerTeam = isPlayerTeam;
 
@@ -123,7 +129,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
         scale: 0.25,
         alpha: { start: 0.5, end: 0, ease: "expo.out" },
       },
-      RenderDepth.SHIPS,
+      RenderDepth.VehicleS,
     );
 
     this.turret = xenoCreator.createBasicImage(
@@ -133,9 +139,9 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
       RenderDepth.TURRETS,
     );
 
-    this.modules = new Array<ShipModule>();
+    this.modules = new Array<VehicleModule>();
 
-    let basicWeapon: ShipModule = new ShipModule(
+    let basicWeapon: VehicleModule = new VehicleModule(
       xenoCreator,
       projectileManager,
       this,
@@ -162,7 +168,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
 
     this.modules.push(basicWeapon);
 
-    let rapidFireWeapon: ShipModule = new ShipModule(
+    let rapidFireWeapon: VehicleModule = new VehicleModule(
       xenoCreator,
       projectileManager,
       this,
@@ -206,7 +212,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
 
     this.modules.push(rapidFireWeapon);
 
-    let heavyLongCooldownWeapon: ShipModule = new ShipModule(
+    let heavyLongCooldownWeapon: VehicleModule = new VehicleModule(
       xenoCreator,
       projectileManager,
       this,
@@ -233,7 +239,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
 
     this.modules.push(heavyLongCooldownWeapon);
 
-    let crapBlaster: ShipModule = new ShipModule(
+    let crapBlaster: VehicleModule = new VehicleModule(
       xenoCreator,
       projectileManager,
       this,
@@ -261,7 +267,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
 
     this.modules.push(crapBlaster);
 
-    let booster: ShipModule = new ShipModule(
+    let booster: VehicleModule = new VehicleModule(
       xenoCreator,
       projectileManager,
       this,
@@ -295,11 +301,11 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
     return this.moduleActionExecutor.isActive();
   }
 
-  getShipID(): number {
-    return this.shipID;
+  getVehicleID(): number {
+    return this.VehicleID;
   }
 
-  getModule(num: number): ShipModule {
+  getModule(num: number): VehicleModule {
     return this.modules[num];
   }
 
@@ -318,65 +324,65 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
       this.setPosition(0, 1000);
     }
 
-    // Reset velocity so the ship doesn't respawn at speed
+    // Reset velocity so the Vehicle doesn't respawn at speed
     this.setVelocity(0, 0);
 
     // Heal back to full
-    this.hp = this.shipData.maxHP;
+    this.hp = this.VehicleData.maxHP;
     this.energy = 0;
   }
 
   // Do physics before update
   preUpdate() {
-    let sci: ShipControlInput = this.controller.getShipInput(this);
+    let sci: VehicleControlInput = this.controller.getVehicleInput(this);
 
     this.rotation = Phaser.Math.Angle.RotateTo(
       this.rotation,
-      sci.shipTargetRotation,
-      this.shipData.rotationSpeed,
+      sci.VehicleTargetRotation,
+      this.VehicleData.rotationSpeed,
     );
 
     this.turret.rotation = Phaser.Math.Angle.RotateTo(
       this.turret.rotation,
       sci.turretTargetRotation,
-      this.shipData.rotationSpeed,
+      this.VehicleData.rotationSpeed,
     );
 
     let isThrust: boolean = false;
 
     // The four cardinal directions
     if (sci.thrust.north) {
-      this.applyForce(0, -this.shipData.thrustPower);
+      this.applyForce(0, -this.VehicleData.thrustPower);
       isThrust = true;
     }
     if (sci.thrust.east) {
-      this.applyForce(this.shipData.thrustPower, 0);
+      this.applyForce(this.VehicleData.thrustPower, 0);
       isThrust = true;
     }
     if (sci.thrust.south) {
-      this.applyForce(0, this.shipData.thrustPower);
+      this.applyForce(0, this.VehicleData.thrustPower);
       isThrust = true;
     }
     if (sci.thrust.west) {
-      this.applyForce(-this.shipData.thrustPower, 0);
+      this.applyForce(-this.VehicleData.thrustPower, 0);
       isThrust = true;
     }
 
     // Relative position
     if (sci.thrust.forward) {
-      this.thrustForward(this.shipData.thrustPower);
+      this.thrustForward(this.VehicleData.thrustPower);
       isThrust = true;
     }
     if (sci.thrust.back) {
-      this.thrustBack(this.shipData.thrustPower);
+      this.thrustBack(this.VehicleData.thrustPower);
       isThrust = true;
     }
     if (sci.thrust.left) {
-      this.thrustLeft(this.shipData.thrustPower);
+      this.thrustLeft(this.VehicleData.thrustPower);
       isThrust = true;
     }
     if (sci.thrust.right) {
-      this.thrustRight(this.shipData.thrustPower);
+      this.thrustRight(this.VehicleData.thrustPower);
       isThrust = true;
     }
 
@@ -388,7 +394,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
     }
 
     let vel = this.getVelocity();
-    let maxSpeed = this.shipData.maxSpeed;
+    let maxSpeed = this.VehicleData.maxSpeed;
 
     const currentSpeed = Math.sqrt(vel.x * vel.x + vel.y * vel.y);
 
@@ -421,7 +427,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
   }
 
   postUpdate(): void {
-    // Ship Death code
+    // Vehicle Death code
     if (this.hp <= 0) {
       this.respawn();
     }
@@ -437,14 +443,14 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
     this.energy += 0.1;
 
     // Cap currentValue, it should never be negative
-    this.energy = Phaser.Math.Clamp(this.energy, 0, this.shipData.maxEnergy);
-    this.hp = Phaser.Math.Clamp(this.hp, 0, this.shipData.maxHP);
+    this.energy = Phaser.Math.Clamp(this.energy, 0, this.VehicleData.maxEnergy);
+    this.hp = Phaser.Math.Clamp(this.hp, 0, this.VehicleData.maxHP);
 
     let borderColour: string = this.isPlayerTeam ? "#009999" : "#660000";
     this.hpBar.updateValue(
       this.x,
       this.y,
-      this.hp / this.shipData.maxHP,
+      this.hp / this.VehicleData.maxHP,
       this.displayWidth,
       borderColour,
       "#CC0000",
@@ -452,7 +458,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
     this.energyBar.updateValue(
       this.x,
       this.y,
-      this.energy / this.shipData.maxEnergy,
+      this.energy / this.VehicleData.maxEnergy,
       this.displayWidth,
       borderColour,
       "#00CCCC",
@@ -474,7 +480,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
     this.hp -= damageAmount;
     this.shield.hit();
 
-    XenoLog.ship.debug(
+    XenoLog.Vehicle.debug(
       "\'" +
         this.physicsEntityName +
         "\' has taken " +
@@ -490,24 +496,24 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
   }
 
   useModule(num: number) {
-    let mod: ShipModule = this.getModule(num);
-    XenoLog.ship.trace("Trying to use \'" + mod.getModuleName() + "\'");
+    let mod: VehicleModule = this.getModule(num);
+    XenoLog.Vehicle.trace("Trying to use \'" + mod.getModuleName() + "\'");
 
     if (this.isCasting()) {
-      XenoLog.ship.trace(
-        "Ship \'" + this.physicsEntityName + "\' is already casting.",
+      XenoLog.Vehicle.trace(
+        "Vehicle \'" + this.physicsEntityName + "\' is already casting.",
       );
       return;
     }
 
-    let result: ShipModuleUseResult = mod.use();
+    let result: VehicleModuleUseResult = mod.use();
 
-    if (result == ShipModuleUseResult.SUCCESS) {
+    if (result == VehicleModuleUseResult.SUCCESS) {
       this.energy -= mod.getEnergyCost();
       return;
     }
 
-    if (result == ShipModuleUseResult.LOW_ENERGY) {
+    if (result == VehicleModuleUseResult.LOW_ENERGY) {
       if (!this.energyMessageTimer.isActive()) {
         this.alertManager.textPop(
           this.x,
@@ -519,7 +525,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
       return;
     }
 
-    if (result == ShipModuleUseResult.ON_COOLDOWN) {
+    if (result == VehicleModuleUseResult.ON_COOLDOWN) {
       if (!this.cooldownMessageTimer.isActive()) {
         this.alertManager.textPop(
           this.x,
@@ -531,7 +537,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
       return;
     }
 
-    if (result == ShipModuleUseResult.NO_CHARGES) {
+    if (result == VehicleModuleUseResult.NO_CHARGES) {
       if (!this.chargesMessageTimer.isActive()) {
         this.alertManager.textPop(
           this.x,
@@ -543,12 +549,12 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
       return;
     }
 
-    XenoLog.ship.trace(
+    XenoLog.Vehicle.trace(
       "\'" + " boop " + "\' Used \'" + mod.getModuleName() + "\'",
     );
   }
 
-  getShipModuleUsageOptions(): ShipModuleUsageOptions {
+  getVehicleModuleUsageOptions(): VehicleModuleUsageOptions {
     return {
       rotation: this.turret.rotation,
       x: this.x,
@@ -556,7 +562,7 @@ export default class Ship extends PhysicsEntity implements ICanUseShipModule {
       velocityX: this.getVelocity().x,
       velocityY: this.getVelocity().y,
       isPlayerTeam: this.isPlayerTeam,
-      shipID: this.shipID,
+      VehicleID: this.VehicleID,
     };
   }
 

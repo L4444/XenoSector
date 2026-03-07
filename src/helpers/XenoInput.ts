@@ -19,38 +19,38 @@ export default class XenoInput {
     this.scene.input.keyboard?.on("keydown", (event: KeyboardEvent) => {
       if (event.key == "1") {
         this.keyboardControlStyle = KeyboardControlStyle.ABSOLUTE;
-        XenoLog.ship.info(
+        XenoLog.Vehicle.info(
           "keyboardControlStyle set to  " + this.keyboardControlStyle,
         );
       }
 
       if (event.key == "2") {
         this.keyboardControlStyle = KeyboardControlStyle.RELATIVE;
-        XenoLog.ship.info(
+        XenoLog.Vehicle.info(
           "keyboardControlStyle set to  " + this.keyboardControlStyle,
         );
       }
 
       if (event.key == "3") {
         this.keyboardControlStyle = KeyboardControlStyle.TANKCONTROLS;
-        XenoLog.ship.info(
+        XenoLog.Vehicle.info(
           "keyboardControlStyle set to  " + this.keyboardControlStyle,
         );
       }
 
       if (event.key == "4") {
         this.mouseLook = !this.mouseLook;
-        XenoLog.ship.info("mouseLook set to " + this.mouseLook);
+        XenoLog.Vehicle.info("mouseLook set to " + this.mouseLook);
       }
 
       if (event.key == "e") {
         this.scene.player.thrustForward(10);
-        XenoLog.ship.info("boost - small");
+        XenoLog.Vehicle.info("boost - small");
       }
 
       if (event.key == "q") {
         this.enemyAutoFire = !this.enemyAutoFire;
-        XenoLog.ship.info("Enemy autofire set to " + this.enemyAutoFire);
+        XenoLog.Vehicle.info("Enemy autofire set to " + this.enemyAutoFire);
       }
     });
   }

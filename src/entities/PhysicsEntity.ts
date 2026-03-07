@@ -29,7 +29,7 @@ export default abstract class PhysicsEntity extends PositionalEntity {
       x,
       y,
       textureKey,
-      RenderDepth.SHIPS,
+      RenderDepth.VehicleS,
     );
     this.image.setData("entity", this);
 

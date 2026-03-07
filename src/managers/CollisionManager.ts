@@ -1,6 +1,6 @@
 import { XenoLog } from "../helpers/XenoLogger";
 import type PhysicsEntity from "../entities/PhysicsEntity";
-import Ship from "../entities/Ship";
+import Vehicle from "../entities/Vehicle";
 
 import { PhysicsEntityType } from "../types/PhysicsEntityType";
 import type Projectile from "../entities/Projectile";
@@ -56,13 +56,13 @@ export default abstract class CollisionManager {
       // Prettier needs to ignore these lines or it will format them in an ugly way.
 
       // prettier-ignore
-      if (checkCollision(objA,objB,PhysicsEntityType.SHIP,PhysicsEntityType.STATIC,handleShipStatic,)) return;
+      if (checkCollision(objA,objB,PhysicsEntityType.Vehicle,PhysicsEntityType.STATIC,handleVehicleStatic,)) return;
 
       // prettier-ignore
-      if (checkCollision(objA,objB,PhysicsEntityType.SHIP,PhysicsEntityType.SHIP,handleShipShip)) return;
+      if (checkCollision(objA,objB,PhysicsEntityType.Vehicle,PhysicsEntityType.Vehicle,handleVehicleVehicle)) return;
 
       // prettier-ignore
-      if (checkCollision(objA,objB,PhysicsEntityType.SHIP,PhysicsEntityType.PROJECTILE,handleShipProjectile,)) return;
+      if (checkCollision(objA,objB,PhysicsEntityType.Vehicle,PhysicsEntityType.PROJECTILE,handleVehicleProjectile,)) return;
 
       // prettier-ignore
       if (checkCollision(objA,objB,PhysicsEntityType.PROJECTILE,PhysicsEntityType.STATIC,handleProjectileStatic,)) return;
@@ -80,26 +80,32 @@ export default abstract class CollisionManager {
       );
     }
 
-    function handleShipStatic(ship: PhysicsEntity, staticObj: PhysicsEntity) {
-      logCollision("Ship", "Static", ship, staticObj);
+    function handleVehicleStatic(
+      Vehicle: PhysicsEntity,
+      staticObj: PhysicsEntity,
+    ) {
+      logCollision("Vehicle", "Static", Vehicle, staticObj);
     }
 
-    function handleShipShip(ship1: PhysicsEntity, ship2: PhysicsEntity) {
-      logCollision("Ship1", "Ship2", ship1, ship2);
+    function handleVehicleVehicle(
+      Vehicle1: PhysicsEntity,
+      Vehicle2: PhysicsEntity,
+    ) {
+      logCollision("Vehicle1", "Vehicle2", Vehicle1, Vehicle2);
     }
 
-    function handleShipProjectile(
-      ship: PhysicsEntity,
+    function handleVehicleProjectile(
+      Vehicle: PhysicsEntity,
       projectile: PhysicsEntity,
     ) {
-      let shipHit: Ship = ship as Ship;
+      let VehicleHit: Vehicle = Vehicle as Vehicle;
       let projectileHit: Projectile = projectile as Projectile;
 
-      logCollision("Ship", "Projectile", shipHit, projectileHit);
+      logCollision("Vehicle", "Projectile", VehicleHit, projectileHit);
 
       // Check if friendly fire, it should do no damage but "eat" the projectile, wasting the shot
-      if (projectileHit.getIsPlayerTeam() != shipHit.getIsPlayerTeam()) {
-        shipHit.takeDamage(projectileHit.getDamage());
+      if (projectileHit.getIsPlayerTeam() != VehicleHit.getIsPlayerTeam()) {
+        VehicleHit.takeDamage(projectileHit.getDamage());
       }
 
       projectileHit.deactivate();

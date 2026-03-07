@@ -1,20 +1,20 @@
 import ModuleAction from "./actions/ModuleAction";
-import type Ship from "./entities/Ship";
+import type Vehicle from "./entities/Vehicle";
 import Timer from "./helpers/Timer";
 
 import { XenoLog } from "./helpers/XenoLogger";
 import type ProjectileManager from "./managers/ProjectileManager";
 
 export default class ModuleActionExecutor {
-  private parentShip!: Ship;
+  private parentVehicle!: Vehicle;
   private projectileManager!: ProjectileManager;
   private moduleActionQueue: Array<ModuleAction> = new Array<ModuleAction>();
   private moduleTimer!: Timer;
   private actionTimer!: Timer;
   private isActionStarted: boolean = false;
 
-  constructor(parentShip: Ship, projectileManager: ProjectileManager) {
-    this.parentShip = parentShip;
+  constructor(parentVehicle: Vehicle, projectileManager: ProjectileManager) {
+    this.parentVehicle = parentVehicle;
     this.projectileManager = projectileManager;
 
     this.actionTimer = new Timer();
@@ -60,8 +60,8 @@ export default class ModuleActionExecutor {
         // EXECUTE the action
         currentAction.onExecute(
           this.projectileManager,
-          this.parentShip,
-          this.parentShip,
+          this.parentVehicle,
+          this.parentVehicle,
         );
 
         // Set the timer to wind down

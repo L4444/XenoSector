@@ -1,52 +1,52 @@
 import BaseController from "./BaseController";
-import type Ship from "../entities/Ship";
+import type Vehicle from "../entities/Vehicle";
 
-import type ShipControlInput from "../types/ShipControlInput";
+import type VehicleControlInput from "../types/VehicleControlInput";
 
 import type XenoInput from "../helpers/XenoInput";
 
 export default class AIController extends BaseController {
-  private targetShip!: Ship;
-  constructor(xenoInput: XenoInput, targetShip: Ship) {
+  private targetVehicle!: Vehicle;
+  constructor(xenoInput: XenoInput, targetVehicle: Vehicle) {
     super(xenoInput);
-    this.targetShip = targetShip;
+    this.targetVehicle = targetVehicle;
   }
-  onControl(sci: ShipControlInput, ship: Ship): ShipControlInput {
+  onControl(sci: VehicleControlInput, Vehicle: Vehicle): VehicleControlInput {
     // AI uses absolute
 
     if (this.xenoInput.getEnemyAutoFire()) {
-      if (ship.getEnergy() >= ship.getModule(3).getEnergyCost()) {
-        ship.useModule(3);
+      if (Vehicle.getEnergy() >= Vehicle.getModule(3).getEnergyCost()) {
+        Vehicle.useModule(3);
       }
 
-      if (this.targetShip.x < ship.x) {
+      if (this.targetVehicle.x < Vehicle.x) {
         sci.thrust.west = true;
       }
 
-      if (this.targetShip.x > ship.x) {
+      if (this.targetVehicle.x > Vehicle.x) {
         sci.thrust.east = true;
       }
 
-      if (this.targetShip.y < ship.y) {
+      if (this.targetVehicle.y < Vehicle.y) {
         sci.thrust.north = true;
       }
 
-      if (this.targetShip.y > ship.y) {
+      if (this.targetVehicle.y > Vehicle.y) {
         sci.thrust.south = true;
       }
 
       sci.turretTargetRotation = Phaser.Math.Angle.Between(
-        ship.x,
-        ship.y,
-        this.targetShip.x,
-        this.targetShip.y,
+        Vehicle.x,
+        Vehicle.y,
+        this.targetVehicle.x,
+        this.targetVehicle.y,
       );
 
-      sci.shipTargetRotation = Phaser.Math.Angle.Between(
-        ship.x,
-        ship.y,
-        this.targetShip.x,
-        this.targetShip.y,
+      sci.VehicleTargetRotation = Phaser.Math.Angle.Between(
+        Vehicle.x,
+        Vehicle.y,
+        this.targetVehicle.x,
+        this.targetVehicle.y,
       );
     }
 

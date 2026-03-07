@@ -1,9 +1,9 @@
 import ModuleAction from "../actions/ModuleAction";
 import { XenoLog } from "../helpers/XenoLogger";
-import type ICanUseShipModule from "../interfaces/ICanUseShipModule";
-import type ShipModuleUsageOptions from "../types/ShipModuleUsageOptions";
+import type ICanUseVehicleModule from "../interfaces/ICanUseVehicleModule";
+import type VehicleModuleUsageOptions from "../types/VehicleModuleUsageOptions";
 
-export default class TestShip implements ICanUseShipModule {
+export default class TestVehicle implements ICanUseVehicleModule {
   private testEnergy: number = 0;
   private testIsCasting: boolean = false;
 
@@ -22,7 +22,7 @@ export default class TestShip implements ICanUseShipModule {
 
   useModule(_num: number): void {}
 
-  getShipModuleUsageOptions(): ShipModuleUsageOptions {
+  getVehicleModuleUsageOptions(): VehicleModuleUsageOptions {
     return {
       x: 0,
       y: 0,
@@ -30,7 +30,7 @@ export default class TestShip implements ICanUseShipModule {
       velocityY: 0,
       isPlayerTeam: true,
       rotation: 0,
-      shipID: 0,
+      VehicleID: 0,
     };
   }
 
