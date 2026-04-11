@@ -1,9 +1,9 @@
 import AIController from "../controllers/AIController";
 import KeyboardAndMouseController from "../controllers/KeyboardAndMouseController";
 
-import GameBackground from "../entities/GameBackground";
+
 import createArena from "../factories/createArena";
-import createAsteroidGrid from "../factories/createAsteroidGrid";
+
 
 import XenoAssetLoader from "../helpers/XenoAssetLoader";
 import XenoCreator from "../helpers/XenoCreator";
@@ -32,6 +32,8 @@ export default class GameScene extends Phaser.Scene {
   private xenoCreator: XenoCreator = new XenoCreator(this);
 
   private versionText!: Phaser.GameObjects.Text;
+
+  private backgroundTiles!: Array<Phaser.GameObjects.Image>;
 
   constructor() {
     super("game");
@@ -104,16 +106,45 @@ export default class GameScene extends Phaser.Scene {
 
   private createBackground() {
     // Create a parallax effect
-    new GameBackground(this, "clay512x512-01d", 1, 1);
-    //new GameBackground(this, "Blue Nebula 2 - 1024x1024", 1, 0.3);
+    //new GameBackground(this, "space-blks-1.034", 1, 1);
+
+    this.backgroundTiles = new Array<Phaser.GameObjects.Image>();
+
+    
+    let gridSize = 21;
+    let totalTiles = gridSize * gridSize;
+    console.log("totalTiles " + totalTiles);
+    let spacing = 128;
+    let startX = -1280;
+    let startY = -1280;
+    for (let i = 0; i < totalTiles; i++) {
+        const gridX: number = i % gridSize;
+        const gridY: number = Math.floor(i / gridSize);
+    
+  
+    
+  
+    
+        let tile = this.add.image(startX + gridX * spacing, startY + gridY * spacing, "tilemap", 10);
+        this.backgroundTiles.push(tile);
+        tile.setScale(2);
+        
+        
+            
+        
+      }
+
+      this.backgroundTiles[40].setFrame(25);
+    
+    
   }
 
   private createStatics() {
     // Create the walls around the world
-    createArena(this.xenoCreator, 1000, 2000, 50);
+    createArena(this.xenoCreator, 1280, 1280, 50);
 
     // Create asteroids to help player orient themselves
-    createAsteroidGrid(this.xenoCreator, -300, -1500, 14, 2, 800);
+    //createAsteroidGrid(this.xenoCreator, -300, -1500, 14, 2, 800);
   }
 
   private createVehicles() {
@@ -123,7 +154,7 @@ export default class GameScene extends Phaser.Scene {
       this.alertManager,
       "Player Vehicle",
       0,
-      1800,
+      0,
       "Mech3",
       new KeyboardAndMouseController(this.xenoInput),
       true,
@@ -148,7 +179,7 @@ export default class GameScene extends Phaser.Scene {
           "Enemy Vehicle " + i,
           i * 300,
           1000,
-          "Alien-Bomber",
+          "Mech3",
 
           new AIController(this.xenoInput, this.player),
           false,

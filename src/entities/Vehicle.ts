@@ -87,6 +87,15 @@ export default class Vehicle
     this.controller = controller;
     this.isPlayerTeam = isPlayerTeam;
 
+    if(isPlayerTeam)
+    {
+      this.setTint(0x9999FF);
+    }
+    else
+    {
+      this.setTint(0xFF9999);
+    }
+
     this.alertManager = alertManager;
     this.moduleActionExecutor = new ModuleActionExecutor(
       this,
@@ -316,9 +325,9 @@ export default class Vehicle
 
     // Move their position back to spawn.
     if (this.isPlayerTeam) {
-      this.setPosition(0, 1800);
+      this.setPosition(0, 500);
     } else {
-      this.setPosition(0, 1000);
+      this.setPosition(0, 200);
     }
 
     // Reset velocity so the vehicle doesn't respawn at speed
