@@ -36,7 +36,7 @@ export default abstract class BaseValueBar {
     borderColour: string,
     barColour: string,
   ) {
-    // This ValueBar should follow the parent Vehicle while displaying the value
+    // This ValueBar should follow the parent vehicle while displaying the value
     this.barBack.x = x + this.offsetX;
     this.barBack.y = y + this.offsetY;
     this.barBack.tint =

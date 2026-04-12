@@ -56,13 +56,13 @@ export default abstract class CollisionManager {
       // Prettier needs to ignore these lines or it will format them in an ugly way.
 
       // prettier-ignore
-      if (checkCollision(objA,objB,PhysicsEntityType.Vehicle,PhysicsEntityType.STATIC,handleVehicleStatic,)) return;
+      if (checkCollision(objA,objB,PhysicsEntityType.VEHICLE,PhysicsEntityType.STATIC,handleVehicleStatic,)) return;
 
       // prettier-ignore
-      if (checkCollision(objA,objB,PhysicsEntityType.Vehicle,PhysicsEntityType.Vehicle,handleVehicleVehicle)) return;
+      if (checkCollision(objA,objB,PhysicsEntityType.VEHICLE,PhysicsEntityType.VEHICLE,handleVehicleVehicle)) return;
 
       // prettier-ignore
-      if (checkCollision(objA,objB,PhysicsEntityType.Vehicle,PhysicsEntityType.PROJECTILE,handleVehicleProjectile,)) return;
+      if (checkCollision(objA,objB,PhysicsEntityType.VEHICLE,PhysicsEntityType.PROJECTILE,handleVehicleProjectile,)) return;
 
       // prettier-ignore
       if (checkCollision(objA,objB,PhysicsEntityType.PROJECTILE,PhysicsEntityType.STATIC,handleProjectileStatic,)) return;
@@ -81,31 +81,31 @@ export default abstract class CollisionManager {
     }
 
     function handleVehicleStatic(
-      Vehicle: PhysicsEntity,
+      vehicle: PhysicsEntity,
       staticObj: PhysicsEntity,
     ) {
-      logCollision("Vehicle", "Static", Vehicle, staticObj);
+      logCollision("Vehicle", "Static", vehicle, staticObj);
     }
 
     function handleVehicleVehicle(
-      Vehicle1: PhysicsEntity,
-      Vehicle2: PhysicsEntity,
+      vehicle1: PhysicsEntity,
+      vehicle2: PhysicsEntity,
     ) {
-      logCollision("Vehicle1", "Vehicle2", Vehicle1, Vehicle2);
+      logCollision("Vehicle1", "Vehicle2", vehicle1, vehicle2);
     }
 
     function handleVehicleProjectile(
-      Vehicle: PhysicsEntity,
+      vehicle: PhysicsEntity,
       projectile: PhysicsEntity,
     ) {
-      let VehicleHit: Vehicle = Vehicle as Vehicle;
+      let vehicleHit: Vehicle = vehicle as Vehicle;
       let projectileHit: Projectile = projectile as Projectile;
 
-      logCollision("Vehicle", "Projectile", VehicleHit, projectileHit);
+      logCollision("Vehicle", "Projectile", vehicleHit, projectileHit);
 
       // Check if friendly fire, it should do no damage but "eat" the projectile, wasting the shot
-      if (projectileHit.getIsPlayerTeam() != VehicleHit.getIsPlayerTeam()) {
-        VehicleHit.takeDamage(projectileHit.getDamage());
+      if (projectileHit.getIsPlayerTeam() != vehicleHit.getIsPlayerTeam()) {
+        vehicleHit.takeDamage(projectileHit.getDamage());
       }
 
       projectileHit.deactivate();

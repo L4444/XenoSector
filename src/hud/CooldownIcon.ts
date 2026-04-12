@@ -18,7 +18,7 @@ export default class CooldownIcon extends BaseEntity {
 
   private xenoCreator!: XenoCreator;
 
-  private VehicleModule!: VehicleModule;
+  private vehicleModule!: VehicleModule;
 
   private SWISH_FILL_COLOUR: number = 0x666666;
   private SWISH_FILL_ALPHA: number = 0.8;
@@ -27,12 +27,12 @@ export default class CooldownIcon extends BaseEntity {
     xenoCreator: XenoCreator,
     x: number,
     y: number,
-    VehicleModule: VehicleModule,
+    vehicleModule: VehicleModule,
   ) {
     super(xenoCreator);
     this.xenoCreator = xenoCreator;
 
-    this.VehicleModule = VehicleModule;
+    this.vehicleModule = vehicleModule;
 
     this.back = this.xenoCreator.createBasicImage(
       x,
@@ -48,7 +48,7 @@ export default class CooldownIcon extends BaseEntity {
     this.icon = this.xenoCreator.createBasicImage(
       x,
       y,
-      VehicleModule.getUITextureName(),
+      vehicleModule.getUITextureName(),
       RenderDepth.UI,
       "#669999",
       RenderSpace.SCREEN,
@@ -79,9 +79,9 @@ export default class CooldownIcon extends BaseEntity {
 
     // Now add the text to the element
     let splitModuleName: string =
-      VehicleModule.getModuleName().split(" ")[0] +
+      vehicleModule.getModuleName().split(" ")[0] +
       "\n" +
-      VehicleModule.getModuleName().split(" ")[1];
+      vehicleModule.getModuleName().split(" ")[1];
 
     this.nameText = this.xenoCreator.createText(
       x - 30,
@@ -97,7 +97,7 @@ export default class CooldownIcon extends BaseEntity {
     this.keybindText = this.xenoCreator.createText(
       x - 30,
       y - 30,
-      VehicleModule.getKeybind(),
+      vehicleModule.getKeybind(),
       RenderDepth.UI,
       "#FFFFFF",
       RenderSpace.SCREEN,
@@ -115,14 +115,14 @@ export default class CooldownIcon extends BaseEntity {
     this.chargesText.setFontSize(20);
 
     // Hide if the VehicleModule doesn't "use charges" (e.g it's max chargers are at 1)
-    if (this.VehicleModule.getMaxCharges() == 1) {
+    if (this.vehicleModule.getMaxCharges() == 1) {
       this.chargesText.setVisible(false);
     }
 
     this.energyText = this.xenoCreator.createText(
       x + 15,
       y - 30,
-      this.VehicleModule.getEnergyCost().toString(),
+      this.vehicleModule.getEnergyCost().toString(),
       RenderDepth.UI,
       "#00Cccc",
       RenderSpace.SCREEN,
@@ -130,13 +130,13 @@ export default class CooldownIcon extends BaseEntity {
     this.energyText.setFontSize(15);
 
     // Hide if the VehicleModule has no cost, so the UI looks cleaner
-    if (this.VehicleModule.getEnergyCost() == 0) {
+    if (this.vehicleModule.getEnergyCost() == 0) {
       this.energyText.setVisible(false);
     }
   }
 
   preUpdate() {
-    let progress: number = this.VehicleModule.getCooldownRemainingRatio();
+    let progress: number = this.vehicleModule.getCooldownRemainingRatio();
 
     this.swish.clear();
     this.swish.fillStyle(this.SWISH_FILL_COLOUR, this.SWISH_FILL_ALPHA);
@@ -154,11 +154,11 @@ export default class CooldownIcon extends BaseEntity {
     this.swish.fillPath();
 
     this.chargesText.text =
-      this.VehicleModule.getCurrentCharges().toString() +
+      this.vehicleModule.getCurrentCharges().toString() +
       "\/" +
-      this.VehicleModule.getMaxCharges().toString();
+      this.vehicleModule.getMaxCharges().toString();
 
-    this.back.tint = this.VehicleModule.hasEnergy() ? 0xffffff : 0xff0000;
+    this.back.tint = this.vehicleModule.hasEnergy() ? 0xffffff : 0xff0000;
   }
 
   get x(): number {

@@ -10,9 +10,9 @@ export default abstract class BaseController {
     this.xenoInput = xenoInput;
   }
 
-  getVehicleInput(Vehicle: Vehicle): VehicleControlInput {
-    let sci: VehicleControlInput = {
-      VehicleTargetRotation: Vehicle.rotation,
+  getVehicleInput(vehicle: Vehicle): VehicleControlInput {
+    let vci: VehicleControlInput = {
+      vehicleTargetRotation: vehicle.rotation,
       turretTargetRotation: 0,
       thrust: {
         north: false,
@@ -27,11 +27,11 @@ export default abstract class BaseController {
       modules: [false, false, false, false],
       brake: false,
     };
-    return this.onControl(sci, Vehicle);
+    return this.onControl(vci, vehicle);
   }
 
   abstract onControl(
-    sci: VehicleControlInput,
-    Vehicle: Vehicle,
+    vci: VehicleControlInput,
+    vehicle: Vehicle,
   ): VehicleControlInput;
 }

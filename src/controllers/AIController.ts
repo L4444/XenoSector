@@ -11,45 +11,45 @@ export default class AIController extends BaseController {
     super(xenoInput);
     this.targetVehicle = targetVehicle;
   }
-  onControl(sci: VehicleControlInput, Vehicle: Vehicle): VehicleControlInput {
+  onControl(vci: VehicleControlInput, vehicle: Vehicle): VehicleControlInput {
     // AI uses absolute
 
     if (this.xenoInput.getEnemyAutoFire()) {
-      if (Vehicle.getEnergy() >= Vehicle.getModule(3).getEnergyCost()) {
-        Vehicle.useModule(3);
+      if (vehicle.getEnergy() >= vehicle.getModule(3).getEnergyCost()) {
+        vehicle.useModule(3);
       }
 
-      if (this.targetVehicle.x < Vehicle.x) {
-        sci.thrust.west = true;
+      if (this.targetVehicle.x < vehicle.x) {
+        vci.thrust.west = true;
       }
 
-      if (this.targetVehicle.x > Vehicle.x) {
-        sci.thrust.east = true;
+      if (this.targetVehicle.x > vehicle.x) {
+        vci.thrust.east = true;
       }
 
-      if (this.targetVehicle.y < Vehicle.y) {
-        sci.thrust.north = true;
+      if (this.targetVehicle.y < vehicle.y) {
+        vci.thrust.north = true;
       }
 
-      if (this.targetVehicle.y > Vehicle.y) {
-        sci.thrust.south = true;
+      if (this.targetVehicle.y > vehicle.y) {
+        vci.thrust.south = true;
       }
 
-      sci.turretTargetRotation = Phaser.Math.Angle.Between(
-        Vehicle.x,
-        Vehicle.y,
+      vci.turretTargetRotation = Phaser.Math.Angle.Between(
+        vehicle.x,
+        vehicle.y,
         this.targetVehicle.x,
         this.targetVehicle.y,
       );
 
-      sci.VehicleTargetRotation = Phaser.Math.Angle.Between(
-        Vehicle.x,
-        Vehicle.y,
+      vci.vehicleTargetRotation = Phaser.Math.Angle.Between(
+        vehicle.x,
+        vehicle.y,
         this.targetVehicle.x,
         this.targetVehicle.y,
       );
     }
 
-    return sci;
+    return vci;
   }
 }

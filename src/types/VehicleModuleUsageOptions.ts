@@ -5,5 +5,5 @@ export default interface VehicleModuleUsageOptions {
   velocityY: number;
   isPlayerTeam: boolean;
   rotation: number;
-  VehicleID: number;
+  vehicleID: number;
 }

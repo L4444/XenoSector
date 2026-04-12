@@ -17,6 +17,12 @@ export default abstract class XenoAssetLoader {
     // Ground Backgrounds
     XenoAssetLoader.loadImage(scene, "/assets/backgrounds/clay512x512-01d.png");
 
+    scene.load.spritesheet("tilemap", import.meta.env.BASE_URL +"/assets/backgrounds/tileset/space-blks-1.034.png", 
+      {
+        frameWidth: 64,
+        frameHeight: 64
+      });
+
     // Mechs
     XenoAssetLoader.loadImage(scene, "/assets/vehicles/Mech3.png", true);
 

@@ -15,7 +15,7 @@ export default class KeyboardAndMouseController extends BaseController {
       throw new Error("No keyboard detected!");
     }
   }
-  onControl(sci: VehicleControlInput, Vehicle: Vehicle): VehicleControlInput {
+  onControl(vci: VehicleControlInput, vehicle: Vehicle): VehicleControlInput {
     let keyboardInput = this.xenoInput.getKeyboard();
 
     let ko = keyboardInput?.addKeys("W,S,A,D,F,G,SPACE,E") as Keys;
@@ -25,92 +25,92 @@ export default class KeyboardAndMouseController extends BaseController {
 
     if (controlStyle == KeyboardControlStyle.ABSOLUTE) {
       if (ko.W.isDown) {
-        sci.thrust.north = true;
+        vci.thrust.north = true;
       }
       if (ko.S.isDown) {
-        sci.thrust.south = true;
+        vci.thrust.south = true;
       }
 
       if (ko.A.isDown) {
-        sci.thrust.west = true;
+        vci.thrust.west = true;
       }
       if (ko.D.isDown) {
-        sci.thrust.east = true;
+        vci.thrust.east = true;
       }
     }
 
     if (controlStyle == KeyboardControlStyle.RELATIVE) {
       if (ko.W.isDown) {
-        sci.thrust.forward = true;
+        vci.thrust.forward = true;
       }
       if (ko.S.isDown) {
-        sci.thrust.back = true;
+        vci.thrust.back = true;
       }
 
       if (ko.A.isDown) {
-        sci.thrust.left = true;
+        vci.thrust.left = true;
       }
       if (ko.D.isDown) {
-        sci.thrust.right = true;
+        vci.thrust.right = true;
       }
     }
 
     if (controlStyle == KeyboardControlStyle.TANKCONTROLS) {
       if (ko.W.isDown) {
-        sci.thrust.forward = true;
+        vci.thrust.forward = true;
       }
       if (ko.S.isDown) {
-        sci.thrust.back = true;
+        vci.thrust.back = true;
       }
 
       if (ko.A.isDown) {
-        sci.VehicleTargetRotation = Vehicle.rotation - 0.1;
+        vci.vehicleTargetRotation = vehicle.rotation - 0.1;
       }
       if (ko.D.isDown) {
-        sci.VehicleTargetRotation = Vehicle.rotation + 0.1;
+        vci.vehicleTargetRotation = vehicle.rotation + 0.1;
       }
     }
 
     if (ko.SPACE.isDown) {
-      sci.brake = true;
+      vci.brake = true;
     }
 
     let activePointer = this.xenoInput.getMouse();
 
     if (activePointer.leftButtonDown()) {
-      sci.modules[0] = true;
+      vci.modules[0] = true;
     }
 
     if (activePointer.rightButtonDown()) {
-      sci.modules[1] = true;
+      vci.modules[1] = true;
     }
 
     if (ko.F.isDown) {
-      sci.modules[2] = true;
+      vci.modules[2] = true;
     }
 
     if (ko.SPACE.isDown) {
-      sci.modules[4] = true;
+      vci.modules[4] = true;
     }
 
     activePointer.updateWorldPoint(this.xenoInput.getMainCamera());
 
-    sci.turretTargetRotation = Phaser.Math.Angle.Between(
-      Vehicle.x,
-      Vehicle.y,
+    vci.turretTargetRotation = Phaser.Math.Angle.Between(
+      vehicle.x,
+      vehicle.y,
       activePointer.worldX,
       activePointer.worldY,
     );
 
     if (controlStyle != KeyboardControlStyle.TANKCONTROLS) {
-      sci.VehicleTargetRotation = Phaser.Math.Angle.Between(
-        Vehicle.x,
-        Vehicle.y,
+      vci.vehicleTargetRotation = Phaser.Math.Angle.Between(
+        vehicle.x,
+        vehicle.y,
         activePointer.worldX,
         activePointer.worldY,
       );
     }
-    return sci;
+    return vci;
   }
 }
 
