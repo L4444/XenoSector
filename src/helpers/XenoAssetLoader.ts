@@ -24,7 +24,7 @@ export default abstract class XenoAssetLoader {
       });
 
     // Mechs
-    XenoAssetLoader.loadImage(scene, "/assets/vehicles/Mech3.png", true);
+    XenoAssetLoader.loadImage(scene, "/assets/vehicles/TestShip.png", true);
 
     /// Vehicles
     XenoAssetLoader.loadImage(

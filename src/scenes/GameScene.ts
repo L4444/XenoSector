@@ -155,7 +155,7 @@ export default class GameScene extends Phaser.Scene {
       "Player Vehicle",
       0,
       0,
-      "Mech3",
+      "TestShip",
       new KeyboardAndMouseController(this.xenoInput),
       true,
       {
